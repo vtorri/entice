@@ -31,6 +31,7 @@
 #include "entice_private.h"
 #include "entice_config.h"
 #include "entice_theme.h"
+#include "entice_key.h"
 #include "entice_win.h"
 
 /*============================================================================*
@@ -43,42 +44,9 @@ _cb_key_down(void *data,
              Evas_Object *obj EINA_UNUSED,
              void *event_info)
 {
-    Evas_Event_Key_Down *ev;
-    Evas_Object *win;
-    Eina_Bool ctrl, alt, shift, winm, meta, hyper; /* modifiers */
-
     EINA_SAFETY_ON_NULL_RETURN(event_info);
 
-    ev = (Evas_Event_Key_Down *)event_info;
-    win = (Evas_Object *)data;
-
-    ctrl = evas_key_modifier_is_set(ev->modifiers, "Control");
-    alt = evas_key_modifier_is_set(ev->modifiers, "Alt");
-    shift = evas_key_modifier_is_set(ev->modifiers, "Shift");
-    winm = evas_key_modifier_is_set(ev->modifiers, "Super");
-    meta =
-        evas_key_modifier_is_set(ev->modifiers, "Meta") ||
-        evas_key_modifier_is_set(ev->modifiers, "AltGr") ||
-        evas_key_modifier_is_set(ev->modifiers, "ISO_Level3_Shift");
-    hyper = evas_key_modifier_is_set(ev->modifiers, "Hyper");
-
-    /* No modifier */
-    if (!ctrl && !alt && !shift && !winm && !meta && !hyper)
-    {
-        if (!strcmp(ev->keyname, "F11"))
-        {
-            elm_win_fullscreen_set(win, !elm_win_fullscreen_get(win));
-        }
-    }
-
-    /* Control modifier */
-    if (ctrl && !alt && !shift && !winm && !meta && !hyper)
-    {
-        if (!strcmp(ev->keyname, "q"))
-        {
-            evas_object_del(win);
-        }
-    }
+    entice_key_handle(data, event_info);
 }
 
 static void
