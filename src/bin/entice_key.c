@@ -28,6 +28,9 @@
 
 #include <Elementary.h>
 
+#include "entice_config.h"
+#include "entice_image.h"
+#include "entice_win.h"
 #include "entice_key.h"
 
 /*============================================================================*
@@ -40,6 +43,7 @@
 
 void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
 {
+    Entice *entice;
     Eina_Bool ctrl, alt, shift, winm, meta, hyper; /* modifiers */
 
     ctrl = evas_key_modifier_is_set(ev->modifiers, "Control");
@@ -52,12 +56,34 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
         evas_key_modifier_is_set(ev->modifiers, "ISO_Level3_Shift");
     hyper = evas_key_modifier_is_set(ev->modifiers, "Hyper");
 
+    entice = evas_object_data_get(win, "entice");
+
     /* No modifier */
     if (!ctrl && !alt && !shift && !winm && !meta && !hyper)
     {
         if (!strcmp(ev->keyname, "F11"))
         {
             elm_win_fullscreen_set(win, !elm_win_fullscreen_get(win));
+        }
+        if (!strcmp(ev->keyname, "space"))
+        {
+            Eina_List *next;
+
+            next = eina_list_next(entice->image_current);
+            if (next)
+            {
+                entice_image_current_set(win, next);
+            }
+        }
+        if (!strcmp(ev->keyname, "BackSpace"))
+        {
+            Eina_List *prev;
+
+            prev = eina_list_prev(entice->image_current);
+            if (prev)
+            {
+                entice_image_current_set(win, prev);
+            }
         }
     }
 

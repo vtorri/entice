@@ -245,5 +245,4 @@ entice_win_images_set(Evas_Object *win, Eina_List *images)
 
     entice = evas_object_data_get(win, "entice");
     entice->images = images;
-    entice->current_image = images;
 }

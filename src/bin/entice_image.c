@@ -42,23 +42,23 @@
  *============================================================================*/
 
 void
-entice_image_set(Evas_Object *win)
+entice_image_current_set(Evas_Object *win, Eina_List *image)
 {
     Entice *entice;
     char *filename;
 
-    printf(" * %s 1\n", __FUNCTION__);
-    entice = evas_object_data_get(win, "entice");
-    if (!entice->current_image)
+    if (!image)
         return;
-    printf(" * %s 2\n", __FUNCTION__);
-    filename = eina_list_data_get(entice->current_image);
+
+    entice = evas_object_data_get(win, "entice");
+    entice->image_current = image;
+
+    filename = eina_list_data_get(entice->image_current);
     if (filename)
     {
         int w;
         int h;
 
-        printf(" * %s 3 : %s\n", __FUNCTION__, filename);
         evas_object_image_file_set(entice->image, filename, NULL);
         evas_object_image_size_get(entice->image, &w, &h);
         evas_object_image_size_set(entice->image, w,h);

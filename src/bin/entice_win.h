@@ -44,7 +44,7 @@ struct Entice
     /* list of opened images */
     Eina_List *images;
     /* current displayed image */
-    Eina_List *current_image;
+    Eina_List *image_current;
 
     /* theme */
     Entice_Config *config;

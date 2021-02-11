@@ -266,7 +266,7 @@ elm_main(int argc, char **argv)
     if (fullscreen) elm_win_fullscreen_set(win, EINA_TRUE);
 
     /* once the images are in the list, display the first and current one */
-    entice_image_set(win);
+    entice_image_current_set(win, list);
 
     elm_run();
 

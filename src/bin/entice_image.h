@@ -27,6 +27,6 @@
 #ifndef ENTICE_IMAGE_H
 #define ENTICE_IMAGE_H
 
-void entice_image_set(Evas_Object *win);
+void entice_image_current_set(Evas_Object *win, Eina_List *image);
 
 #endif /* ENTICE_IMAGE_H */
