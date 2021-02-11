@@ -59,6 +59,18 @@ collections
         action: STATE_SET "default" 0.0;
         target: "vg1";
       }
+
+      // IMAGE
+      part
+      {
+        name: "part.canvas";
+        type: SWALLOW;
+        description
+        {
+          state: "default" 0.0;
+          visible: 1;
+        }
+      }
     }
   }
 }

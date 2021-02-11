@@ -31,6 +31,7 @@
 #include "entice_private.h"
 #include "entice_config.h"
 #include "entice_theme.h"
+#include "entice_image.h"
 #include "entice_key.h"
 #include "entice_win.h"
 
@@ -164,6 +165,24 @@ entice_win_add(void)
     evas_object_show(o);
     entice->conform = o;
 
+    /* scroller */
+    o = elm_scroller_add(win);
+    elm_scroller_policy_set(o,
+                            ELM_SCROLLER_POLICY_AUTO, ELM_SCROLLER_POLICY_AUTO);
+    elm_scroller_bounce_set(o, EINA_TRUE, EINA_TRUE);
+    evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
+    evas_object_show(o);
+    entice->scroller = o;
+
+    /* table */
+    o = elm_table_add(win);
+    evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
+    elm_object_content_set(entice->scroller, o);
+    evas_object_show(o);
+    entice->table = o;
+
     /* gui layout */
     o = elm_layout_add(win);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -178,6 +197,15 @@ entice_win_add(void)
         _cb_win_del(NULL, NULL, win, NULL);
         return NULL;
     }
+
+    /* image */
+    o = evas_object_image_add(evas_object_evas_get(win));
+    evas_object_image_filled_set(o, EINA_TRUE);
+    elm_object_part_content_set(entice->layout, "part.canvas",
+                                entice->scroller);
+    elm_table_pack(entice->table, o, 0, 0, 1, 1);
+    evas_object_show(o);
+    entice->image = o;
 
     /* dummy button to catch mouse events */
     o = elm_button_add(win);
@@ -205,4 +233,17 @@ entice_win_add(void)
     entice->event_kbd = o;
 
     return win;
+}
+
+void
+entice_win_images_set(Evas_Object *win, Eina_List *images)
+{
+    Entice *entice;
+
+    if (!images)
+        return;
+
+    entice = evas_object_data_get(win, "entice");
+    entice->images = images;
+    entice->current_image = images;
 }

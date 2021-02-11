@@ -31,6 +31,7 @@
 
 #include "entice_private.h"
 #include "entice_config.h"
+#include "entice_image.h"
 #include "entice_win.h"
 
 #define ENTICE_COPYRIGHT "(C) 2021 Vincent Torri and others"
@@ -260,7 +261,12 @@ elm_main(int argc, char **argv)
 
     evas_object_show(win);
 
+    entice_win_images_set(win, list);
+
     if (fullscreen) elm_win_fullscreen_set(win, EINA_TRUE);
+
+    /* once the images are in the list, display the first and current one */
+    entice_image_set(win);
 
     elm_run();
 
