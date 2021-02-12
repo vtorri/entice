@@ -89,3 +89,66 @@ entice_image_current_rotate(Evas_Object *win, unsigned int rot)
     prop->orient = prop->orient & 3;
     evas_object_image_orient_set(entice->image, prop->orient);
 }
+
+void
+entice_image_current_zoom(Evas_Object *win, double zoom)
+{
+    Entice *entice;
+    int ow;
+    int oh;
+    int ox;
+    int oy;
+    int w;
+    int h;
+    int x;
+    int y;
+
+    entice = evas_object_data_get(win, "entice");
+    evas_object_image_size_get(entice->image, &ow, &oh);
+    evas_object_geometry_get(win, &x, &y, &w, &h);
+
+    if (zoom == 1.0)
+    {
+        ox = ((w -ow) / 2.0) + (double)x + 0.5;
+        oy = ((h -oh) / 2.0) + (double)y + 0.5;
+        evas_object_move(entice->image, ox, oy);
+        evas_object_resize(entice->image, ow, oh);
+    }
+    else
+    {
+    }
+}
+
+void
+entice_image_current_zoom_fit(Evas_Object *win)
+{
+    Entice *entice;
+    int ow;
+    int oh;
+    int ox;
+    int oy;
+    int w;
+    int h;
+    int x;
+    int y;
+
+    entice = evas_object_data_get(win, "entice");
+    evas_object_image_size_get(entice->image, &ow, &oh);
+    evas_object_geometry_get(win, &x, &y, &w, &h);
+    if ((w * oh) > (ow * h))
+    {
+        int ih = oh;
+        oh = h;
+        ow = (ow * h) / ih;
+    }
+    else
+    {
+        int iw = ow;
+        ow = w;
+        oh = (oh * w) / iw;
+    }
+    ox = ((w -ow) / 2.0) + (double)x + 0.5;
+    oy = ((h -oh) / 2.0) + (double)y + 0.5;
+   evas_object_move(entice->image, ox, oy);
+   evas_object_resize(entice->image, ow, oh);
+}

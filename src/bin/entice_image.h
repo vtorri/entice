@@ -37,4 +37,8 @@ void entice_image_current_set(Evas_Object *win, Eina_List *image);
 
 void entice_image_current_rotate(Evas_Object *win, unsigned int rot);
 
+void entice_image_current_zoom(Evas_Object *win, double zoom);
+
+void entice_image_current_zoom_fit(Evas_Object *win);
+
 #endif /* ENTICE_IMAGE_H */

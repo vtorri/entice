@@ -61,12 +61,12 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
     /* No modifier */
     if (!ctrl && !alt && !shift && !winm && !meta && !hyper)
     {
-        if (!strcmp(ev->keyname, "F11"))
+        if (!strcmp(ev->key, "F11"))
         {
             elm_win_fullscreen_set(win, !elm_win_fullscreen_get(win));
         }
-        else if (!strcmp(ev->keyname, "space") ||
-                 !strcmp(ev->keyname, "Right"))
+        else if (!strcmp(ev->key, "space") ||
+                 !strcmp(ev->key, "Right"))
         {
             Eina_List *next;
 
@@ -76,8 +76,8 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
                 entice_image_current_set(win, next);
             }
         }
-        else if (!strcmp(ev->keyname, "BackSpace") ||
-                 !strcmp(ev->keyname, "Left"))
+        else if (!strcmp(ev->key, "BackSpace") ||
+                 !strcmp(ev->key, "Left"))
         {
             Eina_List *prev;
 
@@ -86,6 +86,10 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
             {
                 entice_image_current_set(win, prev);
             }
+        }
+        else if (!strcmp(ev->keyname, "f"))
+        {
+            entice_image_current_zoom_fit(win);
         }
     }
 
@@ -99,6 +103,11 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
         else if (!strcmp(ev->keyname, "r"))
         {
             entice_image_current_rotate(win, 1);
+        }
+        else if (!strcmp(ev->key, "KP_0") ||
+                 !strcmp(ev->key, "0"))
+        {
+            entice_image_current_zoom(win, 1.0);
         }
     }
 
@@ -114,11 +123,11 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
     /* Alt modifier */
     if (!ctrl && alt && !shift && !winm && !meta && !hyper)
     {
-        if (!strcmp(ev->keyname, "Home"))
+        if (!strcmp(ev->key, "Home"))
         {
             entice_image_current_set(win, entice->images);
         }
-        else if (!strcmp(ev->keyname, "End"))
+        else if (!strcmp(ev->key, "End"))
         {
             entice_image_current_set(win, eina_list_last(entice->images));
         }
