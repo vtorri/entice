@@ -1,4 +1,3 @@
-
 entice_bin_src = [
   'entice_config.c',
   'entice_image.c',
@@ -7,11 +6,6 @@ entice_bin_src = [
   'entice_theme.c',
   'entice_win.c'
 ]
-
-# Windows resource file
-
-## todo
-
 
 entice_bin = executable('entice', entice_bin_src,
   c_args              : [ entice_cargs ],

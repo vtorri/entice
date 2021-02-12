@@ -1,0 +1,11 @@
+[Desktop Entry]
+#Encoding=UTF-8
+Type=Application
+Name=Entice
+GenericName=Image Viewer
+Comment=Image Viewer
+Exec=entice %U
+Icon=entice
+Categories=Graphics;Viewer;
+StartupWMClass=entice
+MimeType=image/jpeg;image/png;image/gif

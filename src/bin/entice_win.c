@@ -134,7 +134,7 @@ entice_win_add(void)
     elm_theme_overlay_add(NULL, entice_config_theme_path_get(entice->config));
 
     /* main window */
-    win = elm_win_add(NULL, PACKAGE_NAME, ELM_WIN_BASIC);
+    win = elm_win_add(NULL, "Entice", ELM_WIN_BASIC);
     if (!win)
     {
         ERR(_("could not create elm window."));

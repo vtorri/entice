@@ -157,7 +157,7 @@ _dir_parse(Eina_List *list, const char *path)
     return list;
 }
 
-static EAPI_MAIN int
+EAPI_MAIN int
 elm_main(int argc, char **argv)
 {
     Evas_Object *win;
