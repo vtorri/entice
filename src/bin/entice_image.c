@@ -68,6 +68,7 @@ entice_image_current_set(Evas_Object *win, Eina_List *image)
         evas_object_image_size_set(entice->image, w,h);
         evas_object_image_fill_set(entice->image, 0, 0, w, h);
         evas_object_resize(entice->image, w, h);
+        evas_object_size_hint_max_set(entice->image, w, h);
         evas_object_size_hint_min_set(entice->image, w, h);
     }
     else
@@ -94,6 +95,7 @@ void
 entice_image_current_zoom(Evas_Object *win, double zoom)
 {
     Entice *entice;
+    Entice_Image_Prop *prop;
     int ow;
     int oh;
     int ox;
@@ -104,6 +106,7 @@ entice_image_current_zoom(Evas_Object *win, double zoom)
     int y;
 
     entice = evas_object_data_get(win, "entice");
+    prop = eina_list_data_get(entice->image_current);
     evas_object_image_size_get(entice->image, &ow, &oh);
     evas_object_geometry_get(win, &x, &y, &w, &h);
 
@@ -113,16 +116,20 @@ entice_image_current_zoom(Evas_Object *win, double zoom)
         oy = ((h -oh) / 2.0) + (double)y + 0.5;
         evas_object_move(entice->image, ox, oy);
         evas_object_resize(entice->image, ow, oh);
+        evas_object_size_hint_max_set(entice->image, ow, oh);
+        evas_object_size_hint_min_set(entice->image, ow, oh);
     }
     else
     {
     }
+   prop->zoom_mode = ENTICE_ZOOM_MODE_NORMAL;
 }
 
 void
 entice_image_current_zoom_fit(Evas_Object *win)
 {
     Entice *entice;
+    Entice_Image_Prop *prop;
     int ow;
     int oh;
     int ox;
@@ -133,8 +140,10 @@ entice_image_current_zoom_fit(Evas_Object *win)
     int y;
 
     entice = evas_object_data_get(win, "entice");
+    prop = eina_list_data_get(entice->image_current);
     evas_object_image_size_get(entice->image, &ow, &oh);
     evas_object_geometry_get(win, &x, &y, &w, &h);
+
     if ((w * oh) > (ow * h))
     {
         int ih = oh;
@@ -147,8 +156,15 @@ entice_image_current_zoom_fit(Evas_Object *win)
         ow = w;
         oh = (oh * w) / iw;
     }
+
     ox = ((w -ow) / 2.0) + (double)x + 0.5;
     oy = ((h -oh) / 2.0) + (double)y + 0.5;
-   evas_object_move(entice->image, ox, oy);
-   evas_object_resize(entice->image, ow, oh);
+
+    evas_object_resize(entice->image, ow, oh);
+    evas_object_size_hint_max_set(entice->image, ow, oh);
+    evas_object_size_hint_min_set(entice->image, ow, oh);
+
+    evas_object_move(entice->image, ox, oy);
+
+    prop->zoom_mode = ENTICE_ZOOM_MODE_FIT;
 }

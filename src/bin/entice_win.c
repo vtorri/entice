@@ -39,6 +39,10 @@
  *                                  Local                                     *
  *============================================================================*/
 
+
+static void
+_cb_mouse_down(void *data, Evas *evas EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info);
+
 static void
 _cb_key_down(void *data,
              Evas *evas EINA_UNUSED,
@@ -59,9 +63,43 @@ _cb_win_del(void *data EINA_UNUSED,
     Entice *entice;
 
     entice = evas_object_data_get(win, "entice");
-    entice_config_del(entice->config);
+    /* FIXME: free images */
     evas_object_data_del(win, "entice");
+
+    evas_object_event_callback_del_full(entice->event_mouse,
+                                        EVAS_CALLBACK_MOUSE_DOWN,
+                                        _cb_mouse_down, win);
+
+    entice_config_del(entice->config);
     free(entice);
+}
+
+static void
+_cb_win_resize(void *data EINA_UNUSED,
+            Evas *_e EINA_UNUSED,
+            Evas_Object *win,
+            void *_event EINA_UNUSED)
+{
+    Entice *entice;
+    Entice_Image_Prop *prop;
+
+    entice = evas_object_data_get(win, "entice");
+    if (!entice || !entice->image_current)
+        return;
+
+    prop = eina_list_data_get(entice->image_current);
+    if (!prop)
+        return;
+
+    switch(prop->zoom_mode)
+    {
+        case ENTICE_ZOOM_MODE_NORMAL:
+            entice_image_current_zoom(win, 1.0);
+            break;
+        case ENTICE_ZOOM_MODE_FIT:
+            entice_image_current_zoom_fit(win);
+            break;
+    }
 }
 
 static void
@@ -103,6 +141,24 @@ _cb_unfocused(void *data EINA_UNUSED, Evas_Object *win, void *event EINA_UNUSED)
 
     entice = evas_object_data_get(win, "entice");
     elm_layout_signal_emit(entice->layout, "state,win,unfocused", "entice");
+}
+
+static void
+_cb_mouse_down(void *win, Evas *evas EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info)
+{
+    Evas_Event_Mouse_Down *ev;
+    Entice *entice;
+    Entice_Image_Prop *prop;
+
+    ev = (Evas_Event_Mouse_Down *)event_info;
+    entice = evas_object_data_get(win, "entice");
+    prop = eina_list_data_get(entice->image_current);
+
+    if (ev->button != 1) return;
+    if (ev->flags & EVAS_BUTTON_DOUBLE_CLICK)
+    {
+        elm_win_fullscreen_set(win, !elm_win_fullscreen_get(win));
+    }
 }
 
 /*============================================================================*
@@ -151,6 +207,7 @@ entice_win_add(void)
     evas_object_data_set(win, "entice", entice);
 
     evas_object_event_callback_add(win, EVAS_CALLBACK_DEL, _cb_win_del, entice);
+    evas_object_event_callback_add(win, EVAS_CALLBACK_RESIZE, _cb_win_resize, entice);
 
     evas_object_smart_callback_add(win, "fullscreen", _cb_fullscreen, NULL);
     evas_object_smart_callback_add(win, "unfullscreen", _cb_unfullscreen, NULL);
@@ -216,8 +273,8 @@ entice_win_add(void)
     evas_object_color_set(o, 0, 0, 0, 0);
     evas_object_repeat_events_set(o, EINA_TRUE);
     evas_object_show(o);
-    /* evas_object_event_callback_add(o, EVAS_CALLBACK_MOUSE_DOWN, */
-    /*                                _cb_mouse_down, win); */
+    evas_object_event_callback_add(o, EVAS_CALLBACK_MOUSE_DOWN,
+                                   _cb_mouse_down, win);
     entice->event_mouse = o;
 
     /* dummy button to catch keyboard events */

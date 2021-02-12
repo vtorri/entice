@@ -47,3 +47,9 @@ rotation clockwise|  Ctrl-r
 rotation counter-clockwise | Ctrl-Alt-r
 Original size | Ctrl-0
 Best fit | f
+
+### Mouse
+
+Action | Shortcut
+------ | --------
+fullscreen | double click

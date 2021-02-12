@@ -27,10 +27,17 @@
 #ifndef ENTICE_IMAGE_H
 #define ENTICE_IMAGE_H
 
+typedef enum
+{
+    ENTICE_ZOOM_MODE_NORMAL,
+    ENTICE_ZOOM_MODE_FIT
+} Entice_Zoom_Mode;
+
 typedef struct
 {
     const char *filename;
     Evas_Image_Orient orient;
+    Entice_Zoom_Mode zoom_mode;
 } Entice_Image_Prop;
 
 void entice_image_current_set(Evas_Object *win, Eina_List *image);
