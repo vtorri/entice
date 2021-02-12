@@ -147,12 +147,8 @@ static void
 _cb_mouse_down(void *win, Evas *evas EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info)
 {
     Evas_Event_Mouse_Down *ev;
-    Entice *entice;
-    Entice_Image_Prop *prop;
 
     ev = (Evas_Event_Mouse_Down *)event_info;
-    entice = evas_object_data_get(win, "entice");
-    prop = eina_list_data_get(entice->image_current);
 
     if (ev->button != 1) return;
     if (ev->flags & EVAS_BUTTON_DOUBLE_CLICK)
