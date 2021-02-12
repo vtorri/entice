@@ -110,4 +110,17 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
             entice_image_current_rotate(win, 3);
         }
     }
+
+    /* Alt modifier */
+    if (!ctrl && alt && !shift && !winm && !meta && !hyper)
+    {
+        if (!strcmp(ev->keyname, "Home"))
+        {
+            entice_image_current_set(win, entice->images);
+        }
+        else if (!strcmp(ev->keyname, "End"))
+        {
+            entice_image_current_set(win, eina_list_last(entice->images));
+        }
+    }
 }

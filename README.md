@@ -41,5 +41,7 @@ Quit   | Ctrl-q
 Fullscreen | F11
 Next image | Space
 Previous image|  BackSpace
+First image | Alt-home
+Last image | Alt-end
 rotation clockwise|  Ctrl-r
 rotation counter-clockwise | Ctrl-r
