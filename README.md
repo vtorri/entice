@@ -35,7 +35,11 @@ as well as video frame, pdf and ps pages, raw, svg and xcf formats
 
 ### Shortcuts
 
-- Quit: Ctrl-q
-- Fullscreen: F11
-- Next image: Space
-- Previous image: BackSpace
+Action | Shortcut
+------ | --------
+Quit   | Ctrl-q
+Fullscreen | F11
+Next image | Space
+Previous image|  BackSpace
+rotation clockwise|  Ctrl-r
+rotation counter-clockwise | Ctrl-r
