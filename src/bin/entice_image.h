@@ -27,6 +27,14 @@
 #ifndef ENTICE_IMAGE_H
 #define ENTICE_IMAGE_H
 
+typedef struct
+{
+    const char *filename;
+    Evas_Image_Orient orient;
+} Entice_Image_Prop;
+
 void entice_image_current_set(Evas_Object *win, Eina_List *image);
+
+void entice_image_current_rotate(Evas_Object *win, unsigned int rot);
 
 #endif /* ENTICE_IMAGE_H */

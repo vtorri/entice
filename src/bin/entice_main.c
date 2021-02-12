@@ -119,7 +119,16 @@ _file_list_append(Eina_List *list, const char *path)
             }
         }
         if (!found)
-            list = eina_list_append(list, eina_stringshare_add(path));
+        {
+            Entice_Image_Prop *prop;
+
+            prop = calloc(1, sizeof(Entice_Image_Prop));
+            if (!prop)
+                return list;
+            prop->filename = eina_stringshare_add(path);
+            prop->orient = 0;
+            list = eina_list_append(list, prop);
+        }
     }
 
     return list;
@@ -198,7 +207,7 @@ elm_main(int argc, char **argv)
 
         for (i = args; i < argc; i++)
         {
-            realpath = strdup(argv[i]);
+            realpath = eina_strdup(argv[i]);
             if (!strncasecmp(realpath, "file://", strlen("file://")))
             {
                 Efreet_Uri *uri = efreet_uri_decode(realpath);
@@ -220,11 +229,11 @@ elm_main(int argc, char **argv)
     }
     {
         Eina_List *l;
-        char *data;
+        Entice_Image_Prop *prop;
 
-        EINA_LIST_FOREACH(list, l, data)
+        EINA_LIST_FOREACH(list, l, prop)
         {
-            printf(" ** %s\n", data);
+            printf(" ** %s\n", prop->filename);
         }
     }
 

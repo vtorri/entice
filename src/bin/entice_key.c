@@ -65,7 +65,8 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
         {
             elm_win_fullscreen_set(win, !elm_win_fullscreen_get(win));
         }
-        if (!strcmp(ev->keyname, "space"))
+        else if (!strcmp(ev->keyname, "space") ||
+                 !strcmp(ev->keyname, "Right"))
         {
             Eina_List *next;
 
@@ -75,7 +76,8 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
                 entice_image_current_set(win, next);
             }
         }
-        if (!strcmp(ev->keyname, "BackSpace"))
+        else if (!strcmp(ev->keyname, "BackSpace") ||
+                 !strcmp(ev->keyname, "Left"))
         {
             Eina_List *prev;
 
@@ -93,6 +95,19 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
         if (!strcmp(ev->keyname, "q"))
         {
             evas_object_del(win);
+        }
+        else if (!strcmp(ev->keyname, "r"))
+        {
+            entice_image_current_rotate(win, 1);
+        }
+    }
+
+    /* Control + Shift modifier */
+    if (ctrl && !alt && shift && !winm && !meta && !hyper)
+    {
+        if (!strcmp(ev->keyname, "r"))
+        {
+            entice_image_current_rotate(win, 3);
         }
     }
 }

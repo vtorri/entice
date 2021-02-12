@@ -45,7 +45,10 @@ void
 entice_image_current_set(Evas_Object *win, Eina_List *image)
 {
     Entice *entice;
-    char *filename;
+    Entice_Image_Prop *prop;
+    Evas_Load_Error err;
+    int w;
+    int h;
 
     if (!image)
         return;
@@ -53,17 +56,36 @@ entice_image_current_set(Evas_Object *win, Eina_List *image)
     entice = evas_object_data_get(win, "entice");
     entice->image_current = image;
 
-    filename = eina_list_data_get(entice->image_current);
-    if (filename)
-    {
-        int w;
-        int h;
+    prop = eina_list_data_get(entice->image_current);
+    if (!prop->filename || !*prop->filename)
+        return;
 
-        evas_object_image_file_set(entice->image, filename, NULL);
+    evas_object_image_file_set(entice->image, prop->filename, NULL);
+    err = evas_object_image_load_error_get(entice->image);
+    if (err == EVAS_LOAD_ERROR_NONE)
+    {
         evas_object_image_size_get(entice->image, &w, &h);
         evas_object_image_size_set(entice->image, w,h);
         evas_object_image_fill_set(entice->image, 0, 0, w, h);
         evas_object_resize(entice->image, w, h);
         evas_object_size_hint_min_set(entice->image, w, h);
     }
+    else
+    {
+        ERR("Could not load image '%s' : \"%s\"\n",
+            prop->filename, evas_load_error_str(err));
+    }
+}
+
+void
+entice_image_current_rotate(Evas_Object *win, unsigned int rot)
+{
+    Entice *entice;
+    Entice_Image_Prop *prop;
+
+    entice = evas_object_data_get(win, "entice");
+    prop = eina_list_data_get(entice->image_current);
+    prop->orient += rot;
+    prop->orient = prop->orient & 3;
+    evas_object_image_orient_set(entice->image, prop->orient);
 }
