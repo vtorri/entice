@@ -70,8 +70,8 @@ _entice_config_new(void)
         return NULL;
 
     config->theme = eina_stringshare_add("default.edj");
-    config->cg_width = 480;
-    config->cg_height = 640;
+    config->cg_width = 960;
+    config->cg_height = 540;
     config->custom_geometry = EINA_FALSE;
     config->disable_visual_bell = EINA_FALSE;
     config->bell_rings = EINA_TRUE;

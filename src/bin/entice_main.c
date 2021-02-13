@@ -161,6 +161,7 @@ EAPI_MAIN int
 elm_main(int argc, char **argv)
 {
     Evas_Object *win;
+    Entice_Config *cfg;;
     Eina_List *list;
     Eina_Bool fullscreen = EINA_FALSE;
     Eina_Bool quit_option = EINA_FALSE;
@@ -174,6 +175,8 @@ elm_main(int argc, char **argv)
 
         ECORE_GETOPT_VALUE_NONE
     };
+    int win_w;
+    int win_h;
     int args;
 
     elm_need_efreet();
@@ -264,9 +267,20 @@ elm_main(int argc, char **argv)
         ERR(_("could not create main window."));
         goto shutdown_config;
     }
+
+    win_w = 960;
+    win_h = 540;
+    cfg = entice_config_load("config");
+    if (cfg)
+    {
+        win_w = cfg->cg_width;
+        win_h = cfg->cg_height;
+        entice_config_del(cfg);
+    }
+
     evas_object_resize(win,
-                       562 * elm_config_scale_get(),
-                       800 * elm_config_scale_get());
+                       win_w * elm_config_scale_get(),
+                       win_h * elm_config_scale_get());
 
     evas_object_show(win);
 
