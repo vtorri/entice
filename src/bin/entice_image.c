@@ -60,6 +60,7 @@ entice_image_current_set(Evas_Object *win, Eina_List *image)
     if (!prop->filename || !*prop->filename)
         return;
 
+    evas_object_image_load_orientation_set(entice->image, EINA_TRUE);
     evas_object_image_file_set(entice->image, prop->filename, NULL);
     err = evas_object_image_load_error_get(entice->image);
     if (err == EVAS_LOAD_ERROR_NONE)
