@@ -47,8 +47,6 @@ entice_image_current_set(Evas_Object *win, Eina_List *image)
     Entice *entice;
     Entice_Image_Prop *prop;
     Evas_Load_Error err;
-    int w;
-    int h;
 
     if (!image)
         return;
@@ -65,12 +63,23 @@ entice_image_current_set(Evas_Object *win, Eina_List *image)
     err = evas_object_image_load_error_get(entice->image);
     if (err == EVAS_LOAD_ERROR_NONE)
     {
+        int win_w;
+        int win_h;
+        int w;
+        int h;
+
         evas_object_image_size_get(entice->image, &w, &h);
-        evas_object_image_size_set(entice->image, w,h);
-        evas_object_image_fill_set(entice->image, 0, 0, w, h);
-        evas_object_resize(entice->image, w, h);
-        evas_object_size_hint_max_set(entice->image, w, h);
-        evas_object_size_hint_min_set(entice->image, w, h);
+        evas_object_geometry_get(win, NULL, NULL, &win_w, &win_h);
+        if ((win_w < w) || (win_h < h))
+            entice_image_current_zoom_fit(win);
+        else
+        {
+            evas_object_image_size_set(entice->image, w,h);
+            evas_object_image_fill_set(entice->image, 0, 0, w, h);
+            evas_object_resize(entice->image, w, h);
+            evas_object_size_hint_max_set(entice->image, w, h);
+            evas_object_size_hint_min_set(entice->image, w, h);
+        }
     }
     else
     {
