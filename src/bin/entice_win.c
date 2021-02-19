@@ -30,6 +30,7 @@
 
 #include "entice_private.h"
 #include "entice_config.h"
+#include "entice_controls.h"
 #include "entice_theme.h"
 #include "entice_image.h"
 #include "entice_key.h"
@@ -39,9 +40,8 @@
  *                                  Local                                     *
  *============================================================================*/
 
-
 static void
-_cb_mouse_down(void *data, Evas *evas EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info);
+_cb_mouse_down(void *data, Evas *evas_UNUSED, Evas_Object *obj_UNUSED, void *event_info);
 
 static void
 _cb_key_down(void *data,
@@ -63,6 +63,7 @@ _cb_win_del(void *data EINA_UNUSED,
     Entice *entice;
 
     entice = evas_object_data_get(win, "entice");
+
     /* FIXME: free images */
     evas_object_data_del(win, "entice");
 
@@ -250,11 +251,12 @@ entice_win_add(void)
         _cb_win_del(NULL, NULL, win, NULL);
         return NULL;
     }
+    entice_controls_init(win);
 
     /* image */
     o = evas_object_image_add(evas_object_evas_get(win));
     evas_object_image_filled_set(o, EINA_TRUE);
-    elm_object_part_content_set(entice->layout, "part.canvas",
+    elm_object_part_content_set(entice->layout, "entice.image",
                                 entice->scroller);
     elm_table_pack(entice->table, o, 0, 0, 1, 1);
     evas_object_show(o);

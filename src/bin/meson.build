@@ -1,5 +1,6 @@
 entice_bin_src = [
   'entice_config.c',
+  'entice_controls.c',
   'entice_image.c',
   'entice_key.c',
   'entice_main.c',

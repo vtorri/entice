@@ -63,13 +63,116 @@ collections
       // IMAGE
       part
       {
-        name: "part.canvas";
+        name: "entice.image";
         type: SWALLOW;
         description
         {
           state: "default" 0.0;
           visible: 1;
         }
+      }
+
+      // CONTROLS
+      // Previous icon
+      part
+      {
+        name: "entice.go.prev";
+        type: SWALLOW;
+        description
+        {
+          state: "default" 0.0;
+          visible: 0;
+          rel.to: "entice.image";
+          rel1.relative: 0.0 0.5;
+          rel1.offset: 0 -16;
+          rel2.relative: 0.0 0.5;
+          rel2.offset: 32 15;
+          min: 32 32;
+          max: 32 32;
+        }
+        description
+        {
+          state: "shown" 0.0;
+          visible: 1;
+          rel.to: "entice.image";
+          rel1.relative: 0.0 0.5;
+          rel1.offset: 0 -16;
+          rel2.relative: 0.0 0.5;
+          rel2.offset: 32 15;
+          min: 32 32;
+          max: 32 32;
+        }
+      }
+      program
+      {
+        signal: "state,prev,show";
+        source: "entice";
+        action: STATE_SET "shown" 0.0;
+        target: "entice.go.prev";
+      }
+      program
+      {
+        signal: "state,prev,hide";
+        source: "entice";
+        action: STATE_SET "default" 0.0;
+        target: "entice.go.prev";
+      }
+      program
+      {
+        signal: "mouse,clicked,1";
+        source: "entice.go.prev";
+        action: SIGNAL_EMIT "image,action,prev" "entice";
+      }
+
+      // Next icon
+      part
+      {
+        name: "entice.go.next";
+        type: SWALLOW;
+        description
+        {
+          state: "default" 0.0;
+          visible: 0;
+          //rel.to: "entice.image";
+          rel1.relative: 1.0 0.5;
+          rel1.offset: -16 -16;
+          rel2.relative: 1.0 0.5;
+          rel2.offset: -16 15;
+          min: 32 32;
+          max: 32 32;
+        }
+        description
+        {
+          state: "shown" 0.0;
+          visible: 1;
+          //rel.to: "entice.image";
+          rel1.relative: 1.0 0.5;
+          rel1.offset: -16 -16;
+          rel2.relative: 1.0 0.5;
+          rel2.offset: -16 15;
+          min: 32 32;
+          max: 32 32;
+        }
+      }
+      program
+      {
+        signal: "state,next,show";
+        source: "entice";
+        action: STATE_SET "shown" 0.0;
+        target: "entice.go.next";
+      }
+      program
+      {
+        signal: "state,next,hide";
+        source: "entice";
+        action: STATE_SET "default" 0.0;
+        target: "entice.go.next";
+      }
+      program
+      {
+        signal: "mouse,clicked,1";
+        source: "entice.go.next";
+        action: SIGNAL_EMIT "image,action,next" "entice";
       }
     }
   }

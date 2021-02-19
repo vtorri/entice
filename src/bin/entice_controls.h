@@ -24,41 +24,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef ENTICE_WIN_H
-#define ENTICE_WIN_H
+#ifndef ENTICE_CONTROLS_H
+#define ENTICE_CONTROLS_H
 
-typedef struct Entice Entice;
+void entice_controls_init(Evas_Object *win);
 
-struct Entice
-{
-    /* window content */
-    Evas_Object *conform;
-    Evas_Object *scroller;
-    Evas_Object *table;
-    Evas_Object *layout;
-    Evas_Object *image;
-    Evas_Object *event_mouse;
-    Evas_Object *event_kbd;
-    Eina_Bool focused;
-
-    /* list of opened images */
-    Eina_List *images;
-    /* current displayed image */
-    Eina_List *image_current;
-
-    /* gui */
-    Evas_Object *prev;      /* previous image */
-    Evas_Object *next;      /* next image */
-    Evas_Object *rot_left;  /* rotate left (counter clock) */
-    Evas_Object *rot_right; /* rotate right (clock) */
-
-    /* theme */
-    Entice_Config *config;
-    char *theme_file;
-};
-
-Evas_Object *entice_win_add(void);
-
-void entice_win_images_set(Evas_Object *win, Eina_List *images);
-
-#endif /* ENTICE_WIN_H */
+#endif /* ENTICE_CONTROLS_H */
