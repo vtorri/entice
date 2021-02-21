@@ -270,7 +270,7 @@ elm_main(int argc, char **argv)
 
     win_w = 960;
     win_h = 540;
-    cfg = entice_config_load("config");
+    cfg = entice_config_load();
     if (cfg)
     {
         win_w = cfg->cg_width;

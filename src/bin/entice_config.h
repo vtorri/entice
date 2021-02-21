@@ -48,18 +48,15 @@ struct Entice_Config_
     int         cg_width;
     int         cg_height;
     Eina_Bool   custom_geometry;
-    Eina_Bool   disable_visual_bell;
-    Eina_Bool   bell_rings;
+    Eina_Bool   fullscreen_startup;
     Eina_List  *keys;
-
-    const char *config_key;
 };
 
 void entice_config_init(void);
 void entice_config_shutdown(void);
-Entice_Config *entice_config_load(const char *key);
+Entice_Config *entice_config_load(void);
 void entice_config_del(Entice_Config *config);
-void entice_config_save(Entice_Config *config, const char *key);
+void entice_config_save(Entice_Config *config);
 
 const char *entice_config_theme_path_get(const Entice_Config *config);
 const char *entice_config_theme_path_default_get(const Entice_Config *config);

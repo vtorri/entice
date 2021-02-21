@@ -176,7 +176,7 @@ entice_win_add(void)
         return NULL;
     }
 
-    entice->config = entice_config_load("config");
+    entice->config = entice_config_load();
     if (!entice->config)
     {
         ERR(_("could not load \"config\" configuration."));

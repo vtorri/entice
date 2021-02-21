@@ -35,6 +35,8 @@
  *                                  Local                                     *
  *============================================================================*/
 
+#define CONFIG_KEY "config"
+
 #define ENTICE_CONFIG_EDD_KEY_ADD(_s, _m, _t) \
     EET_DATA_DESCRIPTOR_ADD_BASIC(edd_keys, Entice_Config_Keys, _s, _m, _t)
 
@@ -73,8 +75,7 @@ _entice_config_new(void)
     config->cg_width = 960;
     config->cg_height = 540;
     config->custom_geometry = EINA_FALSE;
-    config->disable_visual_bell = EINA_FALSE;
-    config->bell_rings = EINA_TRUE;
+    config->fullscreen_startup = EINA_FALSE;
     _entice_default_keys_add(config);
 
     return config;
@@ -132,8 +133,7 @@ entice_config_init(void)
     EET_DATA_DESCRIPTOR_ADD_BASIC(edd_base, Entice_Config, "cg_width", cg_width, EET_T_INT);
     EET_DATA_DESCRIPTOR_ADD_BASIC(edd_base, Entice_Config, "cg_height", cg_height, EET_T_INT);
     EET_DATA_DESCRIPTOR_ADD_BASIC(edd_base, Entice_Config, "custom_geometry", custom_geometry, EET_T_UCHAR);
-    EET_DATA_DESCRIPTOR_ADD_BASIC(edd_base, Entice_Config, "disable_visual_bell", disable_visual_bell, EET_T_UCHAR);
-    EET_DATA_DESCRIPTOR_ADD_BASIC(edd_base, Entice_Config, "bell_rings", bell_rings, EET_T_UCHAR);
+    EET_DATA_DESCRIPTOR_ADD_BASIC(edd_base, Entice_Config, "fullscreen_startup", fullscreen_startup, EET_T_UCHAR);
     EET_DATA_DESCRIPTOR_ADD_LIST(edd_base, Entice_Config, "keys", keys, edd_keys);
 }
 
@@ -145,13 +145,11 @@ entice_config_shutdown(void)
 }
 
 Entice_Config *
-entice_config_load(const char *key)
+entice_config_load(void)
 {
     char buf[PATH_MAX];
     Eet_File *ef;
     Entice_Config *config = NULL;
-
-    EINA_SAFETY_ON_NULL_RETURN_VAL(key, NULL);
 
     snprintf(buf, sizeof(buf), "%s/.entice/config/base.cfg",
              eina_environment_home_get());
@@ -159,7 +157,7 @@ entice_config_load(const char *key)
     ef = eet_open(buf, EET_FILE_MODE_READ);
     if (ef)
     {
-        config = eet_data_read(ef, edd_base, key);
+        config = eet_data_read(ef, edd_base, CONFIG_KEY);
         eet_close(ef);
         if (eina_list_count(config->keys) == 0)
         {
@@ -169,9 +167,6 @@ entice_config_load(const char *key)
 
     if (!config)
         config = _entice_config_new();
-
-    if (config)
-        config->config_key = eina_stringshare_add(key); /* not in eet */
 
     return config;
 }
@@ -193,12 +188,11 @@ entice_config_del(Entice_Config *config)
         free(key);
      }
 
-    eina_stringshare_del(config->config_key);
     free(config);
 }
 
 void
-entice_config_save(Entice_Config *config, const char *key)
+entice_config_save(Entice_Config *config)
 {
     char buf[PATH_MAX];
     char buf2[PATH_MAX];
@@ -206,7 +200,6 @@ entice_config_save(Entice_Config *config, const char *key)
 
     EINA_SAFETY_ON_NULL_RETURN(config);
 
-    if (!key) key = config->config_key;
     snprintf(buf, sizeof(buf), "%s/.entice/config",
              eina_environment_home_get());
     ecore_file_mkpath(buf);
@@ -219,7 +212,7 @@ entice_config_save(Entice_Config *config, const char *key)
     {
         int ok;
 
-        ok = eet_data_write(ef, edd_base, key, config, 1);
+        ok = eet_data_write(ef, edd_base, CONFIG_KEY, config, 1);
         eet_close(ef);
         if (ok) ecore_file_mv(buf, buf2);
     }
