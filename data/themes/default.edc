@@ -276,6 +276,47 @@ collections
         source: "entice.rotate.right";
         action: SIGNAL_EMIT "image,action,rotright" "entice";
       }
+
+      // SETTINGS
+      part
+      {
+        name: "entice.settings";
+        type: SWALLOW;
+        description
+        {
+          state: "default" 0.0;
+          fixed: 1 1;
+          visible: 0;
+          rel1.relative: 0.1 0.02;
+          rel1.offset: 8 8;
+          rel2.relative: 0.9 0.98;
+          rel2.offset: -9 -9;
+        }
+        description
+        {
+          state: "shown" 0.0;
+          fixed: 1 1;
+          visible: 1;
+          rel1.relative: 0.1 0.02;
+          rel1.offset: 8 8;
+          rel2.relative: 0.9 0.98;
+          rel2.offset: -9 -9;
+        }
+      }
+      program
+      {
+        signal: "state,settings,show";
+        source: "entice";
+        action: STATE_SET "shown" 0.0;
+        target: "entice.settings";
+      }
+      program
+      {
+        signal: "state,settings,hide";
+        source: "entice";
+        action: STATE_SET "default" 0.0;
+        target: "entice.settings";
+      }
     }
   }
 }

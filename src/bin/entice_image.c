@@ -30,8 +30,8 @@
 
 #include "entice_private.h"
 #include "entice_config.h"
-#include "entice_win.h"
 #include "entice_image.h"
+#include "entice_win.h"
 
 /*============================================================================*
  *                                  Local                                     *
@@ -49,8 +49,6 @@ entice_image_current_set(Evas_Object *win, Eina_List *image)
     Evas_Load_Error err;
     int win_w;
     int win_h;
-    int w;
-    int h;
 
     if (!image)
         return;
@@ -72,17 +70,17 @@ entice_image_current_set(Evas_Object *win, Eina_List *image)
         return;
     }
 
-    evas_object_image_size_get(entice->image, &w, &h);
+    evas_object_image_size_get(entice->image, &prop->width, &prop->height);
     evas_object_geometry_get(win, NULL, NULL, &win_w, &win_h);
-    if ((win_w < w) || (win_h < h))
+    if ((win_w < prop->width) || (win_h < prop->height))
         entice_image_current_zoom_fit(win);
     else
     {
-        evas_object_image_size_set(entice->image, w,h);
-        evas_object_image_fill_set(entice->image, 0, 0, w, h);
-        evas_object_resize(entice->image, w, h);
-        evas_object_size_hint_max_set(entice->image, w, h);
-        evas_object_size_hint_min_set(entice->image, w, h);
+        evas_object_image_size_set(entice->image, prop->width, prop->height);
+        evas_object_image_fill_set(entice->image, 0, 0, prop->width, prop->height);
+        evas_object_resize(entice->image, prop->width, prop->height);
+        evas_object_size_hint_max_set(entice->image, prop->width, prop->height);
+        evas_object_size_hint_min_set(entice->image, prop->width, prop->height);
     }
 
     if (eina_list_prev(entice->image_current))
@@ -94,6 +92,8 @@ entice_image_current_set(Evas_Object *win, Eina_List *image)
         elm_object_signal_emit(entice->layout, "state,next,show", "entice");
     else
         elm_object_signal_emit(entice->layout, "state,next,hide", "entice");
+
+    entice_win_title_update(win, prop);
 }
 
 void
@@ -114,8 +114,6 @@ entice_image_current_zoom(Evas_Object *win, double zoom)
 {
     Entice *entice;
     Entice_Image_Prop *prop;
-    int ow;
-    int oh;
     int ox;
     int oy;
     int w;
@@ -125,17 +123,16 @@ entice_image_current_zoom(Evas_Object *win, double zoom)
 
     entice = evas_object_data_get(win, "entice");
     prop = eina_list_data_get(entice->image_current);
-    evas_object_image_size_get(entice->image, &ow, &oh);
     evas_object_geometry_get(win, &x, &y, &w, &h);
 
     if (zoom == 1.0)
     {
-        ox = ((w -ow) / 2.0) + (double)x + 0.5;
-        oy = ((h -oh) / 2.0) + (double)y + 0.5;
+        ox = ((w - prop->width) / 2.0) + (double)x + 0.5;
+        oy = ((h - prop->height) / 2.0) + (double)y + 0.5;
         evas_object_move(entice->image, ox, oy);
-        evas_object_resize(entice->image, ow, oh);
-        evas_object_size_hint_max_set(entice->image, ow, oh);
-        evas_object_size_hint_min_set(entice->image, ow, oh);
+        evas_object_resize(entice->image, prop->width, prop->height);
+        evas_object_size_hint_max_set(entice->image, prop->width, prop->height);
+        evas_object_size_hint_min_set(entice->image, prop->width, prop->height);
     }
     else
     {
@@ -159,7 +156,8 @@ entice_image_current_zoom_fit(Evas_Object *win)
 
     entice = evas_object_data_get(win, "entice");
     prop = eina_list_data_get(entice->image_current);
-    evas_object_image_size_get(entice->image, &ow, &oh);
+    ow = prop->width;
+    oh = prop->height;
     evas_object_geometry_get(win, &x, &y, &w, &h);
 
     if ((w * oh) > (ow * h))

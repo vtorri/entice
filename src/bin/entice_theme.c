@@ -30,6 +30,7 @@
 
 #include "entice_private.h"
 #include "entice_config.h"
+#include "entice_image.h"
 #include "entice_win.h"
 #include "entice_theme.h"
 

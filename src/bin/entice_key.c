@@ -30,6 +30,7 @@
 
 #include "entice_config.h"
 #include "entice_image.h"
+#include "entice_settings.h"
 #include "entice_win.h"
 #include "entice_key.h"
 
@@ -90,6 +91,20 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
         else if (!strcmp(ev->keyname, "f"))
         {
             entice_image_current_zoom_fit(win);
+        }
+        else if (!strcmp(ev->keyname, "s"))
+        {
+            entice_settings_init(win);
+            if (entice->settings_shown)
+            {
+                elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
+                entice->settings_shown = EINA_FALSE;
+            }
+            else
+            {
+                elm_object_signal_emit(entice->layout, "state,settings,show", "entice");
+                entice->settings_shown = EINA_TRUE;
+            }
         }
     }
 

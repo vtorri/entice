@@ -4,6 +4,7 @@ entice_bin_src = [
   'entice_image.c',
   'entice_key.c',
   'entice_main.c',
+  'entice_settings.c',
   'entice_theme.c',
   'entice_win.c'
 ]

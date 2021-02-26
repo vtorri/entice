@@ -38,6 +38,8 @@ typedef struct
     const char *filename;
     Evas_Image_Orient orient;
     Entice_Zoom_Mode zoom_mode;
+    int width;
+    int height;
 } Entice_Image_Prop;
 
 void entice_image_current_set(Evas_Object *win, Eina_List *image);

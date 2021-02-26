@@ -51,6 +51,8 @@ struct Entice
     Evas_Object *next;      /* next image */
     Evas_Object *rot_left;  /* rotate left (counter clock) */
     Evas_Object *rot_right; /* rotate right (clock) */
+    Eina_Bool settings_created;
+    Eina_Bool settings_shown;
 
     /* theme */
     Entice_Config *config;
@@ -58,6 +60,8 @@ struct Entice
 };
 
 Evas_Object *entice_win_add(void);
+
+void entice_win_title_update(Evas_Object *win, Entice_Image_Prop *prop);
 
 void entice_win_images_set(Evas_Object *win, Eina_List *images);
 
