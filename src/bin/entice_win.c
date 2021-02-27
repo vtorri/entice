@@ -33,6 +33,7 @@
 #include "entice_controls.h"
 #include "entice_theme.h"
 #include "entice_image.h"
+#include "entice_settings.h"
 #include "entice_key.h"
 #include "entice_win.h"
 
@@ -147,9 +148,26 @@ _cb_unfocused(void *data EINA_UNUSED, Evas_Object *win, void *event EINA_UNUSED)
 static void
 _cb_mouse_down(void *win, Evas *evas EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info)
 {
+    Entice *entice;
     Evas_Event_Mouse_Down *ev;
 
     ev = (Evas_Event_Mouse_Down *)event_info;
+    entice = evas_object_data_get(win, "entice");
+
+    if (ev->button == 3)
+    {
+        entice_settings_init(win);
+        if (!entice->settings_shown)
+        {
+            elm_object_signal_emit(entice->layout, "state,settings,show", "entice");
+            entice->settings_shown = EINA_TRUE;
+        }
+        else
+        {
+            elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
+            entice->settings_shown = EINA_FALSE;
+        }
+    }
 
     if (ev->button != 1) return;
     if (ev->flags & EVAS_BUTTON_DOUBLE_CLICK)

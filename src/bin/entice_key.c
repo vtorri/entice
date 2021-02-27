@@ -59,8 +59,6 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
 
     entice = evas_object_data_get(win, "entice");
 
-    fprintf(stderr, " * %s\n", ev->key);
-    fflush(stderr);
     /* No modifier */
     if (!ctrl && !alt && !shift && !winm && !meta && !hyper)
     {
