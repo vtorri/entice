@@ -59,6 +59,8 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
 
     entice = evas_object_data_get(win, "entice");
 
+    fprintf(stderr, " * %s\n", ev->key);
+    fflush(stderr);
     /* No modifier */
     if (!ctrl && !alt && !shift && !winm && !meta && !hyper)
     {
@@ -95,15 +97,20 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
         else if (!strcmp(ev->keyname, "s"))
         {
             entice_settings_init(win);
+            if (!entice->settings_shown)
+            {
+                elm_object_signal_emit(entice->layout, "state,settings,show", "entice");
+                entice->settings_shown = EINA_TRUE;
+            }
+        }
+        else if (!strcmp(ev->key, "Escape"))
+        {
+            fprintf(stderr, "Esc !!!!\n");
+            fflush(stderr);
             if (entice->settings_shown)
             {
                 elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
                 entice->settings_shown = EINA_FALSE;
-            }
-            else
-            {
-                elm_object_signal_emit(entice->layout, "state,settings,show", "entice");
-                entice->settings_shown = EINA_TRUE;
             }
         }
     }

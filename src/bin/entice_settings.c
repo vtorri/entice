@@ -61,7 +61,6 @@ _cb_op_##_cfg_name(void *data, Evas_Object *obj,                \
      config->_cfg_name = elm_check_state_get(obj);              \
    entice_config_save(config);                                  \
                                                                 \
-   elm_object_focus_set(ctx->entice->event_kbd, EINA_TRUE);     \
 }
 
 #define SETTINGS_CX(_lbl, _cfg_name, _inv)                                \
@@ -108,8 +107,6 @@ _cb_op_custom_geometry(void *data,
    elm_object_disabled_set(ctx->op_w, !config->custom_geometry);
    elm_object_disabled_set(ctx->op_h, !config->custom_geometry);
    elm_object_disabled_set(ctx->op_wh_current, !config->custom_geometry);
-
-   elm_object_focus_set(ctx->entice->event_kbd, EINA_TRUE);
 }
 
 static void
@@ -126,8 +123,6 @@ _cb_op_behavior_custom_geometry_current_set(void *data,
         elm_spinner_value_set(ctx->op_h, config->cg_height);
      }
    entice_config_save(config);
-
-   elm_object_focus_set(ctx->entice->event_kbd, EINA_TRUE);
 }
 
 static void
@@ -143,8 +138,6 @@ _cb_op_behavior_cg_width(void *data,
         config->cg_width = (int) elm_spinner_value_get(obj);
         entice_config_save(config);
      }
-
-   elm_object_focus_set(ctx->entice->event_kbd, EINA_TRUE);
 }
 
 static void
@@ -160,8 +153,6 @@ _cb_op_behavior_cg_height(void *data,
         config->cg_height = (int) elm_spinner_value_get(obj);
         entice_config_save(config);
      }
-
-   elm_object_focus_set(ctx->entice->event_kbd, EINA_TRUE);
 }
 
 OPTIONS_CB(fullscreen_startup, 0);
@@ -199,6 +190,10 @@ entice_settings_init(Evas_Object *win)
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
     elm_object_text_set(o, "Settings");
+    if (!evas_object_key_grab(o, "Escape", 0, 0, EINA_TRUE))
+    {
+        ERR("Can not grab the 'Esc' key");
+    }
     evas_object_show(o);
     frame = o;
 

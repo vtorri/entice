@@ -49,7 +49,6 @@ _cb_image_prev(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EIN
     {
         entice_image_current_set(win, next);
     }
-    elm_object_focus_set(entice->event_kbd, EINA_TRUE);
 }
 
 static void
@@ -64,7 +63,6 @@ _cb_image_next(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EIN
     {
         entice_image_current_set(win, next);
     }
-    elm_object_focus_set(entice->event_kbd, EINA_TRUE);
 }
 
 static void
@@ -74,7 +72,6 @@ _cb_image_rot_left(void *win, Evas_Object *obj EINA_UNUSED, const char *emission
 
     entice = evas_object_data_get(win, "entice");
     entice_image_current_rotate(win, 3);
-    elm_object_focus_set(entice->event_kbd, EINA_TRUE);
 }
 
 static void
@@ -84,7 +81,6 @@ _cb_image_rot_right(void *win, Evas_Object *obj EINA_UNUSED, const char *emissio
 
     entice = evas_object_data_get(win, "entice");
     entice_image_current_rotate(win, 1);
-    elm_object_focus_set(entice->event_kbd, EINA_TRUE);
 }
 
 /*============================================================================*
