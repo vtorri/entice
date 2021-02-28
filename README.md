@@ -47,9 +47,13 @@ rotation clockwise|  Ctrl-r
 rotation counter-clockwise | Ctrl-Alt-r
 Original size | Ctrl-0
 Best fit | f
+Open Settings | s
+Exit Settings | Esc
 
 ### Mouse
 
 Action | Shortcut
 ------ | --------
 fullscreen | double click
+Open Settings | right click
+Exit Settings | right click
