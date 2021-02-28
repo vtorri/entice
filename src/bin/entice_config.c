@@ -88,11 +88,11 @@ _entice_config_theme_path_get(const char *name)
     static char path2[PATH_MAX];
     struct stat s;
 
-    snprintf(path2, sizeof(path2) - 1, "%s/.entice/themes/%s",
+    snprintf(path2, sizeof(path2) - 1, "%s/.config/entice/themes/%s",
              eina_environment_home_get(), name);
     if (stat(path2, &s) == 0)
         return path2;
-    snprintf(path1, sizeof(path1) - 1, "%s/entice/themes/%s",
+    snprintf(path1, sizeof(path1) - 1, "%s/config/entice/themes/%s",
              elm_app_data_dir_get(), name);
     return path1;
 }
@@ -108,7 +108,7 @@ entice_config_init(void)
     Eet_Data_Descriptor_Class eddc;
     Eet_Data_Descriptor_Class eddkc;
 
-    snprintf(path, sizeof(path), "%s/.entice/themes",
+    snprintf(path, sizeof(path), "%s/.config/entice/themes",
              eina_environment_home_get());
     ecore_file_mkpath(path);
 
@@ -151,7 +151,7 @@ entice_config_load(void)
     Eet_File *ef;
     Entice_Config *config = NULL;
 
-    snprintf(buf, sizeof(buf), "%s/.entice/config/base.cfg",
+    snprintf(buf, sizeof(buf), "%s/.config/entice/config/base.cfg",
              eina_environment_home_get());
     buf[sizeof(buf) - 1] = '\0';
     ef = eet_open(buf, EET_FILE_MODE_READ);
@@ -200,12 +200,12 @@ entice_config_save(Entice_Config *config)
 
     EINA_SAFETY_ON_NULL_RETURN(config);
 
-    snprintf(buf, sizeof(buf), "%s/.entice/config",
+    snprintf(buf, sizeof(buf), "%s/.config/entice/config",
              eina_environment_home_get());
     ecore_file_mkpath(buf);
-    snprintf(buf, sizeof(buf), "%s/.entice/config/base.cfg.tmp",
+    snprintf(buf, sizeof(buf), "%s/.config/entice/config/base.cfg.tmp",
              eina_environment_home_get());
-    snprintf(buf2, sizeof(buf2), "%s/.entice/config/base.cfg",
+    snprintf(buf2, sizeof(buf2), "%s/.config/entice/config/base.cfg",
              eina_environment_home_get());
     ef = eet_open(buf, EET_FILE_MODE_WRITE);
     if (ef)
@@ -241,7 +241,7 @@ entice_config_theme_path_default_get(const Entice_Config *config)
    *path = '\0';
    if (path[0]) return path;
 
-   snprintf(path, sizeof(path), "%s/entice/themes/default.edj",
+   snprintf(path, sizeof(path), "%s/config/entice/themes/default.edj",
             elm_app_data_dir_get());
 
    return path;
