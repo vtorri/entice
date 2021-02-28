@@ -312,7 +312,7 @@ void
 entice_win_title_update(Evas_Object *win, Entice_Image_Prop *prop)
 {
     char buf[1024];
-     const char *bn; /* basename */
+    const char *bn; /* basename */
     const char *bn2; /* basename */
 
     bn = strrchr(prop->filename, '/');
