@@ -102,6 +102,7 @@ entice_controls_init(Evas_Object *win)
 
     o = elm_button_add(win);
     elm_object_content_set(o, entice->prev);
+    elm_object_focus_allow_set(o, EINA_FALSE);
     evas_object_show(o);
     elm_object_part_content_set(entice->layout, "entice.go.prev", o);
 
@@ -112,6 +113,7 @@ entice_controls_init(Evas_Object *win)
 
     o = elm_button_add(win);
     elm_object_content_set(o, entice->next);
+    elm_object_focus_allow_set(o, EINA_FALSE);
     evas_object_show(o);
     elm_object_part_content_set(entice->layout, "entice.go.next", o);
 
@@ -122,6 +124,7 @@ entice_controls_init(Evas_Object *win)
 
     o = elm_button_add(win);
     elm_object_content_set(o, entice->rot_left);
+    elm_object_focus_allow_set(o, EINA_FALSE);
     evas_object_show(o);
     elm_object_part_content_set(entice->layout, "entice.rotate.left", o);
 
@@ -132,6 +135,7 @@ entice_controls_init(Evas_Object *win)
 
     o = elm_button_add(win);
     elm_object_content_set(o, entice->rot_right);
+    elm_object_focus_allow_set(o, EINA_FALSE);
     evas_object_show(o);
     elm_object_part_content_set(entice->layout, "entice.rotate.right", o);
 
