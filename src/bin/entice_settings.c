@@ -46,7 +46,57 @@ typedef struct
      Evas_Object *op_wh_current;
 } Settings_Ctx;
 
+static Eina_Bool
+_cb_set_focus(void *win)
+{
+    Entice *entice = evas_object_data_get(win, "entice");
 
+    entice->settings_timer = NULL;
+    elm_object_focus_set(entice->event_kbd, EINA_TRUE);
+    return EINA_FALSE;
+}
+
+static void
+_cb_key_down(void *win,
+             Evas *evas EINA_UNUSED,
+             Evas_Object *obj EINA_UNUSED,
+             void *event_info)
+{
+    Entice *entice;
+    Evas_Event_Key_Down *ev;
+    Eina_Bool ctrl, alt, shift, winm, meta, hyper; /* modifiers */
+
+    EINA_SAFETY_ON_NULL_RETURN(event_info);
+
+    ev = (Evas_Event_Key_Down *)event_info;
+
+    ctrl = evas_key_modifier_is_set(ev->modifiers, "Control");
+    alt = evas_key_modifier_is_set(ev->modifiers, "Alt");
+    shift = evas_key_modifier_is_set(ev->modifiers, "Shift");
+    winm = evas_key_modifier_is_set(ev->modifiers, "Super");
+    meta =
+        evas_key_modifier_is_set(ev->modifiers, "Meta") ||
+        evas_key_modifier_is_set(ev->modifiers, "AltGr") ||
+        evas_key_modifier_is_set(ev->modifiers, "ISO_Level3_Shift");
+    hyper = evas_key_modifier_is_set(ev->modifiers, "Hyper");
+
+    entice = evas_object_data_get(win, "entice");
+
+    /* No modifier */
+    if (!ctrl && !alt && !shift && !winm && !meta && !hyper)
+    {
+        if (!strcmp(ev->key, "Escape"))
+        {
+            if (entice->settings_shown)
+            {
+                elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
+                entice->settings_shown = EINA_FALSE;
+            }
+        }
+    }
+
+    entice->settings_timer = ecore_timer_add(0.1, _cb_set_focus, win);
+}
 
 #define OPTIONS_CB(_cfg_name, _inv)                             \
 static void                                                     \
@@ -196,8 +246,10 @@ entice_settings_init(Evas_Object *win)
     }
     evas_object_show(o);
     frame = o;
+    evas_object_event_callback_add(frame, EVAS_CALLBACK_KEY_DOWN,
+                                   _cb_key_down, win);
 
-    o = elm_scroller_add(win);
+    o = elm_scroller_add(frame);
     elm_scroller_content_min_limit(o, EINA_TRUE, EINA_FALSE);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
@@ -205,7 +257,7 @@ entice_settings_init(Evas_Object *win)
     evas_object_show(o);
     scroller = o;
 
-    o = elm_box_add(win);
+    o = elm_box_add(scroller);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, 0.0);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, 0.0);
     elm_object_content_set(scroller, o);
@@ -214,7 +266,7 @@ entice_settings_init(Evas_Object *win)
 
     SETTINGS_CX("Always open at size", custom_geometry, 0);
 
-    o = elm_button_add(win);
+    o = elm_button_add(box);
     evas_object_size_hint_weight_set(o, 0.0, 0.0);
     evas_object_size_hint_align_set(o, 0.0, 0.5);
     elm_object_text_set(o, "Set Current:");
@@ -226,14 +278,14 @@ entice_settings_init(Evas_Object *win)
                                    _cb_op_behavior_custom_geometry_current_set,
                                    ctx);
 
-    o = elm_label_add(win);
+    o = elm_label_add(box);
     evas_object_size_hint_weight_set(o, 0.0, 0.0);
     evas_object_size_hint_align_set(o, 0.0, 0.5);
     elm_object_text_set(o, "Width:");
     elm_box_pack_end(box, o);
     evas_object_show(o);
 
-    o = elm_spinner_add(win);
+    o = elm_spinner_add(box);
     elm_spinner_editable_set(o, EINA_TRUE);
     elm_spinner_min_max_set(o, 2.0, 960.0);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, 0.0);
@@ -249,14 +301,14 @@ entice_settings_init(Evas_Object *win)
     evas_object_smart_callback_add(o, "changed",
                                    _cb_op_behavior_cg_width, ctx);
 
-    o = elm_label_add(win);
+    o = elm_label_add(box);
     evas_object_size_hint_weight_set(o, 0.0, 0.0);
     evas_object_size_hint_align_set(o, 0.0, 0.5);
     elm_object_text_set(o, "Height:");
     elm_box_pack_end(box, o);
     evas_object_show(o);
 
-    o = elm_spinner_add(win);
+    o = elm_spinner_add(box);
     elm_spinner_editable_set(o, EINA_TRUE);
     elm_spinner_min_max_set(o, 1.0, 540.0);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, 0.0);
