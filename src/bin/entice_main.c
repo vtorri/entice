@@ -232,39 +232,31 @@ elm_main(int argc, char **argv)
             if (!ecore_file_is_dir(realpath))
             {
                 char *dn; /* dirname */
-                char *bn; /* basename */
-                char *bn2; /* basename */
                 Eina_List *l;
                 Entice_Image_Prop *prop;
 
-                bn = strrchr(realpath, '/');
-                if (bn)
-                    bn++;
-                else
-                    bn = realpath;
-#ifdef _WIN32
-                bn2 = strrchr(bn, '\\');
-                if (bn2)
-                    bn = bn2 + 1;
-#endif
-                dn = (char *)malloc(bn - realpath);
-                memcpy(dn, realpath, bn - realpath - 1);
-                dn[bn - realpath - 1] = '\0';
-                list = _dir_parse(list, dn);
-                free(dn);
-                EINA_LIST_FOREACH(list, l, prop)
+                dn = ecore_file_dir_get(realpath);
+                if (!dn)
                 {
-                    if (strcmp(prop->filename, realpath) == 0)
-                    {
-                        printf("found\n");
-                        fflush(stdout);
-                        first = l;
-                        break;
-                    }
-                }
-                /* this should never happen */
-                if (!first)
+                    list = _file_list_append(list, realpath);
                     first = list;
+                }
+                else
+                {
+                    list = _dir_parse(list, dn);
+                    free(dn);
+                    EINA_LIST_FOREACH(list, l, prop)
+                    {
+                        if (strcmp(prop->filename, realpath) == 0)
+                        {
+                            first = l;
+                            break;
+                        }
+                    }
+                    /* this should never happen */
+                    if (!first)
+                        first = list;
+                }
             }
             else
             {
