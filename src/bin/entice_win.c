@@ -312,22 +312,9 @@ void
 entice_win_title_update(Evas_Object *win, Entice_Image_Prop *prop)
 {
     char buf[1024];
-    const char *bn; /* basename */
-    const char *bn2; /* basename */
-
-    bn = strrchr(prop->filename, '/');
-    if (bn)
-        bn++;
-    else
-        bn = prop->filename;
-#ifdef _WIN32
-    bn2 = strrchr(bn, '\\');
-    if (bn2)
-        bn = bn2 + 1;
-#endif
 
     snprintf(buf, sizeof(buf), "Entice - %s (%d x %d)",
-             bn, prop->width, prop->height);
+             ecore_file_file_get(prop->filename), prop->width, prop->height);
     elm_win_title_set(win, buf);
 }
 
