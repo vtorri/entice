@@ -42,7 +42,10 @@
  *============================================================================*/
 
 static void
-_cb_mouse_down(void *data, Evas *evas_UNUSED, Evas_Object *obj_UNUSED, void *event_info);
+_cb_mouse_down(void *data, Evas *evas, Evas_Object *obj, void *event_info);
+
+static void
+_cb_mouse_move(void *data, Evas *evas, Evas_Object *obj, void *event_info);
 
 static void
 _cb_key_down(void *data,
@@ -71,6 +74,10 @@ _cb_win_del(void *data EINA_UNUSED,
     evas_object_event_callback_del_full(entice->event_mouse,
                                         EVAS_CALLBACK_MOUSE_DOWN,
                                         _cb_mouse_down, win);
+
+    evas_object_event_callback_del_full(entice->event_mouse,
+                                        EVAS_CALLBACK_MOUSE_MOVE,
+                                        _cb_mouse_move, win);
 
     entice_config_del(entice->config);
     free(entice);
@@ -143,6 +150,46 @@ _cb_unfocused(void *data EINA_UNUSED, Evas_Object *win, void *event EINA_UNUSED)
 
     entice = evas_object_data_get(win, "entice");
     elm_layout_signal_emit(entice->layout, "state,win,unfocused", "entice");
+}
+
+static Eina_Bool
+_cb_mouse_idle(void *win)
+{
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+
+    entice->controls_timer = NULL;
+
+    /* hide controls */
+    elm_object_signal_emit(entice->layout, "state,prev,hide", "entice");
+    elm_object_signal_emit(entice->layout, "state,next,hide", "entice");
+    elm_object_signal_emit(entice->layout, "state,rotleft,hide", "entice");
+    elm_object_signal_emit(entice->layout, "state,rotright,hide", "entice");
+
+    return EINA_FALSE;
+}
+
+static void
+_cb_mouse_move(void *win, Evas *evas EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+
+    if (entice->controls_timer)
+        ecore_timer_del(entice->controls_timer);
+
+
+    entice->controls_timer = ecore_timer_add(5.0, _cb_mouse_idle, win);
+
+    /* display controls */
+    if (eina_list_prev(entice->image_current))
+        elm_object_signal_emit(entice->layout, "state,prev,show", "entice");
+    if (eina_list_next(entice->image_current))
+        elm_object_signal_emit(entice->layout, "state,next,show", "entice");
+    elm_object_signal_emit(entice->layout, "state,rotleft,show", "entice");
+    elm_object_signal_emit(entice->layout, "state,rotright,show", "entice");
 }
 
 static void
@@ -289,6 +336,8 @@ entice_win_add(void)
     evas_object_color_set(o, 0, 0, 0, 0);
     evas_object_repeat_events_set(o, EINA_TRUE);
     evas_object_show(o);
+    evas_object_event_callback_add(o, EVAS_CALLBACK_MOUSE_MOVE,
+                                   _cb_mouse_move, win);
     evas_object_event_callback_add(o, EVAS_CALLBACK_MOUSE_DOWN,
                                    _cb_mouse_down, win);
     entice->event_mouse = o;

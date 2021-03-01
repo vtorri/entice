@@ -83,16 +83,6 @@ entice_image_current_set(Evas_Object *win, Eina_List *image)
         evas_object_size_hint_min_set(entice->image, prop->width, prop->height);
     }
 
-    if (eina_list_prev(entice->image_current))
-        elm_object_signal_emit(entice->layout, "state,prev,show", "entice");
-    else
-        elm_object_signal_emit(entice->layout, "state,prev,hide", "entice");
-
-    if (eina_list_next(entice->image_current))
-        elm_object_signal_emit(entice->layout, "state,next,show", "entice");
-    else
-        elm_object_signal_emit(entice->layout, "state,next,hide", "entice");
-
     entice_win_title_update(win, prop);
 }
 

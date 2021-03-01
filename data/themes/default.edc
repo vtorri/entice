@@ -183,7 +183,7 @@ collections
         description
         {
           state: "default" 0.0;
-          visible: 1;
+          visible: 0;
           //rel.to: "entice.image";
           rel1.relative: 0.5 1.0;
           rel1.offset: -32 -32;
@@ -234,7 +234,7 @@ collections
         description
         {
           state: "default" 0.0;
-          visible: 1;
+          visible: 0;
           //rel.to: "entice.image";
           rel1.relative: 0.5 1.0;
           rel1.offset: 0 0;
