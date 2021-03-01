@@ -161,8 +161,9 @@ EAPI_MAIN int
 elm_main(int argc, char **argv)
 {
     Evas_Object *win;
-    Entice_Config *cfg;;
+    Entice_Config *cfg;
     Eina_List *list;
+    Eina_List *first = NULL;
     Eina_Bool fullscreen = EINA_FALSE;
     Eina_Bool quit_option = EINA_FALSE;
     Ecore_Getopt_Value values[] = {
@@ -202,11 +203,13 @@ elm_main(int argc, char **argv)
     if (args == argc)
     {
         list = _dir_parse(list, efreet_pictures_dir_get());
+        first = list;
     }
     else
     {
         int i;
         char *realpath;
+        char *tmp;
 
         for (i = args; i < argc; i++)
         {
@@ -221,22 +224,53 @@ elm_main(int argc, char **argv)
                     efreet_uri_free(uri);
                 }
             }
-            if (ecore_file_is_dir(realpath))
-                list = _dir_parse(list, realpath);
+
+            tmp = ecore_file_realpath(realpath);
+            free(realpath);
+            realpath = tmp;
+
+            if (!ecore_file_is_dir(realpath))
+            {
+                char *dn; /* dirname */
+                char *bn; /* basename */
+                char *bn2; /* basename */
+                Eina_List *l;
+                Entice_Image_Prop *prop;
+
+                bn = strrchr(realpath, '/');
+                if (bn)
+                    bn++;
+                else
+                    bn = realpath;
+#ifdef _WIN32
+                bn2 = strrchr(bn, '\\');
+                if (bn2)
+                    bn = bn2 + 1;
+#endif
+                dn = (char *)malloc(bn - realpath);
+                memcpy(dn, realpath, bn - realpath - 1);
+                dn[bn - realpath - 1] = '\0';
+                list = _dir_parse(list, dn);
+                free(dn);
+                EINA_LIST_FOREACH(list, l, prop)
+                {
+                    if (strcmp(prop->filename, realpath) == 0)
+                    {
+                        printf("found\n");
+                        fflush(stdout);
+                        first = l;
+                        break;
+                    }
+                }
+                /* this should never happen */
+                if (!first)
+                    first = list;
+            }
             else
             {
-                list = _file_list_append(list, realpath);
-                free(realpath);
+                list = _dir_parse(list, realpath);
+                first = list;
             }
-        }
-    }
-    {
-        Eina_List *l;
-        Entice_Image_Prop *prop;
-
-        EINA_LIST_FOREACH(list, l, prop)
-        {
-            printf(" ** %s\n", prop->filename);
         }
     }
 
@@ -289,7 +323,7 @@ elm_main(int argc, char **argv)
     if (fullscreen) elm_win_fullscreen_set(win, EINA_TRUE);
 
     /* once the images are in the list, display the first and current one */
-    entice_image_current_set(win, list);
+    entice_image_current_set(win, first);
 
     elm_run();
 
