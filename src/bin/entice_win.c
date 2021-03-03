@@ -181,7 +181,7 @@ _cb_mouse_move(void *win, Evas *evas EINA_UNUSED, Evas_Object *obj EINA_UNUSED, 
         ecore_timer_del(entice->controls_timer);
 
 
-    entice->controls_timer = ecore_timer_add(5.0, _cb_mouse_idle, win);
+    entice->controls_timer = ecore_timer_add(2.0, _cb_mouse_idle, win);
 
     /* display controls */
     if (eina_list_prev(entice->image_current))
