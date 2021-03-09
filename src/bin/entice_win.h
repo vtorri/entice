@@ -63,8 +63,10 @@ struct Entice
 
 Evas_Object *entice_win_add(void);
 
-void entice_win_title_update(Evas_Object *win, Entice_Image_Prop *prop);
+void entice_win_title_update(Evas_Object *win);
 
 void entice_win_images_set(Evas_Object *win, Eina_List *images);
+
+void entice_win_image_first_set(Evas_Object *win, Eina_List *first);
 
 #endif /* ENTICE_WIN_H */

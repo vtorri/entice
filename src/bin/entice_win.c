@@ -68,7 +68,6 @@ _cb_win_del(void *data EINA_UNUSED,
 
     entice = evas_object_data_get(win, "entice");
 
-    /* FIXME: free images */
     evas_object_data_del(win, "entice");
 
     evas_object_event_callback_del_full(entice->event_mouse,
@@ -79,6 +78,7 @@ _cb_win_del(void *data EINA_UNUSED,
                                         EVAS_CALLBACK_MOUSE_MOVE,
                                         _cb_mouse_move, win);
 
+    /* FIXME: free images */
     entice_config_del(entice->config);
     free(entice);
 }
@@ -90,23 +90,18 @@ _cb_win_resize(void *data EINA_UNUSED,
             void *_event EINA_UNUSED)
 {
     Entice *entice;
-    Entice_Image_Prop *prop;
 
     entice = evas_object_data_get(win, "entice");
     if (!entice || !entice->image_current)
         return;
 
-    prop = eina_list_data_get(entice->image_current);
-    if (!prop)
-        return;
-
-    switch(prop->zoom_mode)
+    switch(entice_image_zoom_mode_get(entice->image))
     {
         case ENTICE_ZOOM_MODE_NORMAL:
-            entice_image_current_zoom(win, 1.0);
+            entice_image_zoom(entice->image, 1.0);
             break;
         case ENTICE_ZOOM_MODE_FIT:
-            entice_image_current_zoom_fit(win);
+            entice_image_zoom_fit(entice->image);
             break;
     }
 }
@@ -295,12 +290,12 @@ entice_win_add(void)
     entice->scroller = o;
 
     /* table */
-    o = elm_table_add(win);
-    evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
-    elm_object_content_set(entice->scroller, o);
-    evas_object_show(o);
-    entice->table = o;
+    /* o = elm_table_add(win); */
+    /* evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND); */
+    /* evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL); */
+    /* elm_object_content_set(entice->scroller, o); */
+    /* evas_object_show(o); */
+    /* entice->table = o; */
 
     /* gui layout */
     o = elm_layout_add(win);
@@ -316,14 +311,14 @@ entice_win_add(void)
         _cb_win_del(NULL, NULL, win, NULL);
         return NULL;
     }
+    elm_object_part_content_set(entice->layout, "entice.image",
+                                entice->scroller);
     entice_controls_init(win);
 
     /* image */
-    o = evas_object_image_add(evas_object_evas_get(win));
-    evas_object_image_filled_set(o, EINA_TRUE);
-    elm_object_part_content_set(entice->layout, "entice.image",
-                                entice->scroller);
-    elm_table_pack(entice->table, o, 0, 0, 1, 1);
+    o = entice_image_add(win);
+    elm_object_content_set(entice->scroller, o);
+    //elm_table_pack(entice->table, o, 0, 0, 1, 1);
     evas_object_show(o);
     entice->image = o;
 
@@ -358,12 +353,20 @@ entice_win_add(void)
 }
 
 void
-entice_win_title_update(Evas_Object *win, Entice_Image_Prop *prop)
+entice_win_title_update(Evas_Object *win)
 {
     char buf[1024];
+    Entice *entice;
+    const char *filename;
+    int w;
+    int h;
+
+    entice = evas_object_data_get(win, "entice");
+    entice_image_size_get(entice->image, &w, &h);
+    filename = eina_list_data_get(entice->image_current);
 
     snprintf(buf, sizeof(buf), "Entice - %s (%d x %d)",
-             ecore_file_file_get(prop->filename), prop->width, prop->height);
+             ecore_file_file_get(filename), w, h);
     elm_win_title_set(win, buf);
 }
 
@@ -377,4 +380,13 @@ entice_win_images_set(Evas_Object *win, Eina_List *images)
 
     entice = evas_object_data_get(win, "entice");
     entice->images = images;
+}
+
+void
+entice_win_image_first_set(Evas_Object *win, Eina_List *first)
+{
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+    entice_image_set(entice->image, first);
 }

@@ -120,14 +120,7 @@ _file_list_append(Eina_List *list, const char *path)
         }
         if (!found)
         {
-            Entice_Image_Prop *prop;
-
-            prop = calloc(1, sizeof(Entice_Image_Prop));
-            if (!prop)
-                return list;
-            prop->filename = eina_stringshare_add(path);
-            prop->orient = 0;
-            list = eina_list_append(list, prop);
+            list = eina_list_append(list, eina_stringshare_add(path));
         }
     }
 
@@ -233,7 +226,7 @@ elm_main(int argc, char **argv)
             {
                 char *dn; /* dirname */
                 Eina_List *l;
-                Entice_Image_Prop *prop;
+                char *filename;
 
                 dn = ecore_file_dir_get(realpath);
                 if (!dn)
@@ -245,9 +238,9 @@ elm_main(int argc, char **argv)
                 {
                     list = _dir_parse(list, dn);
                     free(dn);
-                    EINA_LIST_FOREACH(list, l, prop)
+                    EINA_LIST_FOREACH(list, l, filename)
                     {
-                        if (strcmp(prop->filename, realpath) == 0)
+                      if (strcmp(filename, realpath) == 0)
                         {
                             first = l;
                             break;
@@ -301,7 +294,6 @@ elm_main(int argc, char **argv)
     {
         win_w = cfg->cg_width;
         win_h = cfg->cg_height;
-        entice_config_del(cfg);
     }
 
     evas_object_resize(win,
@@ -315,9 +307,14 @@ elm_main(int argc, char **argv)
     if (fullscreen) elm_win_fullscreen_set(win, EINA_TRUE);
 
     /* once the images are in the list, display the first and current one */
-    entice_image_current_set(win, first);
+    entice_win_image_first_set(win, first);
 
     elm_run();
+
+    entice_config_del(cfg);
+    entice_config_shutdown();
+    eina_log_domain_unregister(entice_app_log_dom_global);
+    entice_app_log_dom_global = -1;
 
     return 0;
 

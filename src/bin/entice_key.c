@@ -74,7 +74,7 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
             next = eina_list_next(entice->image_current);
             if (next)
             {
-                entice_image_current_set(win, next);
+                entice_image_set(entice->image, next);
             }
         }
         else if (!strcmp(ev->key, "BackSpace") ||
@@ -85,12 +85,12 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
             prev = eina_list_prev(entice->image_current);
             if (prev)
             {
-                entice_image_current_set(win, prev);
+                entice_image_set(entice->image, prev);
             }
         }
         else if (!strcmp(ev->keyname, "f"))
         {
-            entice_image_current_zoom_fit(win);
+            entice_image_zoom_fit(win);
         }
         else if (!strcmp(ev->keyname, "s"))
         {
@@ -122,12 +122,12 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
         }
         else if (!strcmp(ev->keyname, "r"))
         {
-            entice_image_current_rotate(win, 1);
+            entice_image_rotate(entice->image, 1);
         }
         else if (!strcmp(ev->key, "KP_0") ||
                  !strcmp(ev->key, "0"))
         {
-            entice_image_current_zoom(win, 1.0);
+            entice_image_zoom(win, 1.0);
         }
     }
 
@@ -136,7 +136,7 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
     {
         if (!strcmp(ev->keyname, "r"))
         {
-            entice_image_current_rotate(win, 3);
+            entice_image_rotate(entice->image, 3);
         }
     }
 
@@ -145,11 +145,11 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
     {
         if (!strcmp(ev->key, "Home"))
         {
-            entice_image_current_set(win, entice->images);
+            entice_image_set(entice->image, entice->images);
         }
         else if (!strcmp(ev->key, "End"))
         {
-            entice_image_current_set(win, eina_list_last(entice->images));
+            entice_image_set(entice->image, eina_list_last(entice->images));
         }
     }
 }
