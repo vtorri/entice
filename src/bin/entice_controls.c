@@ -38,43 +38,39 @@
  *============================================================================*/
 
 static void
-_cb_image_prev(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+_cb_image_prev(void *entice, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
 {
-    Entice *entice;
     Eina_List *next;
 
-    entice = evas_object_data_get(win, "entice");
-    next = eina_list_prev(entice->image_current);
+    next = eina_list_prev(((Entice *)entice)->image_current);
     if (next)
     {
-        entice_image_set(entice->image, next);
+        entice_image_set(((Entice *)entice)->image, next);
     }
 }
 
 static void
-_cb_image_next(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+_cb_image_next(void *entice, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
 {
-    Entice *entice;
     Eina_List *next;
 
-    entice = evas_object_data_get(win, "entice");
-    next = eina_list_next(entice->image_current);
+    next = eina_list_next(((Entice *)entice)->image_current);
     if (next)
     {
-        entice_image_set(entice->image, next);
+        entice_image_set(((Entice *)entice)->image, next);
     }
 }
 
 static void
-_cb_image_rot_left(void *img, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+_cb_image_rot_left(void *entice, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
 {
-    entice_image_rotate(img, 3);
+    entice_image_rotate(((Entice *)entice)->image, 3);
 }
 
 static void
-_cb_image_rot_right(void *img, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+_cb_image_rot_right(void *entice, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
 {
-    entice_image_rotate(img, 1);
+    entice_image_rotate(((Entice *)entice)->image, 1);
 }
 
 /*============================================================================*
@@ -135,14 +131,14 @@ entice_controls_init(Evas_Object *win)
 
     elm_layout_signal_callback_add(entice->layout,
                                    "image,action,prev", "entice",
-                                   _cb_image_prev, win);
+                                   _cb_image_prev, entice);
     elm_layout_signal_callback_add(entice->layout,
                                    "image,action,next", "entice",
-                                   _cb_image_next, win);
+                                   _cb_image_next, entice);
     elm_layout_signal_callback_add(entice->layout,
                                    "image,action,rotleft", "entice",
-                                   _cb_image_rot_left, win);
+                                   _cb_image_rot_left, entice);
     elm_layout_signal_callback_add(entice->layout,
                                    "image,action,rotright", "entice",
-                                   _cb_image_rot_right, entice->image);
+                                   _cb_image_rot_right, entice);
 }
