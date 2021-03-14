@@ -78,11 +78,10 @@ collections
       {
         name: "entice.go.prev";
         type: SWALLOW;
+        clip_to: "fader";
         description
         {
           state: "default" 0.0;
-          visible: 0;
-          rel.to: "entice.image";
           rel1.relative: 0.0 0.5;
           rel1.offset: 0 -16;
           rel2.relative: 0.0 0.5;
@@ -92,27 +91,21 @@ collections
         }
         description
         {
-          state: "shown" 0.0;
-          visible: 1;
-          rel.to: "entice.image";
-          rel1.relative: 0.0 0.5;
-          rel1.offset: 0 -16;
-          rel2.relative: 0.0 0.5;
-          rel2.offset: 32 15;
-          min: 32 32;
-          max: 32 32;
+          state: "disable" 0.0;
+          inherit: "default" 0.0;
+          visible: 0;
         }
-      }
-      program
-      {
-        signal: "state,prev,show";
-        source: "entice";
-        action: STATE_SET "shown" 0.0;
-        target: "entice.go.prev";
       }
       program
       {
         signal: "state,prev,hide";
+        source: "entice";
+        action: STATE_SET "disable" 0.0;
+        target: "entice.go.prev";
+      }
+      program
+      {
+        signal: "state,prev,show";
         source: "entice";
         action: STATE_SET "default" 0.0;
         target: "entice.go.prev";
@@ -129,11 +122,10 @@ collections
       {
         name: "entice.go.next";
         type: SWALLOW;
+        clip_to: "fader";
         description
         {
           state: "default" 0.0;
-          visible: 0;
-          //rel.to: "entice.image";
           rel1.relative: 1.0 0.5;
           rel1.offset: -16 -16;
           rel2.relative: 1.0 0.5;
@@ -143,27 +135,21 @@ collections
         }
         description
         {
-          state: "shown" 0.0;
-          visible: 1;
-          //rel.to: "entice.image";
-          rel1.relative: 1.0 0.5;
-          rel1.offset: -16 -16;
-          rel2.relative: 1.0 0.5;
-          rel2.offset: -16 15;
-          min: 32 32;
-          max: 32 32;
+          state: "disable" 0.0;
+          inherit: "default" 0.0;
+          visible: 0;
         }
-      }
-      program
-      {
-        signal: "state,next,show";
-        source: "entice";
-        action: STATE_SET "shown" 0.0;
-        target: "entice.go.next";
       }
       program
       {
         signal: "state,next,hide";
+        source: "entice";
+        action: STATE_SET "disable" 0.0;
+        target: "entice.go.next";
+      }
+      program
+      {
+        signal: "state,next,show";
         source: "entice";
         action: STATE_SET "default" 0.0;
         target: "entice.go.next";
@@ -180,11 +166,10 @@ collections
       {
         name: "entice.rotate.left";
         type: SWALLOW;
+        clip_to: "fader";
         description
         {
           state: "default" 0.0;
-          visible: 0;
-          //rel.to: "entice.image";
           rel1.relative: 0.5 1.0;
           rel1.offset: -32 -32;
           rel2.relative: 0.5 1.0;
@@ -192,32 +177,6 @@ collections
           min: 32 32;
           max: 32 32;
         }
-        description
-        {
-          state: "shown" 0.0;
-          visible: 1;
-          //rel.to: "entice.image";
-          rel1.relative: 0.5 1.0;
-          rel1.offset: -32 -32;
-          rel2.relative: 0.5 1.0;
-          rel2.offset: 0 0;
-          min: 32 32;
-          max: 32 32;
-        }
-      }
-      program
-      {
-        signal: "state,rotleft,show";
-        source: "entice";
-        action: STATE_SET "shown" 0.0;
-        target: "entice.rotate.left";
-      }
-      program
-      {
-        signal: "state,rotleft,hide";
-        source: "entice";
-        action: STATE_SET "default" 0.0;
-        target: "entice.rotate.left";
       }
       program
       {
@@ -231,11 +190,10 @@ collections
       {
         name: "entice.rotate.right";
         type: SWALLOW;
+        clip_to: "fader";
         description
         {
           state: "default" 0.0;
-          visible: 0;
-          //rel.to: "entice.image";
           rel1.relative: 0.5 1.0;
           rel1.offset: 0 0;
           rel2.relative: 0.5 1.0;
@@ -243,38 +201,48 @@ collections
           min: 32 32;
           max: 32 32;
         }
-        description
-        {
-          state: "shown" 0.0;
-          visible: 1;
-          //rel.to: "entice.image";
-          rel1.relative: 0.5 1.0;
-          rel1.offset: 0 0;
-          rel2.relative: 0.5 1.0;
-          rel2.offset: 32 -32;
-          min: 32 32;
-          max: 32 32;
-        }
-      }
-      program
-      {
-        signal: "state,rotright,show";
-        source: "entice";
-        action: STATE_SET "shown" 0.0;
-        target: "entice.rotate.right";
-      }
-      program
-      {
-        signal: "state,rotright,hide";
-        source: "entice";
-        action: STATE_SET "default" 0.0;
-        target: "entice.rotate.right";
       }
       program
       {
         signal: "mouse,clicked,1";
         source: "entice.rotate.right";
         action: SIGNAL_EMIT "image,action,rotright" "entice";
+      }
+
+      part
+      {
+        name: "fader";
+        type: RECT;
+        mouse_events: 0;
+        description
+        {
+          state: "default" 0.0;
+          color: 255 255 255 0;
+          visible: 0;
+        }
+        description
+        {
+          state: "visible" 0.0;
+          inherit: "default" 0.0;
+          color: 255 255 255 255;
+          visible: 1;
+        }
+      }
+      program
+      {
+        signal: "state,controls,show";
+        source: "entice";
+        action: STATE_SET "visible" 0.0;
+        transition: ACCELERATE 1.5;
+        target: "fader";
+      }
+      program
+      {
+        signal: "state,controls,hide";
+        source: "entice";
+        action: STATE_SET "default" 0.0;
+        transition: DECELERATE 1.5;
+        target: "fader";
       }
 
       // SETTINGS
