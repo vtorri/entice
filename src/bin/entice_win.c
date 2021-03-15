@@ -157,7 +157,11 @@ _cb_mouse_idle(void *win)
     entice->controls_timer = NULL;
 
     /* hide controls */
-    elm_object_signal_emit(entice->layout, "state,controls,hide", "entice");
+    if (entice->controls_shown)
+    {
+        elm_object_signal_emit(entice->layout, "state,controls,hide", "entice");
+        entice->controls_shown = EINA_FALSE;
+    }
 
     return EINA_FALSE;
 }
@@ -184,7 +188,11 @@ _cb_mouse_move(void *win, Evas *evas EINA_UNUSED, Evas_Object *obj EINA_UNUSED, 
         elm_object_signal_emit(entice->layout, "state,next,show", "entice");
     else
         elm_object_signal_emit(entice->layout, "state,next,hide", "entice");
-    elm_object_signal_emit(entice->layout, "state,controls,show", "entice");
+    if (!entice->controls_shown)
+    {
+        elm_object_signal_emit(entice->layout, "state,controls,show", "entice");
+        entice->controls_shown = EINA_TRUE;
+    }
 }
 
 static void

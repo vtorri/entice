@@ -55,6 +55,7 @@ struct Entice
     Ecore_Timer *settings_timer;
     Eina_Bool settings_created;
     Eina_Bool settings_shown;
+    Eina_Bool controls_shown;
 
     /* theme */
     Entice_Config *config;

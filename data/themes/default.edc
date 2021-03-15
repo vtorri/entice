@@ -233,7 +233,7 @@ collections
         signal: "state,controls,show";
         source: "entice";
         action: STATE_SET "visible" 0.0;
-        transition: ACCELERATE 1.5;
+        transition: ACCELERATE 0.5;
         target: "fader";
       }
       program
