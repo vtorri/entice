@@ -299,6 +299,8 @@ entice_image_rotate(Evas_Object *obj, unsigned int rot)
 
     orient = evas_object_image_orient_get(sd->img) + rot;
     evas_object_image_orient_set(sd->img, orient & 3);
+    if (sd->zoom_mode == ENTICE_ZOOM_MODE_FIT)
+        entice_image_zoom_fit(obj);
 }
 
 Entice_Zoom_Mode
@@ -364,13 +366,16 @@ entice_image_zoom_fit(Evas_Object *obj)
     Evas_Coord ih;
     Evas_Coord x;
     Evas_Coord y;
+    Evas_Image_Orient orient;
 
     sd = evas_object_smart_data_get(obj);
     EINA_SAFETY_ON_NULL_RETURN(sd);
 
     win = evas_object_data_get(obj, "win");
     evas_object_geometry_get(win, NULL, NULL, &w, &h);
+    orient = evas_object_image_orient_get(sd->img);
     evas_object_image_size_get(sd->img, &iw, &ih);
+
     if ((w * ih) > (iw * h))
     {
         int tmp = ih;

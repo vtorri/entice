@@ -33,21 +33,6 @@ typedef enum
     ENTICE_ZOOM_MODE_FIT
 } Entice_Zoom_Mode;
 
-#if 0
-typedef struct
-{
-    const char *filename;
-    Evas_Image_Orient orient;
-    Entice_Zoom_Mode zoom_mode;
-    int width;
-    int height;
-} Entice_Image_Prop;
-
-void entice_image_current_set(Evas_Object *win, Eina_List *image);
-
-void entice_image_current_zoom(Evas_Object *win, double zoom);
-#endif
-
 
 Evas_Object *entice_image_add(Evas_Object *win);
 
