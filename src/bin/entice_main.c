@@ -145,7 +145,7 @@ _dir_parse(Eina_List *list, const char *path)
             list = _file_list_append(list, info->path);
         }
     }
-    fflush(stdout);
+    eina_iterator_free(it);
 
     return list;
 }
