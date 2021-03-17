@@ -80,6 +80,7 @@ _cb_win_del(void *data EINA_UNUSED,
 
     /* FIXME: free images */
     entice_config_del(entice->config);
+    free(entice->theme_file);
     free(entice);
 }
 
