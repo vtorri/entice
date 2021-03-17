@@ -256,6 +256,7 @@ elm_main(int argc, char **argv)
                 list = _dir_parse(list, realpath);
                 first = list;
             }
+            free(realpath);
         }
     }
 
