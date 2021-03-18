@@ -43,7 +43,9 @@ config_h.set_quoted('PACKAGE_DATA_DIR', dir_data)
 config_h.set_quoted('LOCALE_DIR', dir_locale)
 
 subdir('src/bin')
-subdir('data')
+subdir('data/themes')
+subdir('data/desktop')
+subdir('data/icons')
 
 # use config_h after all subdirs have set values
 configure_file(output : 'config.h', configuration : config_h)

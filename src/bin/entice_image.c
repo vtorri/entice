@@ -113,6 +113,8 @@ _smart_add(Evas_Object *obj)
 
    evas_object_smart_data_set(obj, sd);
 
+   _parent_sc.add(obj);
+
    sd->img = evas_object_image_filled_add(evas_object_evas_get(obj));
    evas_object_smart_member_add(sd->img, obj);
    evas_object_image_load_orientation_set(sd->img, EINA_TRUE);
@@ -131,6 +133,10 @@ _smart_del(Evas_Object *obj)
     evas_object_data_del(obj, "win");
     if (sd->img)
         evas_object_del(sd->img);
+
+    _parent_sc.del(obj);
+
+    free(sd);
 }
 
 static void
