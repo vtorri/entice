@@ -36,6 +36,64 @@
 
 #define ENTICE_COPYRIGHT "(C) 2021 Vincent Torri and others"
 
+/* list image extensions to use for good first-guess tries */
+static const char *_image_ext[] =
+{
+    ".png",
+
+    ".jpg",
+    ".jpeg",
+    ".jfif",
+
+    ".j2k",
+    ".jp2",
+    ".jpx",
+    ".jpf",
+
+    ".xpm",
+
+    ".tiff",
+    ".tif"
+
+    ".gif"
+
+    ".pbm",
+    ".pgm",
+    ".ppm",
+    ".pnm",
+
+    ".bmp"
+
+    ".tga"
+
+    ".wbmp",
+
+    ".webp",
+
+    ".ico"
+    ".cur"
+
+    ".psd"
+
+    ".tgv"
+
+    ".dds"
+
+    ".avif",
+    ".avifs",
+
+    ".heif",
+    ".heic",
+
+    ".xcf",
+    ".xcf.gz",
+
+    ".svg",
+    ".svg.gz",
+
+    NULL
+};
+
 static Ecore_Getopt options = {
     PACKAGE_NAME,
     "%prog [options] [filename]",
@@ -101,27 +159,41 @@ static Eina_List *
 _file_list_append(Eina_List *list, const char *path)
 {
     const Eina_List *l;
-    const char *mime;
     const char *data;
     Eina_Bool found;
 
-    mime = efreet_mime_type_get(path);
-    if (mime &&
-        (strncmp(mime, "image/", strlen("image/")) == 0))
+    /* check if the file has a supported extension */
+    found = EINA_FALSE;
+    for (size_t i = 0; _image_ext[i]; i++)
     {
-        found = EINA_FALSE;
-        EINA_LIST_FOREACH(list, l, data)
+        if (eina_str_has_extension(path, _image_ext[i]))
         {
-            if (strcmp(data, path) == 0)
-            {
-                found = EINA_TRUE;
-                break;
-            }
+            found = EINA_TRUE;
+            break;
         }
-        if (!found)
+    }
+
+    if (!found)
+    {
+        WRN("File %s has no supported extension.", path);
+        return list;
+    }
+
+    found = EINA_FALSE;
+    EINA_LIST_FOREACH(list, l, data)
+    {
+        if (strcmp(data, path) == 0)
         {
-            list = eina_list_append(list, eina_stringshare_add(path));
+            found = EINA_TRUE;
+            break;
         }
+    }
+
+    /* if not found in the list, add it */
+    if (!found)
+    {
+        INF("File %s added.", path);
+        list = eina_list_append(list, eina_stringshare_add(path));
     }
 
     return list;
@@ -137,7 +209,7 @@ _dir_parse(Eina_List *list, const char *path)
     if (!path || !*path)
         return list;
 
-    it = eina_file_stat_ls(path);
+    it = eina_file_direct_ls(path);
     EINA_ITERATOR_FOREACH(it, info)
     {
         if (info->type == EINA_FILE_REG)
