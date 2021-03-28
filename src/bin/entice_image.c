@@ -37,71 +37,85 @@
  *                                  Local                                     *
  *============================================================================*/
 
-#if 0
-static Eina_Bool
-_cb_img_frame(void *data)
-{
-    int fr;
-
-    prop->fr++;
-    fr = ((prop->fr - 1) % (prop->frnum)) + 1;
-    if ((prop->fr >= prop->frnum) && (fr == 1))
-    {
-        int loops;
-
-        if (evas_object_image_animated_loop_type_get(entice->image) ==
-            EVAS_IMAGE_ANIMATED_HINT_NONE)
-        {
-            prop->anim = NULL;
-            return EINA_FALSE;
-        }
-        prop->loops++;
-        loops = evas_object_image_animated_loop_count_get(entice->image);
-        if (loops != 0) // loop == 0 -> loop forever
-        {
-            if (loops < sd->loops)
-            {
-                prop->anim = NULL;
-                return EINA_FALSE;
-            }
-        }
-     }
-   evas_object_image_animated_frame_set(entice->image, fr);
-   t = evas_object_image_animated_frame_duration_get(entice->image, fr, 0);
-   ecore_timer_interval_set(prop->anim, t);
-   return EINA_TRUE;
-}
-
-static void
-_entice_image_anim_handle()
-{
-    double t;
-
-    if (!evas_object_animated_get(entice->image))
-        return;
-
-    prop->fr = 1
-    prop->frame_num = evas_object_image_animated_frame_count_get(entice->image);
-    if (prop->frame_count < 2)
-     return;
-
-    t = evas_object_image_animated_frame_duration_get(entice->image, prop->fr, 0);
-    sd->anim = ecore_timer_add(t, _cb_img_frame, obj);
-}
-#endif
-
 typedef struct Img_ Img;
 
 struct Img_
 {
     Evas_Object *bg;
     Evas_Object *img;
-    Entice_Zoom_Mode zoom_mode;
+    Ecore_Timer *anim;
     double zoom;
+    Entice_Zoom_Mode zoom_mode;
+    int fr;
+    int fr_num;
+    int loops;
 };
 
 static Evas_Smart *_smart = NULL;
 static Evas_Smart_Class _parent_sc = EVAS_SMART_CLASS_INIT_NULL;
+
+static Eina_Bool
+_entice_image_anim_cb(void *obj)
+{
+    Img *sd;
+    double t;
+    int fr;
+
+    sd = evas_object_smart_data_get(obj);
+    EINA_SAFETY_ON_NULL_RETURN_VAL(sd, EINA_FALSE);
+
+    sd->fr++;
+    fr = ((sd->fr - 1) % (sd->fr_num)) + 1;
+    if ((sd->fr >= sd->fr_num) && (fr == 1))
+    {
+        int loops;
+
+        if (evas_object_image_animated_loop_type_get(sd->img) ==
+            EVAS_IMAGE_ANIMATED_HINT_NONE)
+        {
+            sd->anim = NULL;
+            return EINA_FALSE;
+        }
+        sd->loops++;
+        loops = evas_object_image_animated_loop_count_get(sd->img);
+        if (loops != 0) // loop == 0 -> loop forever
+        {
+            if (loops < sd->loops)
+            {
+                sd->anim = NULL;
+                return EINA_FALSE;
+            }
+        }
+     }
+
+    evas_object_image_animated_frame_set(sd->img, fr);
+    t = evas_object_image_animated_frame_duration_get(sd->img, fr, 0);
+    ecore_timer_interval_set(sd->anim, t);
+
+   return EINA_TRUE;
+}
+
+static void
+_entice_image_anim_handle(Evas_Object *obj)
+{
+    Img *sd;
+    double t;
+
+    sd = evas_object_smart_data_get(obj);
+    EINA_SAFETY_ON_NULL_RETURN(sd);
+
+
+    if (!evas_object_image_animated_get(sd->img))
+        return;
+
+    sd->fr = 1;
+    sd->fr_num = evas_object_image_animated_frame_count_get(sd->img);
+    if (sd->fr_num < 2)
+        return;
+
+    t = evas_object_image_animated_frame_duration_get(sd->img, sd->fr, 0);
+    sd->anim = ecore_timer_add(t, _entice_image_anim_cb, obj);
+}
 
 static void
 _smart_add(Evas_Object *obj)
@@ -250,8 +264,6 @@ entice_image_set(Evas_Object *obj, Eina_List *image)
     sd = evas_object_smart_data_get(obj);
     EINA_SAFETY_ON_NULL_RETURN(sd);
 
-    entice = evas_object_data_get(obj, "entice");
-
     win = evas_object_data_get(obj, "win");
     entice = evas_object_data_get(win, "entice");
     if (image == entice->image_current)
@@ -261,6 +273,7 @@ entice_image_set(Evas_Object *obj, Eina_List *image)
     filename = eina_list_data_get(entice->image_current);
 
     evas_object_image_load_orientation_set(sd->img, EINA_TRUE);
+
     evas_object_image_file_set(sd->img, filename, NULL);
     err = evas_object_image_load_error_get(sd->img);
     if (err != EVAS_LOAD_ERROR_NONE)
@@ -278,7 +291,8 @@ entice_image_set(Evas_Object *obj, Eina_List *image)
     else
         entice_image_zoom(obj, sd->zoom);
 
-    //_entice_image_anim_handle();
+    // FIXME : with settings
+    _entice_image_anim_handle(obj);
 
     entice_win_title_update(win);
 }
@@ -344,10 +358,12 @@ entice_image_zoom(Evas_Object *obj, double zoom)
     {
         x = ((w - iw) / 2.0);
         y = ((h - ih) / 2.0);
+
+        evas_object_resize(obj, iw, ih);
+        evas_object_size_hint_max_set(obj, iw, ih);
+        evas_object_size_hint_min_set(obj, iw, ih);
+
         evas_object_move(sd->img, x, y);
-        evas_object_resize(sd->img, iw, ih);
-        evas_object_size_hint_max_set(sd->img, iw, ih);
-        evas_object_size_hint_min_set(sd->img, iw, ih);
     }
     else
     {
