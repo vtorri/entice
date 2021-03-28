@@ -53,31 +53,31 @@ static const char *_image_ext[] =
     ".xpm",
 
     ".tiff",
-    ".tif"
+    ".tif",
 
-    ".gif"
+    ".gif",
 
     ".pbm",
     ".pgm",
     ".ppm",
     ".pnm",
 
-    ".bmp"
+    ".bmp",
 
-    ".tga"
+    ".tga",
 
     ".wbmp",
 
     ".webp",
 
-    ".ico"
-    ".cur"
+    ".ico",
+    ".cur",
 
-    ".psd"
+    ".psd",
 
-    ".tgv"
+    ".tgv",
 
-    ".dds"
+    ".dds",
 
     ".avif",
     ".avifs",
