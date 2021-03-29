@@ -11,27 +11,29 @@ The EFL.
 
 ### Supported images
 
-All the image formats supported by the EFL. The EFL can support:
+The following image formats are supported, if they are supported by the EFL:
 
 - avif
 - bmp
 - dds
-- eet
 - gif
+- heif
 - ico
 - jp2k
 - jpeg
 - pmaps
 - png
 - psd
+- svg
 - tga
 - tgv
 - tiff
 - wbmp
 - webp
+- xcf
 - xpm
 
-as well as video frame, pdf and ps pages, raw, svg and xcf formats
+Animated images, like gif, avif or heif, can also be played.
 
 ### Shortcuts
 
