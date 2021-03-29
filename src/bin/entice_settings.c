@@ -372,7 +372,7 @@ entice_settings_init(Evas_Object *win)
     evas_object_smart_callback_add(o, "changed",
                                    _cb_op_behavior_duration_controls, ctx);
 
-    elm_object_part_content_set(entice->layout, "entice.settings", frame);
+    elm_object_part_content_set(entice->layout, "entice.settings.panel", frame);
 
     entice->settings_created = EINA_TRUE;
 }

@@ -127,6 +127,25 @@ collections {
         action: SIGNAL_EMIT "image,action,rotright" "entice";
       }
 
+      // Settings icon
+      part { name: "entice.settings"; type: SWALLOW;
+        clip_to: "fader";
+        scale: 1;
+        description { state: "default" 0.0;
+          rel1.relative: 0.5 0.0;
+          rel2.relative: 0.5 0.0;
+          rel1.offset: 15 48;
+          rel2.offset: 15 48;
+          align: 0.0 1.0;
+          min: 32 32;
+          max: 32 32;
+          offscale;
+        }
+      }
+      program { signal: "mouse,clicked,1"; source: "entice.settings";
+        action: SIGNAL_EMIT "image,action,settings" "entice";
+      }
+
       part { name: "fader"; type: RECT;
         mouse_events: 0;
         description { state: "default" 0.0;
@@ -151,7 +170,7 @@ collections {
       }
 
       // SETTINGS
-      part { name: "entice.settings"; type: SWALLOW;
+      part { name: "entice.settings.panel"; type: SWALLOW;
         description { state: "default" 0.0;
           fixed: 1 1;
           visible: 0;
@@ -168,11 +187,11 @@ collections {
       }
       program { signal: "state,settings,show"; source: "entice";
         action: STATE_SET "shown" 0.0;
-        target: "entice.settings";
+        target: "entice.settings.panel";
       }
       program { signal: "state,settings,hide"; source: "entice";
         action: STATE_SET "default" 0.0;
-        target: "entice.settings";
+        target: "entice.settings.panel";
       }
     }
   }
