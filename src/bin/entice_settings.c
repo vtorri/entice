@@ -206,7 +206,8 @@ _cb_op_behavior_cg_height(void *data,
 }
 
 OPTIONS_CB(fullscreen_startup, 0);
-OPTIONS_CB(best_fit, 0);
+OPTIONS_CB(best_fit_startup, 1);
+OPTIONS_CB(play_animated, 1);
 
 /*============================================================================*
  *                                 Global                                     *
@@ -328,7 +329,8 @@ entice_settings_init(Evas_Object *win)
 
     SETTINGS_SEPARATOR;
 
-    SETTINGS_CX("Always best fit", best_fit, 0);
+    SETTINGS_CX("Always best fit", best_fit_startup, 1);
+    SETTINGS_CX("Play animated images", play_animated, 1);
 
     elm_object_part_content_set(entice->layout, "entice.settings", frame);
 

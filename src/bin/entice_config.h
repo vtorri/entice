@@ -49,7 +49,8 @@ struct Entice_Config_
     int         cg_height;
     Eina_Bool   custom_geometry;
     Eina_Bool   fullscreen_startup;
-    Eina_Bool   best_fit;
+    Eina_Bool   best_fit_startup;
+    Eina_Bool   play_animated;
     Eina_List  *keys;
 };
 
