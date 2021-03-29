@@ -219,6 +219,7 @@ _cb_op_behavior_duration_controls(void *data,
 }
 
 OPTIONS_CB(fullscreen_startup, 0);
+OPTIONS_CB(automatic_orientation, 0);
 OPTIONS_CB(best_fit_startup, 0);
 OPTIONS_CB(play_animated, 0);
 
@@ -342,6 +343,7 @@ entice_settings_init(Evas_Object *win)
 
     SETTINGS_SEPARATOR;
 
+    SETTINGS_CX("Automatic orientation of images", automatic_orientation, 0);
     SETTINGS_CX("Always best fit", best_fit_startup, 0);
     SETTINGS_CX("Play animated images", play_animated, 0);
 

@@ -283,7 +283,8 @@ entice_image_set(Evas_Object *obj, Eina_List *image)
     entice->image_current = image;
     filename = eina_list_data_get(entice->image_current);
 
-    evas_object_image_load_orientation_set(sd->img, EINA_TRUE);
+    evas_object_image_load_orientation_set(sd->img,
+                                           entice->config->automatic_orientation);
 
     evas_object_image_file_set(sd->img, filename, NULL);
     err = evas_object_image_load_error_get(sd->img);

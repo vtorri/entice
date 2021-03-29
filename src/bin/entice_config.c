@@ -76,6 +76,7 @@ _entice_config_new(void)
     config->cg_height = 540;
     config->custom_geometry = EINA_FALSE;
     config->fullscreen_startup = EINA_FALSE;
+    config->automatic_orientation = EINA_TRUE;
     config->best_fit_startup = EINA_TRUE;
     config->play_animated = EINA_TRUE;
     config->duration_controls = 2;
@@ -137,6 +138,7 @@ entice_config_init(void)
     EET_DATA_DESCRIPTOR_ADD_BASIC(edd_base, Entice_Config, "cg_height", cg_height, EET_T_INT);
     EET_DATA_DESCRIPTOR_ADD_BASIC(edd_base, Entice_Config, "custom_geometry", custom_geometry, EET_T_UCHAR);
     EET_DATA_DESCRIPTOR_ADD_BASIC(edd_base, Entice_Config, "fullscreen_startup", fullscreen_startup, EET_T_UCHAR);
+    EET_DATA_DESCRIPTOR_ADD_BASIC(edd_base, Entice_Config, "automatic_orientation", best_fit_startup, EET_T_UCHAR);
     EET_DATA_DESCRIPTOR_ADD_BASIC(edd_base, Entice_Config, "best_fit_startup", best_fit_startup, EET_T_UCHAR);
     EET_DATA_DESCRIPTOR_ADD_BASIC(edd_base, Entice_Config, "play_animated", play_animated, EET_T_UCHAR);
     EET_DATA_DESCRIPTOR_ADD_BASIC(edd_base, Entice_Config, "duration_controls", duration_controls, EET_T_INT);

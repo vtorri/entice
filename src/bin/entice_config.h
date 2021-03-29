@@ -50,6 +50,7 @@ struct Entice_Config_
     int         duration_controls;
     Eina_Bool   custom_geometry;
     Eina_Bool   fullscreen_startup;
+    Eina_Bool   automatic_orientation;
     Eina_Bool   best_fit_startup;
     Eina_Bool   play_animated;
     Eina_List  *keys;
