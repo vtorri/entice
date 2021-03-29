@@ -104,39 +104,41 @@ static void                                                     \
 _cb_op_##_cfg_name(void *data, Evas_Object *obj,                \
                    void *_event EINA_UNUSED)                    \
 {                                                               \
-   Settings_Ctx *ctx = data;                                    \
-   Entice_Config *config = ctx->config;                         \
-   if (_inv)                                                    \
-     config->_cfg_name = !elm_check_state_get(obj);             \
-   else                                                         \
-     config->_cfg_name = elm_check_state_get(obj);              \
-   entice_config_save(config);                                  \
-                                                                \
+    Settings_Ctx *ctx = data;                                   \
+    Entice_Config *config = ctx->config;                        \
+    if (_inv)                                                   \
+        config->_cfg_name = !elm_check_state_get(obj);          \
+    else                                                        \
+        config->_cfg_name = elm_check_state_get(obj);           \
+    entice_config_save(config);                                 \
 }
 
-#define SETTINGS_CX(_lbl, _cfg_name, _inv)                                \
-   do {                                                                   \
-   o = elm_check_add(box);                                                \
-   evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, 0.0);            \
-   evas_object_size_hint_align_set(o, EVAS_HINT_FILL, 0.5);               \
-   elm_object_text_set(o, _lbl);                                          \
-   elm_check_state_set(o, _inv ? !ctx->config->_cfg_name                  \
-                               : ctx->config->_cfg_name);                 \
-   elm_box_pack_end(box, o);                                              \
-   evas_object_show(o);                                                   \
-   evas_object_smart_callback_add(o, "changed",                           \
-                                  _cb_op_##_cfg_name, ctx);               \
-   } while (0)
+#define SETTINGS_CX(_lbl, _cfg_name, _inv)                          \
+    do                                                              \
+    {                                                               \
+        o = elm_check_add(box);                                     \
+        evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, 0.0); \
+        evas_object_size_hint_align_set(o, EVAS_HINT_FILL, 0.5);    \
+        elm_object_text_set(o, _lbl);                               \
+        elm_check_state_set(o, _inv ? !ctx->config->_cfg_name       \
+                            : ctx->config->_cfg_name);              \
+        elm_box_pack_end(box, o);                                   \
+        elm_object_focus_allow_set(o, EINA_FALSE);                  \
+        evas_object_show(o);                                        \
+        evas_object_smart_callback_add(o, "changed",                \
+                                       _cb_op_##_cfg_name, ctx);    \
+    } while (0)
 
-#define SETTINGS_SEPARATOR                                     \
-   do {                                                        \
-   o = elm_separator_add(box);                                 \
-   evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, 0.0); \
-   evas_object_size_hint_align_set(o, EVAS_HINT_FILL, 0.5);    \
-   elm_separator_horizontal_set(o, EINA_TRUE);                 \
-   elm_box_pack_end(box, o);                                   \
-   evas_object_show(o);                                        \
-   } while (0)
+#define SETTINGS_SEPARATOR                                          \
+    do                                                              \
+    {                                                               \
+        o = elm_separator_add(box);                                 \
+        evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, 0.0); \
+        evas_object_size_hint_align_set(o, EVAS_HINT_FILL, 0.5);    \
+        elm_separator_horizontal_set(o, EINA_TRUE);                 \
+        elm_box_pack_end(box, o);                                   \
+        evas_object_show(o);                                        \
+    } while (0)
 
 
 static void
@@ -254,6 +256,7 @@ entice_settings_init(Evas_Object *win)
     o = elm_frame_add(win);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
+    elm_object_focus_allow_set(o, EINA_FALSE);
     elm_object_text_set(o, "Settings");
     if (!evas_object_key_grab(o, "Escape", 0, 0, EINA_TRUE))
     {
@@ -311,6 +314,7 @@ entice_settings_init(Evas_Object *win)
         elm_spinner_value_set(o, w);
     elm_object_disabled_set(o, !ctx->config->custom_geometry);
     elm_box_pack_end(box, o);
+    elm_object_focus_allow_set(o, EINA_FALSE);
     evas_object_show(o);
     ctx->op_w = o;
     evas_object_smart_callback_add(o, "changed",
@@ -334,6 +338,7 @@ entice_settings_init(Evas_Object *win)
         elm_spinner_value_set(o, h);
     elm_object_disabled_set(o, !ctx->config->custom_geometry);
     elm_box_pack_end(box, o);
+    elm_object_focus_allow_set(o, EINA_FALSE);
     evas_object_show(o);
     ctx->op_h = o;
     evas_object_smart_callback_add(o, "changed",
@@ -361,6 +366,7 @@ entice_settings_init(Evas_Object *win)
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, 0.5);
     elm_spinner_value_set(o, (int) ctx->config->duration_controls);
     elm_box_pack_end(box, o);
+    elm_object_focus_allow_set(o, EINA_FALSE);
     evas_object_show(o);
     ctx->op_duration_controls = o;
     evas_object_smart_callback_add(o, "changed",
