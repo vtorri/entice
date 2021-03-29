@@ -43,7 +43,8 @@ typedef struct
     Entice_Config *config;
     Evas_Object *op_w;
     Evas_Object *op_h;
-     Evas_Object *op_wh_current;
+    Evas_Object *op_wh_current;
+    Evas_Object *op_duration_controls;
 } Settings_Ctx;
 
 static Eina_Bool
@@ -180,14 +181,14 @@ _cb_op_behavior_cg_width(void *data,
                          Evas_Object *obj,
                          void *_event EINA_UNUSED)
 {
-   Settings_Ctx *ctx = data;
-   Entice_Config *config = ctx->config;
+    Settings_Ctx *ctx = data;
+    Entice_Config *config = ctx->config;
 
-   if (config->custom_geometry)
-     {
+    if (config->custom_geometry)
+    {
         config->cg_width = (int) elm_spinner_value_get(obj);
         entice_config_save(config);
-     }
+    }
 }
 
 static void
@@ -195,14 +196,26 @@ _cb_op_behavior_cg_height(void *data,
                           Evas_Object *obj,
                           void *_event EINA_UNUSED)
 {
-   Settings_Ctx *ctx = data;
-   Entice_Config *config = ctx->config;
+    Settings_Ctx *ctx = data;
+    Entice_Config *config = ctx->config;
 
-   if (config->custom_geometry)
-     {
+    if (config->custom_geometry)
+    {
         config->cg_height = (int) elm_spinner_value_get(obj);
         entice_config_save(config);
-     }
+    }
+}
+
+static void
+_cb_op_behavior_duration_controls(void *data,
+                                  Evas_Object *obj,
+                                  void *_event EINA_UNUSED)
+{
+    Settings_Ctx *ctx = data;
+    Entice_Config *config = ctx->config;
+
+    config->duration_controls = (int) elm_spinner_value_get(obj);
+    entice_config_save(config);
 }
 
 OPTIONS_CB(fullscreen_startup, 0);
@@ -331,6 +344,25 @@ entice_settings_init(Evas_Object *win)
 
     SETTINGS_CX("Always best fit", best_fit_startup, 0);
     SETTINGS_CX("Play animated images", play_animated, 0);
+
+    o = elm_label_add(box);
+    evas_object_size_hint_weight_set(o, 0.0, 0.0);
+    evas_object_size_hint_align_set(o, 0.0, 0.5);
+    elm_object_text_set(o, "Display duration of controls:");
+    elm_box_pack_end(box, o);
+    evas_object_show(o);
+
+    o = elm_spinner_add(box);
+    elm_spinner_editable_set(o, EINA_TRUE);
+    elm_spinner_min_max_set(o, 1.0, 20.0);
+    evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, 0.0);
+    evas_object_size_hint_align_set(o, EVAS_HINT_FILL, 0.5);
+    elm_spinner_value_set(o, (int) ctx->config->duration_controls);
+    elm_box_pack_end(box, o);
+    evas_object_show(o);
+    ctx->op_duration_controls = o;
+    evas_object_smart_callback_add(o, "changed",
+                                   _cb_op_behavior_duration_controls, ctx);
 
     elm_object_part_content_set(entice->layout, "entice.settings", frame);
 

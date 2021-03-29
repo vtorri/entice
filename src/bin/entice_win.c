@@ -177,8 +177,8 @@ _cb_mouse_move(void *win, Evas *evas EINA_UNUSED, Evas_Object *obj EINA_UNUSED, 
     if (entice->controls_timer)
         ecore_timer_del(entice->controls_timer);
 
-
-    entice->controls_timer = ecore_timer_add(2.0, _cb_mouse_idle, win);
+    entice->controls_timer = ecore_timer_add(entice->config->duration_controls,
+                                             _cb_mouse_idle, win);
 
     /* display controls */
     if (eina_list_prev(entice->image_current))
@@ -266,7 +266,7 @@ entice_win_add(void)
     }
 
     elm_win_title_set(win, "Entice");
-    /* TODO: icon name */
+    /* FIXME: icon name */
     elm_win_autodel_set(win, EINA_TRUE);
     elm_win_focus_highlight_enabled_set(win, EINA_TRUE);
 
