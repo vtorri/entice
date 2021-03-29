@@ -37,6 +37,22 @@
  *                                  Local                                     *
  *============================================================================*/
 
+#define CONTROLS(_icon, _action)                                       \
+    o = elm_icon_add(win);                                             \
+    elm_icon_standard_set(o, _icon);                                   \
+    evas_object_show(o);                                               \
+    entice->_action = o;                                               \
+                                                                       \
+    o = elm_button_add(win);                                           \
+    elm_object_content_set(o, entice->_action);                        \
+    elm_object_focus_allow_set(o, EINA_FALSE);                         \
+    evas_object_show(o);                                               \
+    elm_object_part_content_set(entice->layout, "entice." #_action, o); \
+                                                                       \
+    elm_layout_signal_callback_add(entice->layout,                     \
+                                   "image,action," #_action, "entice", \
+                                   _cb_image_##_action, entice)
+
 static void
 _cb_image_prev(void *entice, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
 {
@@ -62,13 +78,13 @@ _cb_image_next(void *entice, Evas_Object *obj EINA_UNUSED, const char *emission 
 }
 
 static void
-_cb_image_rot_left(void *entice, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+_cb_image_rotleft(void *entice, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
 {
     entice_image_rotate(((Entice *)entice)->image, 3);
 }
 
 static void
-_cb_image_rot_right(void *entice, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+_cb_image_rotright(void *entice, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
 {
     entice_image_rotate(((Entice *)entice)->image, 1);
 }
@@ -85,60 +101,8 @@ entice_controls_init(Evas_Object *win)
 
     entice = evas_object_data_get(win, "entice");
 
-    o = elm_icon_add(win);
-    elm_icon_standard_set(o, "go-previous");
-    evas_object_show(o);
-    entice->prev = o;
-
-    o = elm_button_add(win);
-    elm_object_content_set(o, entice->prev);
-    elm_object_focus_allow_set(o, EINA_FALSE);
-    evas_object_show(o);
-    elm_object_part_content_set(entice->layout, "entice.go.prev", o);
-
-    o = elm_icon_add(win);
-    elm_icon_standard_set(o, "go-next");
-    evas_object_show(o);
-    entice->next = o;
-
-    o = elm_button_add(win);
-    elm_object_content_set(o, entice->next);
-    elm_object_focus_allow_set(o, EINA_FALSE);
-    evas_object_show(o);
-    elm_object_part_content_set(entice->layout, "entice.go.next", o);
-
-    o = elm_icon_add(win);
-    elm_icon_standard_set(o, "object-rotate-left");
-    evas_object_show(o);
-    entice->rot_left = o;
-
-    o = elm_button_add(win);
-    elm_object_content_set(o, entice->rot_left);
-    elm_object_focus_allow_set(o, EINA_FALSE);
-    evas_object_show(o);
-    elm_object_part_content_set(entice->layout, "entice.rotate.left", o);
-
-    o = elm_icon_add(win);
-    elm_icon_standard_set(o, "object-rotate-right");
-    evas_object_show(o);
-    entice->rot_right = o;
-
-    o = elm_button_add(win);
-    elm_object_content_set(o, entice->rot_right);
-    elm_object_focus_allow_set(o, EINA_FALSE);
-    evas_object_show(o);
-    elm_object_part_content_set(entice->layout, "entice.rotate.right", o);
-
-    elm_layout_signal_callback_add(entice->layout,
-                                   "image,action,prev", "entice",
-                                   _cb_image_prev, entice);
-    elm_layout_signal_callback_add(entice->layout,
-                                   "image,action,next", "entice",
-                                   _cb_image_next, entice);
-    elm_layout_signal_callback_add(entice->layout,
-                                   "image,action,rotleft", "entice",
-                                   _cb_image_rot_left, entice);
-    elm_layout_signal_callback_add(entice->layout,
-                                   "image,action,rotright", "entice",
-                                   _cb_image_rot_right, entice);
+    CONTROLS("go-previous", prev);
+    CONTROLS("go-next", next);
+    CONTROLS("object-rotate-left", rotleft);
+    CONTROLS("object-rotate-right", rotright);
 }

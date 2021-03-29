@@ -44,7 +44,7 @@ collections {
 
       // CONTROLS
       // Previous icon
-       part { name: "entice.go.prev"; type: SWALLOW;
+       part { name: "entice.prev"; type: SWALLOW;
         clip_to: "fader";
         scale: 1;
         description { state: "default" 0.0;
@@ -61,20 +61,12 @@ collections {
           visible: 0;
         }
       }
-      program { signal: "state,prev,hide"; source: "entice";
-        action: STATE_SET "disable" 0.0;
-        target: "entice.go.prev";
-      }
-      program { signal: "state,prev,show"; source: "entice";
-        action: STATE_SET "default" 0.0;
-        target: "entice.go.prev";
-      }
-      program { signal: "mouse,clicked,1"; source: "entice.go.prev";
+      program { signal: "mouse,clicked,1"; source: "entice.prev";
         action: SIGNAL_EMIT "image,action,prev" "entice";
       }
 
       // Next icon
-      part { name: "entice.go.next"; type: SWALLOW;
+      part { name: "entice.next"; type: SWALLOW;
         clip_to: "fader";
         scale: 1;
         description { state: "default" 0.0;
@@ -92,21 +84,13 @@ collections {
           visible: 0;
         }
       }
-      program { signal: "state,next,hide"; source: "entice";
-        action: STATE_SET "disable" 0.0;
-        target: "entice.go.next";
-      }
-       program { signal: "state,next,show"; source: "entice";
-        action: STATE_SET "default" 0.0;
-        target: "entice.go.next";
-      }
       program { signal: "mouse,clicked,1";
-        source: "entice.go.next";
+        source: "entice.next";
         action: SIGNAL_EMIT "image,action,next" "entice";
       }
 
       // Rotate left icon
-      part { name: "entice.rotate.left"; type: SWALLOW;
+      part { name: "entice.rotleft"; type: SWALLOW;
         clip_to: "fader";
         scale: 1;
         description { state: "default" 0.0;
@@ -120,12 +104,12 @@ collections {
           offscale;
         }
       }
-      program { signal: "mouse,clicked,1"; source: "entice.rotate.left";
+      program { signal: "mouse,clicked,1"; source: "entice.rotleft";
         action: SIGNAL_EMIT "image,action,rotleft" "entice";
       }
 
       // Rotate right icon
-      part { name: "entice.rotate.right"; type: SWALLOW;
+      part { name: "entice.rotright"; type: SWALLOW;
         clip_to: "fader";
         scale: 1;
         description { state: "default" 0.0;
@@ -139,7 +123,7 @@ collections {
           offscale;
         }
       }
-      program { signal: "mouse,clicked,1"; source: "entice.rotate.right";
+      program { signal: "mouse,clicked,1"; source: "entice.rotright";
         action: SIGNAL_EMIT "image,action,rotright" "entice";
       }
 

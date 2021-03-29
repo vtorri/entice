@@ -49,8 +49,8 @@ struct Entice
     /* gui */
     Evas_Object *prev;      /* previous image */
     Evas_Object *next;      /* next image */
-    Evas_Object *rot_left;  /* rotate left (counter clock) */
-    Evas_Object *rot_right; /* rotate right (clock) */
+    Evas_Object *rotleft;   /* rotate left (counter clock) */
+    Evas_Object *rotright;  /* rotate right (clock) */
     Ecore_Timer *controls_timer;
     Ecore_Timer *settings_timer;
     Eina_Bool settings_created;
