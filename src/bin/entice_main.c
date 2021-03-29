@@ -81,6 +81,7 @@ static const char *_image_ext[] =
 
     ".avif",
     ".avifs",
+    ".avis",
 
     ".heif",
     ".heic",
