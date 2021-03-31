@@ -5,6 +5,11 @@ project('entice', 'c',
   meson_version   : '>= 0.53',
 )
 
+v_array = meson.project_version().split('.')
+v_maj = v_array[0]
+v_min = v_array[1]
+v_mic = v_array[2]
+
 # install paths
 dir_prefix = get_option('prefix')
 dir_bin = join_paths(dir_prefix, get_option('bindir'))
@@ -12,6 +17,14 @@ dir_lib = join_paths(dir_prefix, get_option('libdir'))
 dir_data = join_paths(dir_prefix, get_option('datadir'))
 dir_pkgdata = join_paths(dir_data, meson.project_name())
 dir_locale = join_paths(dir_prefix, get_option('localedir'))
+
+# host
+
+windows = import('windows')
+
+host_os = host_machine.system()
+win32 = ['windows']
+sys_windows = win32.contains(host_os)
 
 # binaries
 cc = meson.get_compiler('c')
