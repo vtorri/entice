@@ -292,6 +292,7 @@ entice_image_set(Evas_Object *obj, Eina_List *image)
     {
         ERR("Could not load image '%s' : \"%s\"\n",
             filename, evas_load_error_str(err));
+        ERR("Verify that the Evas loader is available for this image if you think it is a valid image");
         return;
     }
 
