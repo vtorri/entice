@@ -1,4 +1,5 @@
-collections {
+collections
+{
   group { name: "entice/core";
     images.image: "vg1.png" COMP;
     parts {
@@ -43,18 +44,49 @@ collections {
       }
 
       // CONTROLS
-      // Previous icon
-       part { name: "entice.prev"; type: SWALLOW;
-        clip_to: "fader";
+
+      // Next icon
+      part
+      {
+        name: "entice.next";
+        type: SWALLOW;
+        clip_to: fader;
         scale: 1;
-        description { state: "default" 0.0;
-          rel1.relative: 0.0 0.5;
-          rel2.relative: 0.0 0.5;
-          rel1.offset: 15 0;
-          rel2.offset: 15 -1;
-          align: 0.0 0.5;
-          min: 32 32;
-          max: 32 32;
+        description
+        {
+          state: "default" 0.0;
+          rel1.relative: 1.0 1.0;
+          rel2.relative: 1.0 1.0;
+          rel1.offset: 0 0;
+          rel2.offset: -16 -16;
+          align: 1.0 1.0;
+          offscale;
+        }
+        description { state: "disable" 0.0;
+          inherit: "default" 0.0;
+          visible: 0;
+        }
+      }
+      program { signal: "mouse,clicked,1"; source: "entice.next";
+        action: SIGNAL_EMIT "image,action,next" "entice";
+      }
+
+      // Previous icon
+      part
+      {
+        name: "entice.prev";
+        type: SWALLOW;
+        clip_to: fader;
+        scale: 1;
+        description
+        {
+          state: "default" 0.0;
+          rel1.relative: 1.0 1.0;
+          rel2.relative: 1.0 1.0;
+          rel1.offset: 0 0;
+          rel2.offset: -40 -16;
+          align: 1.0 1.0;
+          offscale;
         }
         description { state: "disable" 0.0;
           inherit: "default" 0.0;
@@ -65,18 +97,21 @@ collections {
         action: SIGNAL_EMIT "image,action,prev" "entice";
       }
 
-      // Next icon
-      part { name: "entice.next"; type: SWALLOW;
-        clip_to: "fader";
+      // Rotate right icon
+      part
+      {
+        name: "entice.rotright";
+        type: SWALLOW;
+        clip_to: fader;
         scale: 1;
-        description { state: "default" 0.0;
-          rel1.relative: 1.0 0.5;
-          rel2.relative: 1.0 0.5;
-          rel1.offset: -16 0;
-          rel2.offset: -16 -1;
-          align: 1.0 0.5;
-          min: 32 32;
-          max: 32 32;
+        description
+        {
+          state: "default" 0.0;
+          rel1.relative: 1.0 1.0;
+          rel2.relative: 1.0 1.0;
+          rel1.offset: 0 0;
+          rel2.offset: -80 -16;
+          align: 1.0 1.0;
           offscale;
         }
         description { state: "disable" 0.0;
@@ -84,68 +119,63 @@ collections {
           visible: 0;
         }
       }
-      program { signal: "mouse,clicked,1";
-        source: "entice.next";
-        action: SIGNAL_EMIT "image,action,next" "entice";
+      program { signal: "mouse,clicked,1"; source: "entice.rotright";
+        action: SIGNAL_EMIT "image,action,rotright" "entice";
       }
 
       // Rotate left icon
-      part { name: "entice.rotleft"; type: SWALLOW;
-        clip_to: "fader";
+      part
+      {
+        name: "entice.rotleft";
+        type: SWALLOW;
+        clip_to: fader;
         scale: 1;
-        description { state: "default" 0.0;
-          rel1.relative: 0.5 1.0;
-          rel2.relative: 0.5 1.0;
-          rel1.offset: -16 -16;
-          rel2.offset: -16 -16;
+        description
+        {
+          state: "default" 0.0;
+          rel1.relative: 1.0 1.0;
+          rel2.relative: 1.0 1.0;
+          rel1.offset: 0 0;
+          rel2.offset: -104 -16;
           align: 1.0 1.0;
-          min: 32 32;
-          max: 32 32;
           offscale;
+        }
+        description { state: "disable" 0.0;
+          inherit: "default" 0.0;
+          visible: 0;
         }
       }
       program { signal: "mouse,clicked,1"; source: "entice.rotleft";
         action: SIGNAL_EMIT "image,action,rotleft" "entice";
       }
 
-      // Rotate right icon
-      part { name: "entice.rotright"; type: SWALLOW;
-        clip_to: "fader";
+      // Settings icon
+      part
+      {
+        name: "entice.settings";
+        type: SWALLOW;
+        clip_to: fader;
         scale: 1;
-        description { state: "default" 0.0;
-          rel1.relative: 0.5 1.0;
-          rel2.relative: 0.5 1.0;
-          rel1.offset: 15 -16;
-          rel2.offset: 15 -16;
-          align: 0.0 1.0;
-          min: 32 32;
-          max: 32 32;
+        description
+        {
+          state: "default" 0.0;
+          rel1.relative: 1.0 0.0;
+          rel2.relative: 1.0 0.0;
+          rel1.offset: -16 16;
+          rel2.offset: -16 16;
+          align: 1.0 0.0;
           offscale;
         }
-      }
-      program { signal: "mouse,clicked,1"; source: "entice.rotright";
-        action: SIGNAL_EMIT "image,action,rotright" "entice";
-      }
-
-      // Settings icon
-      part { name: "entice.settings"; type: SWALLOW;
-        clip_to: "fader";
-        scale: 1;
-        description { state: "default" 0.0;
-          rel1.relative: 0.5 0.0;
-          rel2.relative: 0.5 0.0;
-          rel1.offset: 15 48;
-          rel2.offset: 15 48;
-          align: 0.0 1.0;
-          min: 32 32;
-          max: 32 32;
-          offscale;
+        description { state: "disable" 0.0;
+          inherit: "default" 0.0;
+          visible: 0;
         }
       }
       program { signal: "mouse,clicked,1"; source: "entice.settings";
         action: SIGNAL_EMIT "image,action,settings" "entice";
       }
 
+      // Fader rectangle
       part { name: "fader"; type: RECT;
         mouse_events: 0;
         description { state: "default" 0.0;
