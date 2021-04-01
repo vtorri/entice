@@ -11,27 +11,33 @@ The EFL.
 
 ### Supported images
 
-The following image formats are supported, if they are supported by the EFL:
+The following image formats (with the corresponding file extension) are
+supported, if they are supported by the EFL:
 
-- avif
-- bmp
-- dds
-- gif
-- heif
-- ico
-- jp2k
-- jpeg
-- pmaps
-- png
-- psd
-- svg
-- tga
-- tgv
-- tiff
-- wbmp
-- webp
-- xcf
-- xpm
+Image format  |  File extension
+------------  |  --------------
+ avif         | .avif, .avifs, .avis
+
+- avif (.avif, .avifs, .avis)
+- bmp (.bmp)
+- dds (.dds)
+- gif (.gif
+- heif (.heif)
+- ico (.ico, .cur)
+- jp2k (.jp2k, .jp2,.jpx, .jpf)
+- jpeg (.jpg, .jpeg, .jfif)
+- pmaps (.pbm, .pgm, .ppm, .pnm)
+- png (.png)
+- psd (.psd)
+- raw (a lot..)
+- svg (.svg, .svg.gz)
+- tga (.tga)
+- tgv (.tgv)
+- tiff (tiff)
+- wbmp (.wbmp)
+- webp (.webp)
+- xcf (.xcf)
+- xpm (.xpm)
 
 Animated images, like gif, avif or heif, can also be played.
 
