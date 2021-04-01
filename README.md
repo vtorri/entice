@@ -17,6 +17,7 @@ supported, if they are supported by the EFL:
 Image format  |  File extension
 ------------  |  --------------
  avif         | .avif, .avifs, .avis
+ bmp          | .bmp
 
 - avif (.avif, .avifs, .avis)
 - bmp (.bmp)
