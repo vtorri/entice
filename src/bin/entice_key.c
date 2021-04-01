@@ -90,7 +90,7 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
         }
         else if (!strcmp(ev->keyname, "f"))
         {
-            entice_image_zoom_fit(win);
+            entice_image_zoom_fit(entice->image);
         }
         else if (!strcmp(ev->keyname, "s"))
         {
