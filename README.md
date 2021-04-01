@@ -18,27 +18,24 @@ Image format  |  File extension
 ------------  |  --------------
  avif         | .avif, .avifs, .avis
  bmp          | .bmp
-
-- avif (.avif, .avifs, .avis)
-- bmp (.bmp)
-- dds (.dds)
-- gif (.gif
-- heif (.heif)
-- ico (.ico, .cur)
-- jp2k (.jp2k, .jp2,.jpx, .jpf)
-- jpeg (.jpg, .jpeg, .jfif)
-- pmaps (.pbm, .pgm, .ppm, .pnm)
-- png (.png)
-- psd (.psd)
-- raw (a lot..)
-- svg (.svg, .svg.gz)
-- tga (.tga)
-- tgv (.tgv)
-- tiff (tiff)
-- wbmp (.wbmp)
-- webp (.webp)
-- xcf (.xcf)
-- xpm (.xpm)
+ dds          | .dds
+ gif          | .gif
+ heif         | .heif
+ ico          | .ico, .cur
+ jp2k         | .jp2k, .jp2,.jpx, .jpf
+ jpeg         | .jpg, .jpeg, .jfif
+ pmaps        | .pbm, .pgm, .ppm, .pnm
+ png          | .png
+ psd          | .psd
+ raw          | a lot..
+ svg          | .svg, .svg.gz
+ tga          | .tga
+ tgv          | .tgv
+ tiff         | .tiff
+ wbmp         | .wbmp
+ webp         | .webp
+ xcf          | .xcf
+ xpm          | .xpm
 
 Animated images, like gif, avif or heif, can also be played.
 
