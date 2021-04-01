@@ -37,7 +37,7 @@ Image format  |  File extension
  xcf          | .xcf
  xpm          | .xpm
 
-### Aniamted images
+### Animated images
 
 Animated images, like gif, avif or heif, can also be played.
 
