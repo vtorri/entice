@@ -74,13 +74,13 @@ collections
       // Next icon
       ICON_PART("next", 0)
 
-      // Previous icon
+      // Previous icon: padding of 8
       ICON_PART("prev", 24)
 
-      // Rotate right icon
+      // Rotate right icon: padding of 24
       ICON_PART("rotright", 64)
 
-      // Rotate left icon
+      // Rotate left icon: padding of 8
       ICON_PART("rotleft", 88)
 
       // Settings icon
