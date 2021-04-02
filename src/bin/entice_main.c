@@ -75,10 +75,6 @@ static const char *_image_ext[] =
 
     ".psd",
 
-    ".tgv",
-
-    ".dds",
-
     ".avif",
     ".avifs",
     ".avis",
@@ -135,6 +131,10 @@ static const char *_image_ext[] =
     ".srw",
     ".tif",
     ".x3f",
+
+    ".dds",
+
+    ".tgv",
 
     NULL
 };
