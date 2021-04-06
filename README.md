@@ -58,6 +58,7 @@ rotation counter-clockwise | Ctrl-Alt-r
 Original size | Ctrl-0
 Best fit | f
 Open Settings | s
+Copy file name in clipboard | Ctrl-c
 Exit Settings | Esc
 
 ### Mouse
