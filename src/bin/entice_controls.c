@@ -129,9 +129,7 @@ _cb_image_zoomorig(void *win, Evas_Object *obj EINA_UNUSED, const char *emission
     Entice *entice;
 
     entice = evas_object_data_get(win, "entice");
-    //entice_image_rotate(entice->image, 1);
-    printf("zoom 1:1 \n");
-    fflush(stdout);
+    entice_image_zoom(entice->image, 1.0);
 }
 
 static void
@@ -140,9 +138,21 @@ _cb_image_zoomfit(void *win, Evas_Object *obj EINA_UNUSED, const char *emission 
     Entice *entice;
 
     entice = evas_object_data_get(win, "entice");
-    //entice_image_rotate(entice->image, 1);
-    printf("zoom fit \n");
-    fflush(stdout);
+    entice_image_zoom_fit(entice->image);
+}
+
+static void
+_cb_image_zoomcheck(void *win, Evas_Object *obj, void *event_info EINA_UNUSED)
+{
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+    if (elm_check_state_get(obj) == EINA_TRUE)
+        entice_image_zoom_fit(entice->image);
+    else
+    {
+        /* FIXME */
+    }
 }
 
 static void
@@ -197,10 +207,14 @@ entice_controls_init(Evas_Object *win)
     CONTROLS("go-previous", prev);
     CONTROLS("go-next", next);
 
+    /* best fit checkbox */
     o = elm_check_add(win);
     elm_object_style_set(o, "default");
+    elm_object_focus_allow_set(o, EINA_FALSE);
     evas_object_show(o);
     entice->zoomcheck = o;
+    evas_object_smart_callback_add(entice->zoomcheck, "changed",
+                                   _cb_image_zoomcheck, win);
 
     elm_object_part_content_set(entice->layout, "entice.zoomcheck", entice->zoomcheck);
 
@@ -211,6 +225,7 @@ entice_controls_init(Evas_Object *win)
     elm_object_text_set(o, "2000%");
     elm_entry_single_line_set(o, EINA_TRUE);
     //evas_object_smart_callback_add(o, "activated", _entry_activated_cb, NULL);
+    elm_object_focus_allow_set(o, EINA_FALSE);
     evas_object_show(o);
     entice->zoomval = o;
 

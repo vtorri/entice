@@ -393,6 +393,9 @@ entice_image_zoom(Evas_Object *obj, double zoom)
     elm_scroller_policy_set(entice->scroller,
                             ELM_SCROLLER_POLICY_AUTO, ELM_SCROLLER_POLICY_AUTO);
 
+    /* update controls */
+    elm_check_state_set(entice->zoomcheck, EINA_FALSE);
+
     sd->is_fit = EINA_FALSE;
 }
 
@@ -408,7 +411,6 @@ entice_image_zoom_fit(Evas_Object *obj)
     Evas_Coord ih;
     Evas_Coord x;
     Evas_Coord y;
-    Evas_Image_Orient orient;
 
     sd = evas_object_smart_data_get(obj);
     EINA_SAFETY_ON_NULL_RETURN(sd);
@@ -420,7 +422,6 @@ entice_image_zoom_fit(Evas_Object *obj)
     EINA_SAFETY_ON_NULL_RETURN(win);
 
     evas_object_geometry_get(win, NULL, NULL, &w, &h);
-    orient = evas_object_image_orient_get(sd->img);
     evas_object_image_size_get(sd->img, &iw, &ih);
 
     if ((w * ih) > (iw * h))
@@ -452,6 +453,9 @@ entice_image_zoom_fit(Evas_Object *obj)
 
     elm_scroller_policy_set(entice->scroller,
                             ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_OFF);
+
+    /* update controls */
+    elm_check_state_set(entice->zoomcheck, EINA_TRUE);
 
     sd->is_fit = EINA_TRUE;
 }
