@@ -49,6 +49,7 @@ struct Img_
     int fr;
     int fr_num;
     int loops;
+    Eina_Bool is_fit;
 };
 
 static Evas_Smart *_smart = NULL;
@@ -391,6 +392,8 @@ entice_image_zoom(Evas_Object *obj, double zoom)
 
     elm_scroller_policy_set(entice->scroller,
                             ELM_SCROLLER_POLICY_AUTO, ELM_SCROLLER_POLICY_AUTO);
+
+    sd->is_fit = EINA_FALSE;
 }
 
 void
@@ -409,6 +412,9 @@ entice_image_zoom_fit(Evas_Object *obj)
 
     sd = evas_object_smart_data_get(obj);
     EINA_SAFETY_ON_NULL_RETURN(sd);
+
+    if (sd->is_fit)
+        return;
 
     win = evas_object_data_get(obj, "win");
     EINA_SAFETY_ON_NULL_RETURN(win);
@@ -446,4 +452,6 @@ entice_image_zoom_fit(Evas_Object *obj)
 
     elm_scroller_policy_set(entice->scroller,
                             ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_OFF);
+
+    sd->is_fit = EINA_TRUE;
 }

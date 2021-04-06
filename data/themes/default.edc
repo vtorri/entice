@@ -1,28 +1,7 @@
-#define ICON_PART(_NAME, _OFFX) \
-      part \
-      { \
-        name: "entice."_NAME; \
-        type: SWALLOW; \
-        clip_to: fader; \
-        scale: 1; \
-        description \
-        { \
-          state: "default" 0.0; \
-          rel1.relative: 1.0 1.0; \
-          rel2.relative: 1.0 1.0; \
-          rel1.offset: 0 0; \
-          rel2.offset: (-16-_OFFX) -16; \
-          align: 1.0 1.0; \
-          offscale; \
-        } \
-        description { state: "disable" 0.0; \
-          inherit: "default" 0.0; \
-          visible: 0; \
-        } \
-      } \
-      program { signal: "mouse,clicked,1"; source: "entice."_NAME; \
-        action: SIGNAL_EMIT "image,action,"_NAME "entice"; \
-      }
+#define ICON_SIZE 30
+
+// padding between icon controls and window border
+#define GB_PAD 10
 
 collections
 {
@@ -71,17 +50,305 @@ collections
 
       // CONTROLS
 
+      // Zoom best fit checkbox
+      part
+      {
+        name: "entice.zoomcheck";
+        type: SWALLOW;
+        clip_to: fader;
+        scale: 1;
+        description
+        {
+          state: "default" 0.0;
+          fixed: 1 1;
+          rel.to: "entice.zoomfit";
+          rel1.relative: 0.0 0.0;
+          rel1.offset: -1 0;
+          rel2.relative: 0.0 1.0;
+          rel2.offset: -1 -1;
+          //min: ICON_SIZE ICON_SIZE;
+          align: 1.0 1.0;
+          offscale;
+        }
+        description { state: "disable" 0.0;
+          inherit: "default" 0.0;
+          visible: 0;
+        }
+      }
+      program { signal: "mouse,clicked,1"; source: "entice.zoomcheck";
+        action: SIGNAL_EMIT "image,action,zoomcheck" "entice";
+      }
+
+      // Zoom best fit icon
+      part
+      {
+        name: "entice.zoomfit";
+        type: SWALLOW;
+        clip_to: fader;
+        scale: 1;
+        description
+        {
+          state: "default" 0.0;
+          fixed: 1 1;
+          rel.to: "entice.zoomorig";
+          rel1.relative: 0.0 0.0;
+          rel1.offset: -1 0;
+          rel2.relative: 0.0 1.0;
+          rel2.offset: -1 -1;
+          min: ICON_SIZE ICON_SIZE;
+          align: 1.0 1.0;
+          offscale;
+        }
+        description { state: "disable" 0.0;
+          inherit: "default" 0.0;
+          visible: 0;
+        }
+      }
+      program { signal: "mouse,clicked,1"; source: "entice.zoomfit";
+        action: SIGNAL_EMIT "image,action,zoomfit" "entice";
+      }
+
+      // Zoom original icon
+      part
+      {
+        name: "entice.zoomorig";
+        type: SWALLOW;
+        clip_to: fader;
+        scale: 1;
+        description
+        {
+          state: "default" 0.0;
+          fixed: 1 1;
+          rel.to: "entice.zoomout";
+          rel1.relative: 0.0 0.0;
+          rel1.offset: -1 0;
+          rel2.relative: 0.0 1.0;
+          rel2.offset: -1 -1;
+          min: ICON_SIZE ICON_SIZE;
+          align: 1.0 1.0;
+          offscale;
+        }
+        description { state: "disable" 0.0;
+          inherit: "default" 0.0;
+          visible: 0;
+        }
+      }
+      program { signal: "mouse,clicked,1"; source: "entice.zoomorig";
+        action: SIGNAL_EMIT "image,action,zoomorig" "entice";
+      }
+
+      // Zoom out icon
+      part
+      {
+        name: "entice.zoomout";
+        type: SWALLOW;
+        clip_to: fader;
+        scale: 1;
+        description
+        {
+          state: "default" 0.0;
+          fixed: 1 1;
+          rel.to: "entice.zoomval";
+          rel1.relative: 0.0 0.0;
+          rel1.offset: -1 0;
+          rel2.relative: 0.0 1.0;
+          rel2.offset: -1 -1;
+          min: ICON_SIZE ICON_SIZE;
+          align: 1.0 1.0;
+          offscale;
+        }
+        description { state: "disable" 0.0;
+          inherit: "default" 0.0;
+          visible: 0;
+        }
+      }
+      program { signal: "mouse,clicked,1"; source: "entice.zoomout";
+        action: SIGNAL_EMIT "image,action,zoomout" "entice";
+      }
+
+      // entry
+      part
+      {
+        name: "entice.zoomval";
+        type: SWALLOW;
+        clip_to: fader;
+        scale: 1;
+        description
+        {
+          state: "default" 0.0;
+          fixed: 1 1;
+          rel.to: "entice.zoomin";
+          rel1.relative: 0.0 0.0;
+          rel1.offset: -1 0;
+          rel2.relative: 0.0 1.0;
+          rel2.offset: -1 -1;
+          align: 1.0 1.0;
+          offscale;
+        }
+        description { state: "disable" 0.0;
+          inherit: "default" 0.0;
+          visible: 0;
+        }
+      }
+      program { signal: "mouse,clicked,1"; source: "entice.zoomval";
+        action: SIGNAL_EMIT "image,action,zoomval" "entice";
+      }
+
+      // Zoom in icon
+      part
+      {
+        name: "entice.zoomin";
+        type: SWALLOW;
+        clip_to: fader;
+        scale: 1;
+        description
+        {
+          state: "default" 0.0;
+          fixed: 1 1;
+          rel.to: "entice.rotleft";
+          rel1.relative: 0.0 0.0;
+          rel1.offset: -9 0;
+          rel2.relative: 0.0 1.0;
+          rel2.offset: -9 -1;
+          min: ICON_SIZE ICON_SIZE;
+          align: 1.0 1.0;
+          offscale;
+        }
+        description { state: "disable" 0.0;
+          inherit: "default" 0.0;
+          visible: 0;
+        }
+      }
+      program { signal: "mouse,clicked,1"; source: "entice.zoomin";
+        action: SIGNAL_EMIT "image,action,zoomin" "entice";
+      }
+
+      // Rotate left icon
+      part
+      {
+        name: "entice.rotleft";
+        type: SWALLOW;
+        clip_to: fader;
+        scale: 1;
+        description
+        {
+          state: "default" 0.0;
+          fixed: 1 1;
+          rel.to: "entice.rotright";
+          rel1.relative: 0.0 0.0;
+          rel1.offset: -1 0;
+          rel2.relative: 0.0 1.0;
+          rel2.offset: -1 -1;
+          min: ICON_SIZE ICON_SIZE;
+          align: 1.0 1.0;
+          offscale;
+        }
+        description { state: "disable" 0.0;
+          inherit: "default" 0.0;
+          visible: 0;
+        }
+      }
+      program { signal: "mouse,clicked,1"; source: "entice.rotleft";
+        action: SIGNAL_EMIT "image,action,rotleft" "entice";
+      }
+
+      // Rotate right icon
+      part
+      {
+        name: "entice.rotright";
+        type: SWALLOW;
+        clip_to: fader;
+        scale: 1;
+        description
+        {
+          state: "default" 0.0;
+          fixed: 1 1;
+          rel.to: "entice.prev";
+          rel1.relative: 0.0 0.0;
+          rel1.offset: -9 0;
+          rel2.relative: 0.0 1.0;
+          rel2.offset: -9 -1;
+          min: ICON_SIZE ICON_SIZE;
+          align: 1.0 1.0;
+          offscale;
+        }
+        description { state: "disable" 0.0;
+          inherit: "default" 0.0;
+          visible: 0;
+        }
+      }
+      program { signal: "mouse,clicked,1"; source: "entice.rotright";
+        action: SIGNAL_EMIT "image,action,rotright" "entice";
+      }
+
+      // Prev icon
+      part
+      {
+        name: "entice.prev";
+        type: SWALLOW;
+        clip_to: fader;
+        scale: 1;
+        description
+        {
+          state: "default" 0.0;
+          fixed: 1 1;
+          rel.to: "entice.next";
+          rel1.relative: 0.0 0.0;
+          rel1.offset: -1 0;
+          rel2.relative: 0.0 1.0;
+          rel2.offset: -1 -1;
+          min: ICON_SIZE ICON_SIZE;
+          align: 1.0 1.0;
+          offscale;
+        }
+        description { state: "disable" 0.0;
+          inherit: "default" 0.0;
+          visible: 0;
+        }
+      }
+      program { signal: "mouse,clicked,1"; source: "entice.prev";
+        action: SIGNAL_EMIT "image,action,prev" "entice";
+      }
+
       // Next icon
-      ICON_PART("next", 0)
+      part
+      {
+        name: "entice.next";
+        type: SWALLOW;
+        clip_to: fader;
+        scale: 1;
+        description
+        {
+          state: "default" 0.0;
+          fixed: 1 1;
+          rel1.relative: 1.0 1.0;
+          rel1.offset: -GB_PAD -GB_PAD;
+          rel2.relative: 1.0 1.0;
+          rel2.offset: -GB_PAD -GB_PAD;
+          min: ICON_SIZE ICON_SIZE;
+          align: 1.0 1.0;
+          offscale;
+        }
+        description { state: "disable" 0.0;
+          inherit: "default" 0.0;
+          visible: 0;
+        }
+      }
+      program { signal: "mouse,clicked,1"; source: "entice.next";
+        action: SIGNAL_EMIT "image,action,next" "entice";
+      }
 
-      // Previous icon: padding of 8
-      ICON_PART("prev", 24)
-
-      // Rotate right icon: padding of 24
-      ICON_PART("rotright", 64)
-
-      // Rotate left icon: padding of 8
-      ICON_PART("rotleft", 88)
+      // event RECT to forbid fade away
+      part { name: "fadenext"; type: RECT;
+        mouse_events: 1;
+        repeat_events: 1;
+        description { state: "default" 0.0;
+          rel.to: "entice.next";
+          rel1.offset: -2 -2;
+          rel2.offset: 2 2;
+          visible: 0;
+        }
+      }
 
       // Settings icon
       part
@@ -93,10 +360,13 @@ collections
         description
         {
           state: "default" 0.0;
-          rel1.relative: 1.0 0.0;
-          rel2.relative: 1.0 0.0;
-          rel1.offset: -16 16;
-          rel2.offset: -16 16;
+          fixed: 1 1;
+          rel.to: "entice.fullscreen";
+          rel1.relative: 0.0 0.0;
+          rel1.offset: -1 0;
+          rel2.relative: 0.0 1.0;
+          rel2.offset: -1 -1;
+          min: ICON_SIZE ICON_SIZE;
           align: 1.0 0.0;
           offscale;
         }
@@ -107,6 +377,64 @@ collections
       }
       program { signal: "mouse,clicked,1"; source: "entice.settings";
         action: SIGNAL_EMIT "image,action,settings" "entice";
+      }
+
+      // Fullscreen icon
+      part
+      {
+        name: "entice.fullscreen";
+        type: SWALLOW;
+        clip_to: fader;
+        scale: 1;
+        description
+        {
+          state: "default" 0.0;
+          fixed: 1 1;
+          rel.to: "entice.close";
+          rel1.relative: 0.0 0.0;
+          rel1.offset: -1 0;
+          rel2.relative: 0.0 1.0;
+          rel2.offset: -1 -1;
+          min: ICON_SIZE ICON_SIZE;
+          align: 1.0 0.0;
+          offscale;
+        }
+        description { state: "disable" 0.0;
+          inherit: "default" 0.0;
+          visible: 0;
+        }
+      }
+      program { signal: "mouse,clicked,1"; source: "entice.fullscreen";
+        action: SIGNAL_EMIT "image,action,fullscreen" "entice";
+      }
+
+
+      // Close icon
+      part
+      {
+        name: "entice.close";
+        type: SWALLOW;
+        clip_to: fader;
+        scale: 1;
+        description
+        {
+          state: "default" 0.0;
+          fixed: 1 1;
+          rel1.relative: 1.0 0.0;
+          rel1.offset: -GB_PAD GB_PAD;
+          rel2.relative: 1.0 0.0;
+          rel2.offset: -GB_PAD GB_PAD;
+          min: ICON_SIZE ICON_SIZE;
+          align: 1.0 0.0;
+          offscale;
+        }
+        description { state: "disable" 0.0;
+          inherit: "default" 0.0;
+          visible: 0;
+        }
+      }
+      program { signal: "mouse,clicked,1"; source: "entice.close";
+        action: SIGNAL_EMIT "image,action,close" "entice";
       }
 
       // Fader rectangle

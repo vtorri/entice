@@ -102,6 +102,62 @@ _cb_image_rotright(void *win, Evas_Object *obj EINA_UNUSED, const char *emission
 }
 
 static void
+_cb_image_zoomin(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+{
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+    //entice_image_rotate(entice->image, 1);
+    printf("zoom in \n");
+    fflush(stdout);
+}
+
+static void
+_cb_image_zoomout(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+{
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+    //entice_image_rotate(entice->image, 1);
+    printf("zoom out \n");
+    fflush(stdout);
+}
+
+static void
+_cb_image_zoomorig(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+{
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+    //entice_image_rotate(entice->image, 1);
+    printf("zoom 1:1 \n");
+    fflush(stdout);
+}
+
+static void
+_cb_image_zoomfit(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+{
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+    //entice_image_rotate(entice->image, 1);
+    printf("zoom fit \n");
+    fflush(stdout);
+}
+
+static void
+_cb_image_close(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+{
+    evas_object_del(win);
+}
+
+static void
+_cb_image_fullscreen(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+{
+    elm_win_fullscreen_set(win, !elm_win_fullscreen_get(win));
+}
+
+static void
 _cb_image_settings(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
 {
     Entice *entice;
@@ -132,9 +188,35 @@ entice_controls_init(Evas_Object *win)
 
     entice = evas_object_data_get(win, "entice");
 
-    CONTROLS("go-previous", prev);
-    CONTROLS("go-next", next);
+    CONTROLS("zoom-fit-best", zoomfit);
+    CONTROLS("zoom-original", zoomorig);
+    CONTROLS("zoom-out", zoomout);
+    CONTROLS("zoom-in", zoomin);
     CONTROLS("object-rotate-left", rotleft);
     CONTROLS("object-rotate-right", rotright);
+    CONTROLS("go-previous", prev);
+    CONTROLS("go-next", next);
+
+    o = elm_check_add(win);
+    elm_object_style_set(o, "default");
+    evas_object_show(o);
+    entice->zoomcheck = o;
+
+    elm_object_part_content_set(entice->layout, "entice.zoomcheck", entice->zoomcheck);
+
+    /* zoom entry */
+    o = elm_entry_add(win);
+    elm_scroller_policy_set(o, ELM_SCROLLER_POLICY_OFF,
+                            ELM_SCROLLER_POLICY_OFF);
+    elm_object_text_set(o, "2000%");
+    elm_entry_single_line_set(o, EINA_TRUE);
+    //evas_object_smart_callback_add(o, "activated", _entry_activated_cb, NULL);
+    evas_object_show(o);
+    entice->zoomval = o;
+
+    elm_object_part_content_set(entice->layout, "entice.zoomval", entice->zoomval);
+
     CONTROLS("preferences-system", settings);
+    CONTROLS("view-fullscreen", fullscreen);
+    CONTROLS("window-close", close);
 }
