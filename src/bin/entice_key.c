@@ -124,10 +124,20 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
         {
             entice_image_rotate(entice->image, 1);
         }
+        else if (!strcmp(ev->keyname, "c"))
+        {
+            const char *filename;
+
+            filename = (char *)eina_list_data_get(entice->image_current);
+            elm_cnp_selection_set(win,
+                                  ELM_SEL_TYPE_CLIPBOARD,
+                                  ELM_SEL_FORMAT_TEXT,
+                                  filename, strlen(filename));
+        }
         else if (!strcmp(ev->key, "KP_0") ||
                  !strcmp(ev->key, "0"))
         {
-            entice_image_zoom(win, 1.0);
+            entice_image_zoom(entice->image, 1.0);
         }
     }
 
