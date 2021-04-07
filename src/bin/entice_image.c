@@ -495,6 +495,8 @@ entice_image_zoom_fit(Evas_Object *obj)
 
     evas_object_move(sd->img, out_x, out_y);
 
+    sd->zoom = zoom;
+
     entice = evas_object_data_get(win, "entice");
     EINA_SAFETY_ON_NULL_RETURN(entice);
 

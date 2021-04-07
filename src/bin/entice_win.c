@@ -366,8 +366,9 @@ entice_win_title_update(Evas_Object *win)
     entice_image_size_get(entice->image, &w, &h);
     filename = eina_list_data_get(entice->image_current);
 
-    snprintf(buf, sizeof(buf), "Entice - %s (%d x %d)",
-             ecore_file_file_get(filename), w, h);
+    snprintf(buf, sizeof(buf), "Entice - %s (%d x %d) %d%%",
+             ecore_file_file_get(filename), w, h,
+             entice_image_zoom_get(entice->image));
     elm_win_title_set(win, buf);
 }
 
