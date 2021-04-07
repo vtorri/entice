@@ -129,7 +129,9 @@ _cb_image_zoomorig(void *win, Evas_Object *obj EINA_UNUSED, const char *emission
     Entice *entice;
 
     entice = evas_object_data_get(win, "entice");
-    entice_image_zoom(entice->image, 1.0);
+    entice_image_zoom_mode_set(entice->image, ENTICE_ZOOM_MODE_NORMAL);
+    entice_image_zoom_set(entice->image, 100);
+    entice_image_update(entice->image);
 }
 
 static void
@@ -138,7 +140,8 @@ _cb_image_zoomfit(void *win, Evas_Object *obj EINA_UNUSED, const char *emission 
     Entice *entice;
 
     entice = evas_object_data_get(win, "entice");
-    entice_image_zoom_fit(entice->image);
+    entice_image_zoom_mode_set(entice->image, ENTICE_ZOOM_MODE_FIT);
+    entice_image_update(entice->image);
 }
 
 static void
@@ -148,10 +151,14 @@ _cb_image_zoomcheck(void *win, Evas_Object *obj, void *event_info EINA_UNUSED)
 
     entice = evas_object_data_get(win, "entice");
     if (elm_check_state_get(obj) == EINA_TRUE)
-        entice_image_zoom_fit(entice->image);
+    {
+        entice_image_zoom_mode_set(entice->image, ENTICE_ZOOM_MODE_FIT);
+        entice_image_update(entice->image);
+    }
     else
     {
-        /* FIXME */
+        entice_image_zoom_mode_set(entice->image, ENTICE_ZOOM_MODE_NORMAL);
+        entice_image_update(entice->image);
     }
 }
 

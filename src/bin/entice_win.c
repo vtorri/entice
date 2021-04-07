@@ -96,15 +96,7 @@ _cb_win_resize(void *data EINA_UNUSED,
     if (!entice || !entice->image_current)
         return;
 
-    switch(entice_image_zoom_mode_get(entice->image))
-    {
-        case ENTICE_ZOOM_MODE_NORMAL:
-            entice_image_zoom(entice->image, 1.0);
-            break;
-        case ENTICE_ZOOM_MODE_FIT:
-            entice_image_zoom_fit(entice->image);
-            break;
-    }
+    entice_image_update(entice->image);
 }
 
 static void

@@ -42,10 +42,18 @@ void entice_image_size_get(Evas_Object *obj, int *w, int *h);
 
 void entice_image_rotate(Evas_Object *obj, unsigned int rot);
 
+void entice_image_zoom_mode_set(Evas_Object *obj, Entice_Zoom_Mode zoom_mode);
+
 Entice_Zoom_Mode entice_image_zoom_mode_get(Evas_Object *obj);
 
-void entice_image_zoom(Evas_Object *win, double zoom);
+void entice_image_zoom_set(Evas_Object *obj, int zoom);
+
+int entice_image_zoom_get(Evas_Object *obj);
+
+void entice_image_zoom_normal(Evas_Object *win);
 
 void entice_image_zoom_fit(Evas_Object *win);
+
+void entice_image_update(Evas_Object *obj);
 
 #endif /* ENTICE_IMAGE_H */

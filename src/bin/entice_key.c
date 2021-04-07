@@ -90,7 +90,12 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
         }
         else if (!strcmp(ev->keyname, "f"))
         {
-            entice_image_zoom_fit(entice->image);
+            entice_image_zoom_mode_set(entice->image, ENTICE_ZOOM_MODE_FIT);
+            entice_image_update(entice->image);
+
+            /* update controls */
+            elm_check_state_set(entice->zoomcheck, EINA_TRUE);
+            /* FIXME entry too */
         }
         else if (!strcmp(ev->keyname, "s"))
         {
@@ -137,7 +142,13 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
         else if (!strcmp(ev->key, "KP_0") ||
                  !strcmp(ev->key, "0"))
         {
-            entice_image_zoom(entice->image, 1.0);
+            entice_image_zoom_mode_set(entice->image, ENTICE_ZOOM_MODE_NORMAL);
+            entice_image_zoom_set(entice->image, 100);
+            entice_image_update(entice->image);
+
+            /* update controls */
+            elm_check_state_set(entice->zoomcheck, EINA_FALSE);
+            /* FIXME entry too */
         }
     }
 

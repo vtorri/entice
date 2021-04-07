@@ -44,12 +44,11 @@ struct Img_
     Evas_Object *bg;
     Evas_Object *img;
     Ecore_Timer *anim;
-    double zoom;
+    int zoom;
     Entice_Zoom_Mode zoom_mode;
     int fr;
     int fr_num;
     int loops;
-    Eina_Bool is_fit;
 };
 
 static Evas_Smart *_smart = NULL;
@@ -134,7 +133,7 @@ _smart_add(Evas_Object *obj)
    evas_object_smart_member_add(sd->img, obj);
    evas_object_image_load_orientation_set(sd->img, EINA_TRUE);
    sd->zoom_mode = ENTICE_ZOOM_MODE_NORMAL;
-   sd->zoom = 1.0;
+   sd->zoom = 100;
 }
 
 static void
@@ -228,17 +227,18 @@ static void
 _entice_image_size_zoom_get(int zoom, int in_w, int in_h, int img_w, int img_h,
                             int *out_x, int *out_y, int *out_w, int *out_h)
 {
-    if (zoom == 100)
-    {
-        *out_x = ((in_w - img_w) / 2.0);
-        *out_y = ((in_h - img_h) / 2.0);
-        *out_w = img_w;
-        *out_h = img_h;
-        return;
-    }
+    *out_w = (zoom * img_w) / 100;
+    *out_h = (zoom * img_h) / 100;
 
-    *out_w = (zoom * in_w) / 100;
-    *out_h = (zoom * in_h) / 100;
+    if (*out_w >= in_w)
+        *out_x = 0;
+    else
+        *out_x = ((in_w - *out_w) / 2);
+
+    if (*out_h >= in_h)
+        *out_y = 0;
+    else
+        *out_y = ((in_h - *out_h) / 2);
 }
 
 static void
@@ -246,8 +246,6 @@ _entice_image_size_fit_get(int in_w, int in_h, int img_w, int img_h,
                            int *out_x, int *out_y, int *out_w, int *out_h,
                            int *zoom)
 {
-    printf("window : %d %d\n", in_w, in_h);
-    printf("image  : %d %d\n", img_w, img_h);
     if ((in_w * img_h) > (img_w * in_h))
     {
         *out_h = in_h;
@@ -263,8 +261,6 @@ _entice_image_size_fit_get(int in_w, int in_h, int img_w, int img_h,
 
     *out_x = ((in_w - *out_w) / 2.0);
     *out_y = ((in_h - *out_h) / 2.0);
-
-    printf("out : %d %d  %d %d  %d%%\n", *out_x, *out_y, *out_w, *out_h, *zoom);
 }
 
 /*============================================================================*
@@ -346,7 +342,7 @@ entice_image_set(Evas_Object *obj, Eina_List *image)
     if ((w < iw) || (h < ih))
         entice_image_zoom_fit(obj);
     else
-        entice_image_zoom(obj, sd->zoom);
+        entice_image_zoom_normal(obj);
 
     if (entice->config->play_animated)
         _entice_image_anim_handle(obj);
@@ -380,6 +376,17 @@ entice_image_rotate(Evas_Object *obj, unsigned int rot)
         entice_image_zoom_fit(obj);
 }
 
+void
+entice_image_zoom_mode_set(Evas_Object *obj, Entice_Zoom_Mode zoom_mode)
+{
+    Img *sd;
+
+    sd = evas_object_smart_data_get(obj);
+    EINA_SAFETY_ON_NULL_RETURN(sd);
+
+    sd->zoom_mode = zoom_mode;
+}
+
 Entice_Zoom_Mode
 entice_image_zoom_mode_get(Evas_Object *obj)
 {
@@ -391,18 +398,42 @@ entice_image_zoom_mode_get(Evas_Object *obj)
     return sd->zoom_mode;
 }
 
+void entice_image_zoom_set(Evas_Object *obj, int zoom)
+{
+    Img *sd;
+
+    sd = evas_object_smart_data_get(obj);
+    EINA_SAFETY_ON_NULL_RETURN(sd);
+
+    sd->zoom = zoom;
+    printf("zoom set : %d\n", sd->zoom);
+    fflush(stdout);
+}
+
+int entice_image_zoom_get(Evas_Object *obj)
+{
+    Img *sd;
+
+    sd = evas_object_smart_data_get(obj);
+    EINA_SAFETY_ON_NULL_RETURN_VAL(sd, 100);
+
+    return sd->zoom;
+}
+
 void
-entice_image_zoom(Evas_Object *obj, double zoom)
+entice_image_zoom_normal(Evas_Object *obj)
 {
     Evas_Object *win;
     Entice *entice;
     Img *sd;
-    Evas_Coord w;
-    Evas_Coord h;
-    Evas_Coord iw;
-    Evas_Coord ih;
-    Evas_Coord x;
-    Evas_Coord y;
+    Evas_Coord win_w;
+    Evas_Coord win_h;
+    Evas_Coord img_w;
+    Evas_Coord img_h;
+    Evas_Coord out_x;
+    Evas_Coord out_y;
+    Evas_Coord out_w;
+    Evas_Coord out_h;
 
     sd = evas_object_smart_data_get(obj);
     EINA_SAFETY_ON_NULL_RETURN(sd);
@@ -410,36 +441,23 @@ entice_image_zoom(Evas_Object *obj, double zoom)
     win = evas_object_data_get(obj, "win");
     EINA_SAFETY_ON_NULL_RETURN(win);
 
-    evas_object_geometry_get(win, NULL, NULL, &w, &h);
-    evas_object_image_size_get(sd->img, &iw, &ih);
+    evas_object_geometry_get(win, NULL, NULL, &win_w, &win_h);
+    evas_object_image_size_get(sd->img, &img_w, &img_h);
 
-    if (zoom == 1.0)
-    {
-        x = ((w - iw) / 2.0);
-        y = ((h - ih) / 2.0);
+    _entice_image_size_zoom_get(sd->zoom, win_w, win_h, img_w, img_h,
+                                &out_x, &out_y,  &out_w, &out_h);
 
-        evas_object_resize(obj, iw, ih);
-        evas_object_size_hint_max_set(obj, iw, ih);
-        evas_object_size_hint_min_set(obj, iw, ih);
+    evas_object_resize(obj, out_w, out_h);
+    evas_object_size_hint_max_set(obj, out_w, out_h);
+    evas_object_size_hint_min_set(obj, out_w, out_h);
 
-        evas_object_move(sd->img, x, y);
-    }
-    else
-    {
-    }
-
-    sd->zoom_mode = ENTICE_ZOOM_MODE_NORMAL;
+    evas_object_move(sd->img, out_x, out_y);
 
     entice = evas_object_data_get(win, "entice");
     EINA_SAFETY_ON_NULL_RETURN(entice);
 
     elm_scroller_policy_set(entice->scroller,
                             ELM_SCROLLER_POLICY_AUTO, ELM_SCROLLER_POLICY_AUTO);
-
-    /* update controls */
-    elm_check_state_set(entice->zoomcheck, EINA_FALSE);
-
-    sd->is_fit = EINA_FALSE;
 }
 
 void
@@ -461,9 +479,6 @@ entice_image_zoom_fit(Evas_Object *obj)
     sd = evas_object_smart_data_get(obj);
     EINA_SAFETY_ON_NULL_RETURN(sd);
 
-    if (sd->is_fit)
-        return;
-
     win = evas_object_data_get(obj, "win");
     EINA_SAFETY_ON_NULL_RETURN(win);
 
@@ -478,16 +493,29 @@ entice_image_zoom_fit(Evas_Object *obj)
     evas_object_size_hint_min_set(obj, out_w, out_h);
 
     evas_object_move(sd->img, out_x, out_y);
-    sd->zoom_mode = ENTICE_ZOOM_MODE_FIT;
 
     entice = evas_object_data_get(win, "entice");
     EINA_SAFETY_ON_NULL_RETURN(entice);
 
     elm_scroller_policy_set(entice->scroller,
                             ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_OFF);
+}
 
-    /* update controls */
-    elm_check_state_set(entice->zoomcheck, EINA_TRUE);
+void
+entice_image_update(Evas_Object *obj)
+{
+    Img *sd;
 
-    sd->is_fit = EINA_TRUE;
+    sd = evas_object_smart_data_get(obj);
+    EINA_SAFETY_ON_NULL_RETURN(sd);
+
+    switch (sd->zoom_mode)
+    {
+        case ENTICE_ZOOM_MODE_NORMAL:
+            entice_image_zoom_normal(obj);
+            break;
+        case ENTICE_ZOOM_MODE_FIT:
+            entice_image_zoom_fit(obj);
+            break;
+    }
 }
