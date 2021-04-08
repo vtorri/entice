@@ -107,7 +107,8 @@ _cb_image_zoomin(void *win, Evas_Object *obj EINA_UNUSED, const char *emission E
     Entice *entice;
 
     entice = evas_object_data_get(win, "entice");
-    //entice_image_rotate(entice->image, 1);
+    entice_image_zoom_increase(entice->image);
+    entice_image_update(entice->image);
     printf("zoom in \n");
     fflush(stdout);
 }
@@ -118,7 +119,8 @@ _cb_image_zoomout(void *win, Evas_Object *obj EINA_UNUSED, const char *emission 
     Entice *entice;
 
     entice = evas_object_data_get(win, "entice");
-    //entice_image_rotate(entice->image, 1);
+    entice_image_zoom_decrease(entice->image);
+    entice_image_update(entice->image);
     printf("zoom out \n");
     fflush(stdout);
 }

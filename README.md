@@ -57,6 +57,8 @@ rotation clockwise|  Ctrl-r
 rotation counter-clockwise | Ctrl-Alt-r
 Original size | Ctrl-0
 Best fit | f
+Zoom in | +
+Zoom out | -
 Open Settings | s
 Copy file name in clipboard | Ctrl-c
 Exit Settings | Esc

@@ -50,6 +50,10 @@ void entice_image_zoom_set(Evas_Object *obj, int zoom);
 
 int entice_image_zoom_get(Evas_Object *obj);
 
+void entice_image_zoom_increase(Evas_Object *obj);
+
+void entice_image_zoom_decrease(Evas_Object *obj);
+
 void entice_image_update(Evas_Object *obj);
 
 #endif /* ENTICE_IMAGE_H */

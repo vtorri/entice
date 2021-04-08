@@ -455,6 +455,46 @@ int entice_image_zoom_get(Evas_Object *obj)
 }
 
 void
+entice_image_zoom_increase(Evas_Object *obj)
+{
+    Img *sd;
+    size_t l;
+
+    sd = evas_object_smart_data_get(obj);
+    EINA_SAFETY_ON_NULL_RETURN(sd);
+
+    l = sizeof(_zoom_levels) / sizeof(int);
+    for (size_t i = 0; i < (l - 1); i++)
+    {
+        if ((_zoom_levels[i] <= sd->zoom) && (sd->zoom < _zoom_levels[i + 1]))
+        {
+            entice_image_zoom_set(obj, _zoom_levels[i + 1]);
+            break;
+        }
+    }
+}
+
+void
+entice_image_zoom_decrease(Evas_Object *obj)
+{
+    Img *sd;
+    size_t l;
+
+    sd = evas_object_smart_data_get(obj);
+    EINA_SAFETY_ON_NULL_RETURN(sd);
+
+    l = sizeof(_zoom_levels) / sizeof(int);
+    for (size_t i = (l - 1); i > 0; i--)
+    {
+        if ((_zoom_levels[i - 1] < sd->zoom) && (sd->zoom <= _zoom_levels[i]))
+        {
+            entice_image_zoom_set(obj, _zoom_levels[i - 1]);
+            break;
+        }
+    }
+}
+
+void
 entice_image_update(Evas_Object *obj)
 {
     Evas_Object *win;

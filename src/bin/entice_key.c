@@ -88,6 +88,16 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
                 entice_image_set(entice->image, prev);
             }
         }
+        else if (!strcmp(ev->key, "plus"))
+        {
+            entice_image_zoom_increase(entice->image);
+            entice_image_update(entice->image);
+        }
+        else if (!strcmp(ev->key, "minus"))
+        {
+            entice_image_zoom_decrease(entice->image);
+            entice_image_update(entice->image);
+        }
         else if (!strcmp(ev->keyname, "f"))
         {
             entice_image_zoom_mode_set(entice->image, ENTICE_ZOOM_MODE_FIT);
