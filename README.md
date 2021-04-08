@@ -1,5 +1,5 @@
 ### Entice
-##### A simple image viewer with basic features written with the EFL (Enlightement Fundation Libraries)
+##### A simple cross-platform image viewer with basic features written with the EFL (Enlightement Fundation Libraries)
 
 ### License:
 
