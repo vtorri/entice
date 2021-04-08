@@ -92,10 +92,6 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
         {
             entice_image_zoom_mode_set(entice->image, ENTICE_ZOOM_MODE_FIT);
             entice_image_update(entice->image);
-
-            /* update controls */
-            elm_check_state_set(entice->zoomcheck, EINA_TRUE);
-            /* FIXME entry too */
         }
         else if (!strcmp(ev->keyname, "s"))
         {
@@ -145,10 +141,6 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
             entice_image_zoom_mode_set(entice->image, ENTICE_ZOOM_MODE_NORMAL);
             entice_image_zoom_set(entice->image, 100);
             entice_image_update(entice->image);
-
-            /* update controls */
-            elm_check_state_set(entice->zoomcheck, EINA_FALSE);
-            /* FIXME entry too */
         }
     }
 

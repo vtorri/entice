@@ -29,4 +29,6 @@
 
 void entice_controls_init(Evas_Object *win);
 
+void entice_controls_update(Evas_Object *win);
+
 #endif /* ENTICE_CONTROLS_H */

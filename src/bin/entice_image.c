@@ -30,6 +30,7 @@
 
 #include "entice_private.h"
 #include "entice_config.h"
+#include "entice_controls.h"
 #include "entice_image.h"
 #include "entice_win.h"
 
@@ -474,4 +475,5 @@ entice_image_update(Evas_Object *obj)
     evas_object_move(sd->img, out_x, out_y);
 
     entice_win_title_update(win);
+    entice_controls_update(win);
 }

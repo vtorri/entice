@@ -229,7 +229,7 @@ entice_controls_init(Evas_Object *win)
     o = elm_entry_add(win);
     elm_scroller_policy_set(o, ELM_SCROLLER_POLICY_OFF,
                             ELM_SCROLLER_POLICY_OFF);
-    elm_object_text_set(o, "2000%");
+    elm_object_text_set(o, "     ");
     elm_entry_single_line_set(o, EINA_TRUE);
     //evas_object_smart_callback_add(o, "activated", _entry_activated_cb, NULL);
     elm_object_focus_allow_set(o, EINA_FALSE);
@@ -241,4 +241,20 @@ entice_controls_init(Evas_Object *win)
     CONTROLS("preferences-system", settings);
     CONTROLS("view-fullscreen", fullscreen);
     CONTROLS("window-close", close);
+}
+
+void
+entice_controls_update(Evas_Object *win)
+{
+    char buf[16];
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+    EINA_SAFETY_ON_NULL_RETURN(entice);
+
+    elm_check_state_set(entice->zoomcheck,
+                        entice_image_zoom_mode_get(entice->image));
+
+    snprintf(buf, sizeof(buf), "%d%%", entice_image_zoom_get(entice->image));
+    elm_object_text_set(entice->zoomval, buf);
 }
