@@ -262,7 +262,7 @@ _entice_image_size_zoom_get(int zoom, int in_w, int in_h, int img_w, int img_h,
     printf("nor window : %d %d\n", in_w, in_h);
     printf("nor image  : %d %d\n", img_w, img_h);
     printf("nor zoom   : %d\n", zoom);
-    *out_w = (zoom * img_w) / 10;
+    *out_w = (zoom * img_w) / 100;
     *out_h = (zoom * img_h) / 100;
 
     if (*out_w >= in_w)
