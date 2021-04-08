@@ -48,6 +48,31 @@ collections
         }
       }
 
+      // SETTINGS
+      part { name: "entice.settings.panel"; type: SWALLOW;
+        description { state: "default" 0.0;
+          fixed: 1 1;
+          visible: 0;
+          rel1.relative: 0.3 0.1;
+          rel2.relative: 0.7 0.9;
+          rel1.offset: 32 32;
+          rel2.offset: -33 -33;
+          offscale;
+        }
+        description { state: "shown" 0.0;
+          inherit: "default" 0.0;
+          visible: 1;
+        }
+      }
+      program { signal: "state,settings,show"; source: "entice";
+        action: STATE_SET "shown" 0.0;
+        target: "entice.settings.panel";
+      }
+      program { signal: "state,settings,hide"; source: "entice";
+        action: STATE_SET "default" 0.0;
+        target: "entice.settings.panel";
+      }
+
       // CONTROLS
 
       // Zoom best fit checkbox
@@ -485,31 +510,6 @@ collections
         action: STATE_SET "default" 0.0;
         transition: DECELERATE 1.5;
         target: "fader";
-      }
-
-      // SETTINGS
-      part { name: "entice.settings.panel"; type: SWALLOW;
-        description { state: "default" 0.0;
-          fixed: 1 1;
-          visible: 0;
-          rel1.relative: 0.3 0.1;
-          rel2.relative: 0.7 0.9;
-          rel1.offset: 32 32;
-          rel2.offset: -33 -33;
-          offscale;
-        }
-        description { state: "shown" 0.0;
-          inherit: "default" 0.0;
-          visible: 1;
-        }
-      }
-      program { signal: "state,settings,show"; source: "entice";
-        action: STATE_SET "shown" 0.0;
-        target: "entice.settings.panel";
-      }
-      program { signal: "state,settings,hide"; source: "entice";
-        action: STATE_SET "default" 0.0;
-        target: "entice.settings.panel";
       }
     }
   }
