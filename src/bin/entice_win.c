@@ -219,6 +219,46 @@ _cb_mouse_down(void *win, Evas *evas EINA_UNUSED, Evas_Object *obj EINA_UNUSED, 
     }
 }
 
+static void
+_cb_mouse_wheel(void *win,
+                Evas *e EINA_UNUSED,
+                Evas_Object *obj EINA_UNUSED,
+                void *event)
+{
+    Entice *entice;
+    Evas_Event_Mouse_Wheel *ev;
+    Eina_Bool ctrl, alt, shift, winm, meta, hyper; /* modifiers */
+
+    ev = (Evas_Event_Mouse_Wheel *)event;
+
+    ctrl = evas_key_modifier_is_set(ev->modifiers, "Control");
+    alt = evas_key_modifier_is_set(ev->modifiers, "Alt");
+    shift = evas_key_modifier_is_set(ev->modifiers, "Shift");
+    winm = evas_key_modifier_is_set(ev->modifiers, "Super");
+    meta =
+        evas_key_modifier_is_set(ev->modifiers, "Meta") ||
+        evas_key_modifier_is_set(ev->modifiers, "AltGr") ||
+        evas_key_modifier_is_set(ev->modifiers, "ISO_Level3_Shift");
+    hyper = evas_key_modifier_is_set(ev->modifiers, "Hyper");
+
+    entice = evas_object_data_get(win, "entice");
+
+    /* Ctrl modifier */
+    if (ctrl && !alt && !shift && !winm && !meta && !hyper)
+    {
+        if (ev->z == 1)
+        {
+            entice_image_zoom_increase(entice->image);
+            entice_image_update(entice->image);
+        }
+        else
+        {
+            entice_image_zoom_decrease(entice->image);
+            entice_image_update(entice->image);
+        }
+    }
+}
+
 /*============================================================================*
  *                                 Global                                     *
  *============================================================================*/
@@ -336,6 +376,8 @@ entice_win_add(void)
                                    _cb_mouse_move, win);
     evas_object_event_callback_add(o, EVAS_CALLBACK_MOUSE_DOWN,
                                    _cb_mouse_down, win);
+    evas_object_event_callback_add(o, EVAS_CALLBACK_MOUSE_WHEEL,
+                                   _cb_mouse_wheel, win);
     entice->event_mouse = o;
 
     /* dummy button to catch keyboard events */

@@ -70,3 +70,4 @@ Action | Shortcut
 fullscreen | double click
 Open Settings | right click
 Exit Settings | right click
+Zoom in/out | Ctrl-mouse wheel
