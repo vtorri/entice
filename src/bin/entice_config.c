@@ -79,7 +79,7 @@ _entice_config_new(void)
     config->automatic_orientation = EINA_TRUE;
     config->best_fit_startup = EINA_TRUE;
     config->play_animated = EINA_TRUE;
-    config->duration_controls = 2;
+    config->duration_controls = 10;
     _entice_default_keys_add(config);
 
     return config;

@@ -138,7 +138,6 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
         else if (!strcmp(ev->key, "KP_0") ||
                  !strcmp(ev->key, "0"))
         {
-            entice_image_zoom_mode_set(entice->image, ENTICE_ZOOM_MODE_NORMAL);
             entice_image_zoom_set(entice->image, 100);
             entice_image_update(entice->image);
         }

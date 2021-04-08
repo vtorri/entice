@@ -129,7 +129,6 @@ _cb_image_zoomorig(void *win, Evas_Object *obj EINA_UNUSED, const char *emission
     Entice *entice;
 
     entice = evas_object_data_get(win, "entice");
-    entice_image_zoom_mode_set(entice->image, ENTICE_ZOOM_MODE_NORMAL);
     entice_image_zoom_set(entice->image, 100);
     entice_image_update(entice->image);
 }
@@ -150,6 +149,7 @@ _cb_image_zoomcheck(void *win, Evas_Object *obj, void *event_info EINA_UNUSED)
     Entice *entice;
 
     entice = evas_object_data_get(win, "entice");
+
     if (elm_check_state_get(obj) == EINA_TRUE)
     {
         entice_image_zoom_mode_set(entice->image, ENTICE_ZOOM_MODE_FIT);
@@ -160,6 +160,64 @@ _cb_image_zoomcheck(void *win, Evas_Object *obj, void *event_info EINA_UNUSED)
         entice_image_zoom_mode_set(entice->image, ENTICE_ZOOM_MODE_NORMAL);
         entice_image_update(entice->image);
     }
+}
+
+static void
+_cb_image_zoomval(void *win, Evas_Object *obj, void *event_info EINA_UNUSED)
+{
+    Entice *entice;
+    const char *t;
+    char *t2;
+    size_t l;
+    size_t i;
+    int z = 0;
+    int p = 1;
+
+    entice = evas_object_data_get(win, "entice");
+
+    elm_object_focus_set(entice->event_kbd, EINA_TRUE);
+
+    t = elm_entry_entry_get(obj);
+    t2 = strdup(t);
+
+    if (!t2)
+        goto update;
+
+    l = strlen(t2);
+    if (t2[l - 1] == '%')
+    {
+        t2[l - 1] = '\0';
+        l--;
+    }
+    if ((l == 0) || (l > 4))
+        goto free_t2;
+
+    for (i = 0;  i < l; i++, p *= 10)
+    {
+        size_t j = l - 1 - i;
+        if ((t2[j] < '0') || (t2[j] > '9'))
+        goto free_t2;
+
+        z += (t2[j] - '0') * p;
+    }
+
+    free(t2);
+
+    if ((z < 2))
+        z = 2;
+
+    if (z > 2000)
+        z = 2000;
+
+    entice_image_zoom_set(entice->image, z);
+    entice_image_update(entice->image);
+
+    return;
+
+  free_t2:
+    free(t2);
+  update:
+    entice_controls_update(win);
 }
 
 static void
@@ -217,11 +275,10 @@ entice_controls_init(Evas_Object *win)
     /* best fit checkbox */
     o = elm_check_add(win);
     elm_object_style_set(o, "default");
+    evas_object_smart_callback_add(o, "changed", _cb_image_zoomcheck, win);
     elm_object_focus_allow_set(o, EINA_FALSE);
     evas_object_show(o);
     entice->zoomcheck = o;
-    evas_object_smart_callback_add(entice->zoomcheck, "changed",
-                                   _cb_image_zoomcheck, win);
 
     elm_object_part_content_set(entice->layout, "entice.zoomcheck", entice->zoomcheck);
 
@@ -231,8 +288,7 @@ entice_controls_init(Evas_Object *win)
                             ELM_SCROLLER_POLICY_OFF);
     elm_object_text_set(o, "     ");
     elm_entry_single_line_set(o, EINA_TRUE);
-    //evas_object_smart_callback_add(o, "activated", _entry_activated_cb, NULL);
-    elm_object_focus_allow_set(o, EINA_FALSE);
+    evas_object_smart_callback_add(o, "activated", _cb_image_zoomval, win);
     evas_object_show(o);
     entice->zoomval = o;
 

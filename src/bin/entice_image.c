@@ -55,6 +55,38 @@ struct Img_
 static Evas_Smart *_smart = NULL;
 static Evas_Smart_Class _parent_sc = EVAS_SMART_CLASS_INIT_NULL;
 
+static int _zoom_levels[] =
+{
+    2,
+    5,
+    10,
+    20,
+    33,
+    50,
+    67,
+    100,
+    133,
+    200,
+    300,
+    400,
+    500,
+    600,
+    700,
+    800,
+    900,
+    1000,
+    1100,
+    1200,
+    1300,
+    1400,
+    1500,
+    1600,
+    1700,
+    1800,
+    1900,
+    2000
+};
+
 static Eina_Bool
 _entice_image_anim_cb(void *obj)
 {
@@ -406,6 +438,7 @@ void entice_image_zoom_set(Evas_Object *obj, int zoom)
     sd = evas_object_smart_data_get(obj);
     EINA_SAFETY_ON_NULL_RETURN(sd);
 
+    sd->zoom_mode = ENTICE_ZOOM_MODE_NORMAL;
     sd->zoom = zoom;
     printf("zoom set : %d\n", sd->zoom);
     fflush(stdout);
