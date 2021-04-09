@@ -296,7 +296,7 @@ entice_controls_init(Evas_Object *win)
 
     elm_object_part_content_set(entice->layout, "entice.zoomval", entice->zoomval);
 
-    CONTROLS("preferences-system", settings);
+    CONTROLS("menu", settings);
     CONTROLS("view-fullscreen", fullscreen);
     CONTROLS("window-close", close);
 }
