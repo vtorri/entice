@@ -394,11 +394,24 @@ collections
         mouse_events: 1;
         repeat_events: 1;
         description { state: "default" 0.0;
+          color: 255 255 255 0;
           rel.to: "entice.next";
           rel1.offset: -2 -2;
           rel2.offset: 2 2;
-          visible: 0;
+          visible: 1;
         }
+      }
+      program
+      {
+        signal: "mouse,in";
+        source: "fadenext";
+        action: SIGNAL_EMIT "image,stopfade,next" "entice";
+      }
+      program
+      {
+        signal: "mouse,out";
+        source: "fadenext";
+        action: SIGNAL_EMIT "image,startfade,next" "entice";
       }
 
       // Settings icon

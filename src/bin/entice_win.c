@@ -140,52 +140,10 @@ _cb_unfocused(void *data EINA_UNUSED, Evas_Object *win, void *event EINA_UNUSED)
     elm_layout_signal_emit(entice->layout, "state,win,unfocused", "entice");
 }
 
-static Eina_Bool
-_cb_mouse_idle(void *win)
-{
-    Entice *entice;
-
-    entice = evas_object_data_get(win, "entice");
-
-    entice->controls_timer = NULL;
-
-    /* hide controls */
-    if (entice->controls_shown)
-    {
-        elm_object_signal_emit(entice->layout, "state,controls,hide", "entice");
-        entice->controls_shown = EINA_FALSE;
-    }
-
-    return EINA_FALSE;
-}
-
 static void
 _cb_mouse_move(void *win, Evas *evas EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
-    Entice *entice;
-
-    entice = evas_object_data_get(win, "entice");
-
-    if (entice->controls_timer)
-        ecore_timer_del(entice->controls_timer);
-
-    entice->controls_timer = ecore_timer_add(entice->config->duration_controls,
-                                             _cb_mouse_idle, win);
-
-    /* display controls */
-    if (eina_list_prev(entice->image_current))
-        elm_object_signal_emit(entice->layout, "state,prev,show", "entice");
-    else
-        elm_object_signal_emit(entice->layout, "state,prev,hide", "entice");
-    if (eina_list_next(entice->image_current))
-        elm_object_signal_emit(entice->layout, "state,next,show", "entice");
-    else
-        elm_object_signal_emit(entice->layout, "state,next,hide", "entice");
-    if (!entice->controls_shown)
-    {
-        elm_object_signal_emit(entice->layout, "state,controls,show", "entice");
-        entice->controls_shown = EINA_TRUE;
-    }
+    entice_controls_timer_start(win);
 }
 
 static void

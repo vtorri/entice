@@ -259,6 +259,49 @@ _cb_image_settings(void *win, Evas_Object *obj EINA_UNUSED, const char *emission
     }
 }
 
+static void
+_cb_image_stopfade(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+{
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+    printf("mouse in\n");
+    fflush(stdout);
+
+    if (entice->controls_timer)
+    {
+        ecore_timer_del(entice->controls_timer);
+        entice->controls_timer = NULL;
+    }
+}
+
+static void
+_cb_image_startfade(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+{
+    entice_controls_timer_start(win);
+    printf("mouse out\n");
+    fflush(stdout);
+}
+
+static Eina_Bool
+_cb_controls_hide(void *win)
+{
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+
+    entice->controls_timer = NULL;
+
+    /* hide controls */
+    if (entice->controls_shown)
+    {
+        elm_object_signal_emit(entice->layout, "state,controls,hide", "entice");
+        entice->controls_shown = EINA_FALSE;
+    }
+
+    return EINA_FALSE;
+}
+
 /*============================================================================*
  *                                 Global                                     *
  *============================================================================*/
@@ -279,6 +322,14 @@ entice_controls_init(Evas_Object *win)
     CONTROLS("object-rotate-right", rotright);
     CONTROLS("go-previous", prev);
     CONTROLS("go-next", next);
+
+    elm_layout_signal_callback_add(entice->layout,
+                                   "image,stopfade,next", "entice",
+                                   _cb_image_stopfade, win);
+
+    elm_layout_signal_callback_add(entice->layout,
+                                   "image,startfade,next", "entice",
+                                   _cb_image_startfade, win);
 
     /* best fit checkbox */
     o = elm_check_add(win);
@@ -321,4 +372,33 @@ entice_controls_update(Evas_Object *win)
 
     snprintf(buf, sizeof(buf), "%d%%", entice_image_zoom_get(entice->image));
     elm_object_text_set(entice->zoomval, buf);
+}
+
+void
+entice_controls_timer_start(Evas_Object *win)
+{
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+
+    if (entice->controls_timer)
+        ecore_timer_del(entice->controls_timer);
+
+    entice->controls_timer = ecore_timer_add(entice->config->duration_controls,
+                                             _cb_controls_hide, win);
+
+    /* display controls */
+    if (eina_list_prev(entice->image_current))
+        elm_object_signal_emit(entice->layout, "state,prev,show", "entice");
+    else
+        elm_object_signal_emit(entice->layout, "state,prev,hide", "entice");
+    if (eina_list_next(entice->image_current))
+        elm_object_signal_emit(entice->layout, "state,next,show", "entice");
+    else
+        elm_object_signal_emit(entice->layout, "state,next,hide", "entice");
+    if (!entice->controls_shown)
+    {
+        elm_object_signal_emit(entice->layout, "state,controls,show", "entice");
+        entice->controls_shown = EINA_TRUE;
+    }
 }
