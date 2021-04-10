@@ -34,7 +34,6 @@ struct Entice
     /* window content */
     Evas_Object *conform;
     Evas_Object *scroller;
-    Evas_Object *table;
     Evas_Object *layout;
     Evas_Object *image;
     Evas_Object *event_mouse;

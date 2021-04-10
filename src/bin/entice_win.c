@@ -288,14 +288,6 @@ entice_win_add(void)
     evas_object_show(o);
     entice->scroller = o;
 
-    /* table */
-    /* o = elm_table_add(win); */
-    /* evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND); */
-    /* evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL); */
-    /* elm_object_content_set(entice->scroller, o); */
-    /* evas_object_show(o); */
-    /* entice->table = o; */
-
     /* gui layout */
     o = elm_layout_add(win);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -317,7 +309,6 @@ entice_win_add(void)
     /* image */
     o = entice_image_add(win);
     elm_object_content_set(entice->scroller, o);
-    //elm_table_pack(entice->table, o, 0, 0, 1, 1);
     evas_object_show(o);
     entice->image = o;
 
