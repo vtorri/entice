@@ -93,7 +93,7 @@ _cb_win_resize(void *data EINA_UNUSED,
     Entice *entice;
 
     entice = evas_object_data_get(win, "entice");
-    if (!entice || !entice->image_current)
+    if (!entice || !entice->image)
         return;
 
     entice_image_update(entice->image);
