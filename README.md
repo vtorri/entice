@@ -39,7 +39,7 @@ Image format  |  File extension
 
 ### Animated images
 
-Animated images, like gif, avif or heif, can also be played.
+Animated images, like gif or avif, can also be played.
 
 This feature is enabled by default and can be disabled in settings
 
