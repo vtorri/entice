@@ -231,7 +231,13 @@ _cb_image_close(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EI
 static void
 _cb_image_fullscreen(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
 {
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
     elm_win_fullscreen_set(win, !elm_win_fullscreen_get(win));
+    (elm_win_fullscreen_get(win))
+        ? elm_icon_standard_set(entice->fullscreen, "view-fullscreen")
+        : elm_icon_standard_set(entice->fullscreen, "view-restore");
 }
 
 static void
