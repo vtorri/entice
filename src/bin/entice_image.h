@@ -1,5 +1,5 @@
 /* Entice - small and simple image viewer using the EFL
- * Copyright (C) 2021 Vincent Torro
+ * Copyright (C) 2021 Vincent Torri
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
