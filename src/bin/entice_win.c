@@ -143,6 +143,8 @@ _cb_unfocused(void *data EINA_UNUSED, Evas_Object *win, void *event EINA_UNUSED)
 static void
 _cb_mouse_move(void *win, Evas *evas EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
+    printf("mouse move\n");
+    fflush(stdout);
     entice_controls_timer_start(win);
 }
 
@@ -270,14 +272,6 @@ entice_win_add(void)
     evas_object_smart_callback_add(win, "focused", _cb_focused, entice);
     evas_object_smart_callback_add(win, "unfocused", _cb_unfocused, entice);
 
-    /* conformant */
-    o = elm_conformant_add(win);
-    evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_fill_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
-    elm_win_resize_object_add(win, o);
-    evas_object_show(o);
-    entice->conform = o;
-
     /* scroller */
     o = elm_scroller_add(win);
     elm_scroller_policy_set(o,
@@ -285,15 +279,22 @@ entice_win_add(void)
     elm_scroller_bounce_set(o, EINA_TRUE, EINA_TRUE);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
+    elm_win_resize_object_add(win, o);
     evas_object_show(o);
     entice->scroller = o;
+
+    /* image */
+    o = entice_image_add(win);
+    elm_object_content_set(entice->scroller, o);
+    evas_object_show(o);
+    entice->image = o;
 
     /* gui layout */
     o = elm_layout_add(win);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_fill_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
-    elm_object_content_set(entice->conform, o);
     evas_object_repeat_events_set(o, EINA_FALSE);
+    elm_win_resize_object_add(win, o);
     evas_object_show(o);
     entice->layout = o;
     if (!entice_theme_apply(win, "entice/core"))
@@ -305,12 +306,6 @@ entice_win_add(void)
     elm_object_part_content_set(entice->layout, "entice.image",
                                 entice->scroller);
     entice_controls_init(win);
-
-    /* image */
-    o = entice_image_add(win);
-    elm_object_content_set(entice->scroller, o);
-    evas_object_show(o);
-    entice->image = o;
 
     /* dummy button to catch mouse events */
     o = elm_button_add(win);
