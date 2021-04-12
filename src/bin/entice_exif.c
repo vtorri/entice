@@ -62,6 +62,7 @@ static Entice_Exif_Entry entice_exif_gps_entries[] =
     { NULL, "Longiture Ref:",   "GPSLongitudeRef"    },
     { NULL, "Longiture:",       "GPSLongitude"       },
     { NULL, "Altitude Ref:",    "GPSAltitudeRef"     },
+    { NULL, "Altitude:",        "GPSAltitude"     },
     { NULL, "Timestamp:",       "GPSTimeStamp"       },
     { NULL, "Satellites:",      "GPSSatellites"      },
     { NULL, "ImgDirectionRef:", "GPSImgDirectionRef" },
