@@ -109,10 +109,10 @@ collections
         description { state: "default" 0.0;
           fixed: 1 1;
           visible: 0;
-          rel1.relative: 0.3 0.1;
-          rel2.relative: 0.7 0.9;
+          rel1.relative: 0.6 0.1;
+          rel2.relative: 1.0 0.9;
           rel1.offset: 32 32;
-          rel2.offset: -33 -33;
+          rel2.offset: (-1-GB_PAD) -1;
           offscale;
         }
         description { state: "shown" 0.0;
@@ -160,10 +160,10 @@ collections
         description { state: "default" 0.0;
           fixed: 1 1;
           visible: 0;
-          rel1.relative: 0.3 0.1;
-          rel2.relative: 0.7 0.9;
+          rel1.relative: 0.6 0.1;
+          rel2.relative: 1.0 0.9;
           rel1.offset: 32 32;
-          rel2.offset: -33 -33;
+          rel2.offset: (-1-GB_PAD) -1;
           offscale;
         }
         description { state: "shown" 0.0;
