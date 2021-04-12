@@ -59,7 +59,8 @@ Original size | Ctrl-0
 Best fit | f
 Zoom in | +
 Zoom out | -
-Open Settings | s
+Manage Settings | s
+Show EXIF data | e
 Copy file name in clipboard | Ctrl-c
 Exit Settings | Esc
 

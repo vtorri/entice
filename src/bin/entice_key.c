@@ -31,6 +31,7 @@
 #include "entice_config.h"
 #include "entice_image.h"
 #include "entice_settings.h"
+#include "entice_exif.h"
 #include "entice_win.h"
 #include "entice_key.h"
 
@@ -115,6 +116,16 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
                 entice->settings_shown = EINA_TRUE;
             }
         }
+        else if (!strcmp(ev->keyname, "e"))
+        {
+            entice_exif_fill(win);
+            if (!entice->exif_shown)
+            {
+                elm_object_signal_emit(entice->layout, "state,exif,show", "entice");
+                elm_object_signal_emit(entice->layout, "state,exifbg,show", "entice");
+                entice->exif_shown = EINA_TRUE;
+            }
+        }
         else if (!strcmp(ev->key, "Escape"))
         {
             fprintf(stderr, "Esc !!!!\n");
@@ -123,6 +134,12 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
             {
                 elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
                 entice->settings_shown = EINA_FALSE;
+            }
+            if (entice->exif_shown)
+            {
+                elm_object_signal_emit(entice->layout, "state,exif,hide", "entice");
+                elm_object_signal_emit(entice->layout, "state,exifbg,hide", "entice");
+                entice->exif_shown = EINA_FALSE;
             }
         }
     }

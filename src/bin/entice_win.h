@@ -55,7 +55,7 @@ struct Entice
     Evas_Object *zoomorig;  /* zoom 1:1 */
     Evas_Object *zoomfit;   /* zoom best fit */
     Evas_Object *zoomcheck; /* checkbox for zoom best fit */
-    Evas_Object *settings;  /* settings icon */
+    Evas_Object *menu;      /* menu icon */
     Evas_Object *fullscreen;/* fullscreen icon */
     Evas_Object *close;     /* close icon */
     Ecore_Timer *controls_timer;
@@ -63,6 +63,9 @@ struct Entice
     Eina_Bool settings_created;
     Eina_Bool settings_shown;
     Eina_Bool controls_shown;
+    Eina_Bool controls_over;
+    Eina_Bool exif_created;
+    Eina_Bool exif_shown;
 
     /* theme */
     Entice_Config *config;

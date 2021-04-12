@@ -29,7 +29,10 @@ sys_windows = win32.contains(host_os)
 # binaries
 cc = meson.get_compiler('c')
 efl_req = '>= 1.25'
-entice_deps = [ dependency('elementary', version : efl_req) ]
+entice_deps = [
+               dependency('elementary', version : efl_req),
+               dependency('libexif'),
+              ]
 edje = dependency('edje', version: efl_req)
 
 # edje_cc tool - allow ti as an option for cross-compile

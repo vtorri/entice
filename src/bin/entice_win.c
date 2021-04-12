@@ -34,6 +34,7 @@
 #include "entice_theme.h"
 #include "entice_image.h"
 #include "entice_settings.h"
+#include "entice_exif.h"
 #include "entice_key.h"
 #include "entice_win.h"
 
@@ -143,8 +144,6 @@ _cb_unfocused(void *data EINA_UNUSED, Evas_Object *win, void *event EINA_UNUSED)
 static void
 _cb_mouse_move(void *win, Evas *evas EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
-    printf("mouse move\n");
-    fflush(stdout);
     entice_controls_timer_start(win);
 }
 
@@ -306,6 +305,7 @@ entice_win_add(void)
     elm_object_part_content_set(entice->layout, "entice.image",
                                 entice->scroller);
     entice_controls_init(win);
+    entice_exif_init(win);
 
     /* dummy button to catch mouse events */
     o = elm_button_add(win);

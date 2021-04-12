@@ -3,6 +3,36 @@
 // padding between icon controls and window border
 #define GB_PAD 10
 
+#define STOP_FADE(icon) \
+  part \
+  { \
+    name: "fade"icon; \
+    type: RECT; \
+    mouse_events: 1; \
+    repeat_events: 1; \
+    description \
+    { \
+      state: "default" 0.0; \
+      color: 255 255 255 0; \
+      rel.to: "entice."icon; \
+      rel1.offset: -2 -2; \
+      rel2.offset: 2 2; \
+      visible: 1; \
+    } \
+  } \
+  program \
+  { \
+    signal: "mouse,in"; \
+    source: "fade"icon; \
+    action: SIGNAL_EMIT "image,stopfade,"icon "entice"; \
+  } \
+  program \
+  { \
+    signal: "mouse,out"; \
+    source: "fade"icon; \
+    action: SIGNAL_EMIT "image,startfade,"icon "entice"; \
+  }
+
 collections
 {
   group { name: "entice/core";
@@ -73,6 +103,57 @@ collections
         target: "entice.settings.panel";
       }
 
+      // EXIF
+
+      // exif bg
+      part { name: "entice.exifbg"; type: RECT;
+        mouse_events: 1;
+        repeat_events: 1;
+        description { state: "default" 0.0;
+          color: 64 64 64 255;
+          rel.to: "entice.exif.panel";
+          rel1.offset: 0 0;
+          rel2.offset: -1 -1;
+          visible: 0;
+        }
+        description { state: "shown" 0.0;
+          inherit: "default" 0.0;
+          visible: 1;
+        }
+      }
+      program { signal: "state,exifbg,show"; source: "entice";
+        action: STATE_SET "shown" 0.0;
+        target: "entice.exifbg";
+      }
+      program { signal: "state,exifbg,hide"; source: "entice";
+        action: STATE_SET "default" 0.0;
+        target: "entice.exifbg";
+      }
+
+      part { name: "entice.exif.panel"; type: SWALLOW;
+        description { state: "default" 0.0;
+          fixed: 1 1;
+          visible: 0;
+          rel1.relative: 0.3 0.1;
+          rel2.relative: 0.7 0.9;
+          rel1.offset: 32 32;
+          rel2.offset: -33 -33;
+          offscale;
+        }
+        description { state: "shown" 0.0;
+          inherit: "default" 0.0;
+          visible: 1;
+        }
+      }
+      program { signal: "state,exif,show"; source: "entice";
+        action: STATE_SET "shown" 0.0;
+        target: "entice.exif.panel";
+      }
+      program { signal: "state,exif,hide"; source: "entice";
+        action: STATE_SET "default" 0.0;
+        target: "entice.exif.panel";
+      }
+
       // CONTROLS
 
       // Zoom best fit checkbox
@@ -133,6 +214,8 @@ collections
         action: SIGNAL_EMIT "image,action,zoomfit" "entice";
       }
 
+      STOP_FADE("zoomfit")
+
       // Zoom original icon
       part
       {
@@ -162,6 +245,8 @@ collections
         action: SIGNAL_EMIT "image,action,zoomorig" "entice";
       }
 
+      STOP_FADE("zoomorig")
+
       // Zoom out icon
       part
       {
@@ -190,6 +275,8 @@ collections
       program { signal: "mouse,clicked,1"; source: "entice.zoomout";
         action: SIGNAL_EMIT "image,action,zoomout" "entice";
       }
+
+      STOP_FADE("zoomout")
 
       // entry bg
       part
@@ -245,6 +332,8 @@ collections
         action: SIGNAL_EMIT "image,action,zoomval" "entice";
       }
 
+      STOP_FADE("zoomval")
+
       // Zoom in icon
       part
       {
@@ -273,6 +362,8 @@ collections
       program { signal: "mouse,clicked,1"; source: "entice.zoomin";
         action: SIGNAL_EMIT "image,action,zoomin" "entice";
       }
+
+      STOP_FADE("zoomin")
 
       // Rotate left icon
       part
@@ -303,6 +394,8 @@ collections
         action: SIGNAL_EMIT "image,action,rotleft" "entice";
       }
 
+      STOP_FADE("rotleft")
+
       // Rotate right icon
       part
       {
@@ -331,6 +424,8 @@ collections
       program { signal: "mouse,clicked,1"; source: "entice.rotright";
         action: SIGNAL_EMIT "image,action,rotright" "entice";
       }
+
+      STOP_FADE("rotright")
 
       // Prev icon
       part
@@ -361,6 +456,8 @@ collections
         action: SIGNAL_EMIT "image,action,prev" "entice";
       }
 
+      STOP_FADE("prev")
+
       // Next icon
       part
       {
@@ -389,35 +486,12 @@ collections
         action: SIGNAL_EMIT "image,action,next" "entice";
       }
 
-      // event RECT to forbid fade away
-      part { name: "fadenext"; type: RECT;
-        mouse_events: 1;
-        repeat_events: 1;
-        description { state: "default" 0.0;
-          color: 255 255 255 0;
-          rel.to: "entice.next";
-          rel1.offset: -2 -2;
-          rel2.offset: 2 2;
-          visible: 1;
-        }
-      }
-      program
-      {
-        signal: "mouse,in";
-        source: "fadenext";
-        action: SIGNAL_EMIT "image,stopfade,next" "entice";
-      }
-      program
-      {
-        signal: "mouse,out";
-        source: "fadenext";
-        action: SIGNAL_EMIT "image,startfade,next" "entice";
-      }
+      STOP_FADE("next")
 
-      // Settings icon
+      // Menu icon
       part
       {
-        name: "entice.settings";
+        name: "entice.menu";
         type: SWALLOW;
         clip_to: fader;
         scale: 1;
@@ -439,9 +513,11 @@ collections
           visible: 0;
         }
       }
-      program { signal: "mouse,clicked,1"; source: "entice.settings";
-        action: SIGNAL_EMIT "image,action,settings" "entice";
+      program { signal: "mouse,clicked,1"; source: "entice.menu";
+        action: SIGNAL_EMIT "image,action,menu" "entice";
       }
+
+      STOP_FADE("menu")
 
       // Fullscreen icon
       part
@@ -472,6 +548,8 @@ collections
         action: SIGNAL_EMIT "image,action,fullscreen" "entice";
       }
 
+      STOP_FADE("fullscreen")
+
 
       // Close icon
       part
@@ -500,6 +578,8 @@ collections
       program { signal: "mouse,clicked,1"; source: "entice.close";
         action: SIGNAL_EMIT "image,action,close" "entice";
       }
+
+      STOP_FADE("close")
 
       // Fader rectangle
       part { name: "fader"; type: RECT;

@@ -31,6 +31,7 @@
 #include "entice_config.h"
 #include "entice_image.h"
 #include "entice_settings.h"
+#include "entice_exif.h"
 #include "entice_win.h"
 #include "entice_controls.h"
 
@@ -38,22 +39,30 @@
  *                                  Local                                     *
  *============================================================================*/
 
-#define CONTROLS(_icon, _action)                                        \
-    o = elm_icon_add(win);                                              \
-    elm_icon_standard_set(o, _icon);                                    \
-    evas_object_show(o);                                                \
-    entice->_action = o;                                                \
-                                                                        \
-    o = elm_button_add(win);                                            \
-    elm_object_content_set(o, entice->_action);                         \
-    elm_object_focus_allow_set(o, EINA_FALSE);                          \
-    elm_object_style_set(o, "overlay");                                 \
-    evas_object_show(o);                                                \
-    elm_object_part_content_set(entice->layout, "entice." #_action, o); \
-                                                                        \
-    elm_layout_signal_callback_add(entice->layout,                      \
-                                   "image,action," #_action, "entice",  \
-                                   _cb_image_##_action, win)
+#define CONTROLS(_icon, _action)                                         \
+    o = elm_icon_add(win);                                               \
+    elm_icon_standard_set(o, _icon);                                     \
+    evas_object_show(o);                                                 \
+    entice->_action = o;                                                 \
+                                                                         \
+    o = elm_button_add(win);                                             \
+    elm_object_content_set(o, entice->_action);                          \
+    elm_object_focus_allow_set(o, EINA_FALSE);                           \
+    elm_object_style_set(o, "overlay");                                  \
+    evas_object_show(o);                                                 \
+    elm_object_part_content_set(entice->layout, "entice." #_action, o);  \
+                                                                         \
+    elm_layout_signal_callback_add(entice->layout,                       \
+                                   "image,action," #_action, "entice",   \
+                                   _cb_image_##_action, win);            \
+                                                                         \
+    elm_layout_signal_callback_add(entice->layout,                       \
+                                   "image,startfade," #_action, "entice",   \
+                                   _cb_image_startfade, win);            \
+                                                                         \
+    elm_layout_signal_callback_add(entice->layout,                       \
+                                   "image,stopfade," #_action, "entice", \
+                                   _cb_image_stopfade, win)
 
 static void
 _cb_image_prev(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
@@ -241,22 +250,82 @@ _cb_image_fullscreen(void *win, Evas_Object *obj EINA_UNUSED, const char *emissi
 }
 
 static void
-_cb_image_settings(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+_cb_image_ctxpopup_dismissed(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
+{
+   evas_object_del(obj);
+}
+
+static void
+_cb_image_ctxpopup_settings_cb(void *win, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
     Entice *entice;
 
     entice = evas_object_data_get(win, "entice");
+
     entice_settings_init(win);
+
+    if (entice->exif_shown)
+    {
+        elm_object_signal_emit(entice->layout, "state,exif,hide", "entice");
+        elm_object_signal_emit(entice->layout, "state,exifbg,hide", "entice");
+        entice->exif_shown = EINA_FALSE;
+    }
+
     if (!entice->settings_shown)
     {
         elm_object_signal_emit(entice->layout, "state,settings,show", "entice");
         entice->settings_shown = EINA_TRUE;
     }
-    else
+
+    evas_object_del(obj);
+}
+
+static void
+_cb_image_ctxpopup_exif_cb(void *win, Evas_Object *obj, void *event_info EINA_UNUSED)
+{
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+
+    entice_exif_fill(win);
+
+    if (entice->settings_shown)
     {
         elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
         entice->settings_shown = EINA_FALSE;
     }
+
+    if (!entice->exif_shown)
+    {
+        elm_object_signal_emit(entice->layout, "state,exif,show", "entice");
+        elm_object_signal_emit(entice->layout, "state,exifbg,show", "entice");
+        entice->exif_shown = EINA_TRUE;
+    }
+
+    evas_object_del(obj);
+}
+
+static void
+_cb_image_menu(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+{
+    Evas_Object *ctxpopup;
+    Evas_Coord x,y;
+
+    ctxpopup = elm_ctxpopup_add(win);
+    elm_ctxpopup_direction_priority_set(ctxpopup,
+                                        ELM_CTXPOPUP_DIRECTION_DOWN,
+                                        ELM_CTXPOPUP_DIRECTION_LEFT,
+                                        ELM_CTXPOPUP_DIRECTION_RIGHT,
+                                        ELM_CTXPOPUP_DIRECTION_UP);
+
+    elm_ctxpopup_item_append(ctxpopup, "settings", NULL,
+                             _cb_image_ctxpopup_settings_cb, win);
+    elm_ctxpopup_item_append(ctxpopup, "exif", NULL,
+                             _cb_image_ctxpopup_exif_cb, win);
+    evas_pointer_canvas_xy_get(evas_object_evas_get(win), &x, &y);
+    evas_object_move(ctxpopup, x, y);
+    evas_object_show(ctxpopup);
+    evas_object_smart_callback_add(ctxpopup, "dismissed", _cb_image_ctxpopup_dismissed, NULL);
 }
 
 static void
@@ -265,6 +334,7 @@ _cb_image_stopfade(void *win, Evas_Object *obj EINA_UNUSED, const char *emission
     Entice *entice;
 
     entice = evas_object_data_get(win, "entice");
+    entice->controls_over = EINA_TRUE;
     printf("mouse in\n");
     fflush(stdout);
 
@@ -278,7 +348,11 @@ _cb_image_stopfade(void *win, Evas_Object *obj EINA_UNUSED, const char *emission
 static void
 _cb_image_startfade(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
 {
-    entice_controls_timer_start(win);
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+    entice->controls_over = EINA_FALSE;
+    //entice_controls_timer_start(win);
     printf("mouse out\n");
     fflush(stdout);
 }
@@ -323,14 +397,6 @@ entice_controls_init(Evas_Object *win)
     CONTROLS("go-previous", prev);
     CONTROLS("go-next", next);
 
-    elm_layout_signal_callback_add(entice->layout,
-                                   "image,stopfade,next", "entice",
-                                   _cb_image_stopfade, win);
-
-    elm_layout_signal_callback_add(entice->layout,
-                                   "image,startfade,next", "entice",
-                                   _cb_image_startfade, win);
-
     /* best fit checkbox */
     o = elm_check_add(win);
     elm_object_style_set(o, "default");
@@ -353,7 +419,7 @@ entice_controls_init(Evas_Object *win)
 
     elm_object_part_content_set(entice->layout, "entice.zoomval", entice->zoomval);
 
-    CONTROLS("menu", settings);
+    CONTROLS("menu", menu);
     CONTROLS("view-fullscreen", fullscreen);
     CONTROLS("window-close", close);
 }
@@ -382,9 +448,20 @@ entice_controls_timer_start(Evas_Object *win)
     entice = evas_object_data_get(win, "entice");
 
     if (entice->controls_timer)
-        ecore_timer_del(entice->controls_timer);
+    {
+        ecore_timer_reset(entice->controls_timer);
+        return;
+    }
 
-    entice->controls_timer = ecore_timer_add(entice->config->duration_controls,
+    if ((entice->controls_timer) && (entice->controls_over))
+    {
+        ecore_timer_del(entice->controls_timer);
+        entice->controls_timer = NULL;
+        return;
+    }
+
+    if ((!entice->controls_timer) && (!entice->controls_over))
+        entice->controls_timer = ecore_timer_add(entice->config->duration_controls,
                                              _cb_controls_hide, win);
 
     /* display controls */
