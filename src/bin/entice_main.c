@@ -203,12 +203,9 @@ _entice_translate_options(void)
 static Eina_List *
 _file_list_append(Eina_List *list, const char *path)
 {
-    const Eina_List *l;
-    const char *data;
-    Eina_Bool found;
+    Eina_Bool found = EINA_FALSE;
 
     /* check if the file has a supported extension */
-    found = EINA_FALSE;
     for (size_t i = 0; _image_ext[i]; i++)
     {
         if (eina_str_has_extension(path, _image_ext[i]))
@@ -223,23 +220,8 @@ _file_list_append(Eina_List *list, const char *path)
         WRN("File %s has no supported extension.", path);
         return list;
     }
-
-    found = EINA_FALSE;
-    EINA_LIST_FOREACH(list, l, data)
-    {
-        if (strcmp(data, path) == 0)
-        {
-            found = EINA_TRUE;
-            break;
-        }
-    }
-
-    /* if not found in the list, add it */
-    if (!found)
-    {
-        INF("File %s added.", path);
-        list = eina_list_append(list, eina_stringshare_add(path));
-    }
+    INF("File %s added.", path);
+    list = eina_list_append(list, eina_stringshare_add(path));
 
     return list;
 }
@@ -265,6 +247,24 @@ _dir_parse(Eina_List *list, const char *path)
     eina_iterator_free(it);
 
     return list;
+}
+
+static char *
+_path_uri_decode(const char *arg)
+{
+   char *path = NULL;
+
+   if (!strncasecmp(arg, "file://", strlen("file://")))
+     {
+        Efreet_Uri *uri = efreet_uri_decode(arg);
+        if (uri)
+          {
+             path = strdup(uri->path);
+             efreet_uri_free(uri);
+          }
+     }
+   else path = strdup(arg);
+   return path;
 }
 
 EAPI_MAIN int
@@ -317,64 +317,42 @@ elm_main(int argc, char **argv)
     }
     else
     {
-        int i;
-        char *realpath;
-        char *tmp;
+       // only 1 file passed, so scan dir as list and jump to file in that dir
+       if (args == (argc - 1))
+         {
+            char *dir = NULL, *path;
+            Eina_List *l;
+            const char *s;
 
-        for (i = args; i < argc; i++)
-        {
-            realpath = eina_strdup(argv[i]);
-            if (!strncasecmp(realpath, "file://", strlen("file://")))
-            {
-                Efreet_Uri *uri = efreet_uri_decode(realpath);
-                if (uri)
-                {
-                    free(realpath);
-                    realpath = ecore_file_realpath(uri->path);
-                    efreet_uri_free(uri);
-                }
-            }
+            path = _path_uri_decode(argv[args]);
+            if (ecore_file_is_dir(path)) dir =  strdup(path);
+            else dir = ecore_file_dir_get(path);
+            list = _dir_parse(list, dir);
+            EINA_LIST_FOREACH(list, l, s)
+              {
+                 if (!strcmp(ecore_file_file_get(s),
+                             ecore_file_file_get(path)))
+                   {
+                      first = l;
+                      break;
+                   }
+              }
+            free(path);
+            free(dir);
+         }
+       // multiple files passed - just append them in order as given
+       else
+         {
+            int i;
 
-            tmp = ecore_file_realpath(realpath);
-            free(realpath);
-            realpath = tmp;
-
-            if (!ecore_file_is_dir(realpath))
-            {
-                char *dn; /* dirname */
-                Eina_List *l;
-                char *filename;
-
-                dn = ecore_file_dir_get(realpath);
-                if (!dn)
-                {
-                    list = _file_list_append(list, realpath);
-                    first = list;
-                }
-                else
-                {
-                    list = _dir_parse(list, dn);
-                    free(dn);
-                    EINA_LIST_FOREACH(list, l, filename)
-                    {
-                      if (strcmp(filename, realpath) == 0)
-                        {
-                            first = l;
-                            break;
-                        }
-                    }
-                    /* this should never happen */
-                    if (!first)
-                        first = list;
-                }
-            }
-            else
-            {
-                list = _dir_parse(list, realpath);
-                first = list;
-            }
-            free(realpath);
-        }
+            for (i = args; i < argc; i++)
+              {
+                 char *path = _path_uri_decode(argv[i]);
+                 list = _file_list_append(list, path);
+                 free(path);
+              }
+         }
+       if (!first) first = list;
     }
 
     entice_config_init();
