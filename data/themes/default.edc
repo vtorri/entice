@@ -79,6 +79,32 @@ collections
       }
 
       // SETTINGS
+
+      // settings bg
+      part { name: "entice.settingsbg"; type: RECT;
+        mouse_events: 1;
+        repeat_events: 1;
+        description { state: "default" 0.0;
+          color: 64 64 64 255;
+          rel.to: "entice.settings.panel";
+          rel1.offset: 0 0;
+          rel2.offset: -1 -1;
+          visible: 0;
+        }
+        description { state: "shown" 0.0;
+          inherit: "default" 0.0;
+          visible: 1;
+        }
+      }
+      program { signal: "state,settingsbg,show"; source: "entice";
+        action: STATE_SET "shown" 0.0;
+        target: "entice.settingsbg";
+      }
+      program { signal: "state,settingsbg,hide"; source: "entice";
+        action: STATE_SET "default" 0.0;
+        target: "entice.settingsbg";
+      }
+
       part { name: "entice.settings.panel"; type: SWALLOW;
         description { state: "default" 0.0;
           fixed: 1 1;

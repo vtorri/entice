@@ -69,6 +69,19 @@ static Entice_Exif_Entry entice_exif_gps_entries[] =
     { NULL, "DateStamp:",       "GPSDateStamp"       },
 };
 
+static void
+_cb_op_exif_close(void *win,
+                      Evas_Object *obj,
+                      void *_event EINA_UNUSED)
+{
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+    elm_object_signal_emit(entice->layout, "state,exif,hide", "entice");
+    elm_object_signal_emit(entice->layout, "state,exifbg,hide", "entice");
+    entice->exif_shown = EINA_FALSE;
+}
+
 /*============================================================================*
  *                                 Global                                     *
  *============================================================================*/
@@ -80,53 +93,52 @@ entice_exif_init(Evas_Object *win)
     Evas_Object *o;
     Evas_Object *scroller;
     Evas_Object *vbox;
+    Evas_Object *hbox;
+    Evas_Object *box;
+    Evas_Object *icon;
     Evas_Object *frame;
     Evas_Object *table;
     size_t i;
-
-    Evas_Object *box;
-    Evas_Object *hbox;
-    Evas_Object *icon;
 
     entice = evas_object_data_get(win, "entice");
     if (entice->exif_created)
         return;
 
-    {
-        o = elm_box_add(win);
-        evas_object_size_hint_weight_set(o, 0.0, EVAS_HINT_EXPAND);
-        evas_object_size_hint_align_set(o, 0.0, EVAS_HINT_FILL);
-        evas_object_show(o);
-        box = o;
+    o = elm_box_add(win);
+    evas_object_size_hint_weight_set(o, 0.0, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(o, 0.0, EVAS_HINT_FILL);
+    evas_object_show(o);
+    vbox = o;
 
-        o = elm_box_add(box);
-        evas_object_size_hint_weight_set(o, 0.0, 0.0);
-        evas_object_size_hint_align_set(o, 1.0, 0.0);
-        elm_box_horizontal_set(o, EINA_TRUE);
-        elm_box_pack_end(box, o);
-        evas_object_show(o);
-        hbox = o;
+    o = elm_box_add(vbox);
+    evas_object_size_hint_weight_set(o, 0.0, 0.0);
+    evas_object_size_hint_align_set(o, 1.0, 0.0);
+    elm_box_horizontal_set(o, EINA_TRUE);
+    elm_box_pack_end(vbox, o);
+    evas_object_show(o);
+    hbox = o;
 
-        o = elm_icon_add(win);
-        evas_object_size_hint_align_set(o, 1.0, 0.0);
-        elm_icon_standard_set(o, "window-close");
-        evas_object_show(o);
-        icon = o;
+    o = elm_icon_add(win);
+    evas_object_size_hint_align_set(o, 1.0, 0.0);
+    elm_icon_standard_set(o, "window-close");
+    evas_object_show(o);
+    icon = o;
 
-        o = elm_button_add(box);
-        elm_object_content_set(o, icon);
-        //evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-        evas_object_size_hint_align_set(o, 1.0, 0.0);
-        elm_box_pack_end(hbox, o);
-        evas_object_show(o);
-    }
+    o = elm_button_add(vbox);
+    elm_object_content_set(o, icon);
+    evas_object_size_hint_align_set(o, 1.0, 0.0);
+    elm_box_pack_end(hbox, o);
+    evas_object_show(o);
+    evas_object_smart_callback_add(o, "clicked",
+                                   _cb_op_exif_close,
+                                   win);
 
     o = elm_scroller_add(win);
     elm_scroller_content_min_limit(o, EINA_TRUE, EINA_FALSE);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
-    // add :
-    elm_box_pack_end(box, o);
+
+    elm_box_pack_end(vbox, o);
     evas_object_show(o);
     scroller = o;
 
@@ -135,16 +147,16 @@ entice_exif_init(Evas_Object *win)
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, 0.0);
     elm_object_content_set(scroller, o);
     evas_object_show(o);
-    vbox = o;
+    box = o;
 
     /* EXIF informations */
 
-    o = elm_frame_add(vbox);
+    o = elm_frame_add(box);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
     elm_object_focus_allow_set(o, EINA_FALSE);
     elm_object_text_set(o, "EXIF");
-    elm_box_pack_end(vbox, o);
+    elm_box_pack_end(box, o);
     evas_object_show(o);
     frame = o;
 
@@ -177,12 +189,12 @@ entice_exif_init(Evas_Object *win)
 
     /* GPS informations */
 
-    o = elm_frame_add(vbox);
+    o = elm_frame_add(box);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
     elm_object_focus_allow_set(o, EINA_FALSE);
     elm_object_text_set(o, "GPS");
-    elm_box_pack_end(vbox, o);
+    elm_box_pack_end(box, o);
     evas_object_show(o);
     frame = o;
 
@@ -212,8 +224,7 @@ entice_exif_init(Evas_Object *win)
         entice_exif_gps_entries[i].button = o;
     }
 
-    // add
-    elm_object_part_content_set(entice->layout, "entice.exif.panel", box);
+    elm_object_part_content_set(entice->layout, "entice.exif.panel", vbox);
 
     entice->exif_created = EINA_TRUE;
 }

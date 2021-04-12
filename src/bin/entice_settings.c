@@ -88,11 +88,9 @@ _cb_key_down(void *win,
     {
         if (!strcmp(ev->key, "Escape"))
         {
-            if (entice->settings_shown)
-            {
-                elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
-                entice->settings_shown = EINA_FALSE;
-            }
+          elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
+          elm_object_signal_emit(entice->layout, "state,settingsbg,hide", "entice");
+          entice->settings_shown = EINA_FALSE;
         }
     }
 
@@ -220,6 +218,19 @@ _cb_op_behavior_duration_controls(void *data,
     entice_config_save(config);
 }
 
+static void
+_cb_op_settings_close(void *win,
+                      Evas_Object *obj,
+                      void *_event EINA_UNUSED)
+{
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+    elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
+    elm_object_signal_emit(entice->layout, "state,settingsbg,hide", "entice");
+    entice->settings_shown = EINA_FALSE;
+}
+
 OPTIONS_CB(fullscreen_startup, 0);
 OPTIONS_CB(automatic_orientation, 0);
 OPTIONS_CB(best_fit_startup, 0);
@@ -237,7 +248,10 @@ entice_settings_init(Evas_Object *win)
     Evas_Object *o;
     Evas_Object *frame;
     Evas_Object *scroller;
+    Evas_Object *vbox;
+    Evas_Object *hbox;
     Evas_Object *box;
+    Evas_Object *icon;
     int w;
     int h;
 
@@ -253,15 +267,45 @@ entice_settings_init(Evas_Object *win)
     ctx->config = entice->config;
     evas_object_geometry_get(win, NULL, NULL, &w, &h);
 
+    o = elm_box_add(win);
+    evas_object_size_hint_weight_set(o, 0.0, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(o, 0.0, EVAS_HINT_FILL);
+    evas_object_show(o);
+    vbox = o;
+
+    o = elm_box_add(vbox);
+    evas_object_size_hint_weight_set(o, 0.0, 0.0);
+    evas_object_size_hint_align_set(o, 1.0, 0.0);
+    elm_box_horizontal_set(o, EINA_TRUE);
+    elm_box_pack_end(vbox, o);
+    evas_object_show(o);
+    hbox = o;
+
+    o = elm_icon_add(win);
+    evas_object_size_hint_align_set(o, 1.0, 0.0);
+    elm_icon_standard_set(o, "window-close");
+    evas_object_show(o);
+    icon = o;
+
+    o = elm_button_add(vbox);
+    elm_object_content_set(o, icon);
+    evas_object_size_hint_align_set(o, 1.0, 0.0);
+    elm_box_pack_end(hbox, o);
+    evas_object_smart_callback_add(o, "clicked",
+                                   _cb_op_settings_close,
+                                   win);
+    evas_object_show(o);
+
     o = elm_frame_add(win);
+    elm_object_focus_allow_set(o, EINA_FALSE);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
-    elm_object_focus_allow_set(o, EINA_FALSE);
     elm_object_text_set(o, "Settings");
     if (!evas_object_key_grab(o, "Escape", 0, 0, EINA_TRUE))
     {
         ERR("Can not grab the 'Esc' key");
     }
+    elm_box_pack_end(vbox, o);
     evas_object_show(o);
     frame = o;
     evas_object_event_callback_add(frame, EVAS_CALLBACK_KEY_DOWN,
@@ -372,7 +416,7 @@ entice_settings_init(Evas_Object *win)
     evas_object_smart_callback_add(o, "changed",
                                    _cb_op_behavior_duration_controls, ctx);
 
-    elm_object_part_content_set(entice->layout, "entice.settings.panel", frame);
+    elm_object_part_content_set(entice->layout, "entice.settings.panel", vbox);
 
     entice->settings_created = EINA_TRUE;
 }
