@@ -424,6 +424,11 @@ entice_controls_init(Evas_Object *win)
     CONTROLS("menu", menu);
     CONTROLS("view-fullscreen", fullscreen);
     CONTROLS("window-close", close);
+
+    o = elm_icon_add(win);
+    elm_icon_standard_set(o, "dialog-error");
+    evas_object_show(o);
+    elm_object_part_content_set(entice->layout, "entice.error", o);
 }
 
 void

@@ -607,6 +607,79 @@ collections
 
       STOP_FADE("close")
 
+
+      // Error text
+      part
+      {
+        name: "entice.nofile";
+        type: TEXT;
+        mouse_events: 0;
+        scale: 1;
+        description
+        {
+          state: "default" 0.0;
+          fixed: 1 1;
+          rel1.relative: 0.5 0.0;
+          rel1.offset: 5 0;
+          rel2.relative: 0.5 1.0;
+          rel2.offset: 5 -1;
+          color: 255 255 255 255;
+          align: 1.0 0.5;
+          text
+          {
+            font: "Sans"; size: 12;
+            align: 1.0 0.5;
+            min: 1 1;
+            text: "No image found";
+            elipsis: -1;
+          }
+          visible: 0;
+        }
+        description
+        {
+          state: "shown" 0.0;
+          inherit: "default" 0.0;
+          visible: 1;
+        }
+      }
+      program { signal: "state,error,show"; source: "entice";
+        action: STATE_SET "shown" 0.0;
+        target: "entice.nofile";
+      }
+
+      // Error icon
+      part
+      {
+        name: "entice.error";
+        type: SWALLOW;
+        mouse_events: 0;
+        scale: 1;
+        description
+        {
+          state: "default" 0.0;
+          fixed: 1 1;
+          rel.to: "entice.nofile";
+          rel1.relative: 0.0 0.5;
+          rel1.offset: (-ICON_SIZE - 5) 0;
+          rel2.relative: 0.0 0.5;
+          rel2.offset: (-ICON_SIZE - 5) 0;
+          min: ICON_SIZE ICON_SIZE;
+          visible: 0;
+          align: 0.0 0.5;
+          offscale;
+        }
+        description
+        {
+          state: "shown" 0.0;
+          inherit: "default" 0.0;
+          visible: 1;
+        }
+      }
+      program { signal: "state,error,show"; source: "entice";
+        action: STATE_SET "shown" 0.0;
+        target: "entice.error";
+      }
+
       // Fader rectangle
       part { name: "fader"; type: RECT;
         mouse_events: 0;

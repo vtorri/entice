@@ -355,6 +355,13 @@ entice_image_set(Evas_Object *obj, Eina_List *image)
     entice = evas_object_data_get(obj, "entice");
     EINA_SAFETY_ON_NULL_RETURN(entice);
 
+    if (!image)
+    {
+        elm_object_signal_emit(entice->layout, "state,error,show", "entice");
+        elm_win_title_set(win, "Entice");
+        return;
+    }
+
     if (image == entice->image_current)
         return;
 
