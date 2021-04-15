@@ -88,28 +88,28 @@ _cb_key_down(void *win,
     {
         if (!strcmp(ev->key, "Escape"))
         {
-          elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
-          elm_object_signal_emit(entice->layout, "state,settingsbg,hide", "entice");
-          entice->settings_shown = EINA_FALSE;
+            elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
+            elm_object_signal_emit(entice->layout, "state,settingsbg,hide", "entice");
+            entice->settings_shown = EINA_FALSE;
         }
     }
 
     entice->settings_timer = ecore_timer_add(0.1, _cb_set_focus, win);
 }
 
-#define OPTIONS_CB(_cfg_name, _inv)                             \
-static void                                                     \
-_cb_op_##_cfg_name(void *data, Evas_Object *obj,                \
-                   void *_event EINA_UNUSED)                    \
-{                                                               \
-    Settings_Ctx *ctx = data;                                   \
-    Entice_Config *config = ctx->config;                        \
-    if (_inv)                                                   \
-        config->_cfg_name = !elm_check_state_get(obj);          \
-    else                                                        \
-        config->_cfg_name = elm_check_state_get(obj);           \
-    entice_config_save(config);                                 \
-}
+#define OPTIONS_CB(_cfg_name, _inv)                         \
+    static void                                             \
+    _cb_op_##_cfg_name(void *data, Evas_Object *obj,        \
+                       void *_event EINA_UNUSED)            \
+    {                                                       \
+        Settings_Ctx *ctx = data;                           \
+        Entice_Config *config = ctx->config;                \
+        if (_inv)                                           \
+            config->_cfg_name = !elm_check_state_get(obj);  \
+        else                                                \
+            config->_cfg_name = elm_check_state_get(obj);   \
+        entice_config_save(config);                         \
+    }
 
 #define SETTINGS_CX(_lbl, _cfg_name, _inv)                          \
     do                                                              \
@@ -144,36 +144,36 @@ _cb_op_custom_geometry(void *data,
                        Evas_Object *obj,
                        void *_event EINA_UNUSED)
 {
-   Settings_Ctx *ctx = data;
-   Entice_Config *config = ctx->config;
+    Settings_Ctx *ctx = data;
+    Entice_Config *config = ctx->config;
 
-   config->custom_geometry = elm_check_state_get(obj);
-   if (config->custom_geometry)
-     {
+    config->custom_geometry = elm_check_state_get(obj);
+    if (config->custom_geometry)
+    {
         config->cg_width = (int) elm_spinner_value_get(ctx->op_w);
         config->cg_height = (int) elm_spinner_value_get(ctx->op_h);
-     }
-   entice_config_save(config);
+    }
+    entice_config_save(config);
 
-   elm_object_disabled_set(ctx->op_w, !config->custom_geometry);
-   elm_object_disabled_set(ctx->op_h, !config->custom_geometry);
-   elm_object_disabled_set(ctx->op_wh_current, !config->custom_geometry);
+    elm_object_disabled_set(ctx->op_w, !config->custom_geometry);
+    elm_object_disabled_set(ctx->op_h, !config->custom_geometry);
+    elm_object_disabled_set(ctx->op_wh_current, !config->custom_geometry);
 }
 
 static void
 _cb_op_behavior_custom_geometry_current_set(void *data,
-                                Evas_Object *obj EINA_UNUSED,
-                                void *_event EINA_UNUSED)
+                                            Evas_Object *obj EINA_UNUSED,
+                                            void *_event EINA_UNUSED)
 {
-   Settings_Ctx *ctx = data;
-   Entice_Config *config = ctx->config;
+    Settings_Ctx *ctx = data;
+    Entice_Config *config = ctx->config;
 
-   if (config->custom_geometry)
-     {
+    if (config->custom_geometry)
+    {
         elm_spinner_value_set(ctx->op_w, config->cg_width);
         elm_spinner_value_set(ctx->op_h, config->cg_height);
-     }
-   entice_config_save(config);
+    }
+    entice_config_save(config);
 }
 
 static void

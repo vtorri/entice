@@ -308,6 +308,25 @@ _cb_image_ctxpopup_exif_cb(void *win, Evas_Object *obj, void *event_info EINA_UN
 }
 
 static void
+_cb_image_ctxpopup_copy_cb(void *win, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+    Entice *entice;
+    const char *filename;
+
+    entice = evas_object_data_get(win, "entice");
+    filename = (char *)eina_list_data_get(entice->image_current);
+    if (filename)
+    {
+        elm_cnp_selection_set(win,
+                              ELM_SEL_TYPE_CLIPBOARD,
+                              ELM_SEL_FORMAT_TEXT,
+                              filename, strlen(filename));
+    }
+
+    evas_object_del(obj);
+}
+
+static void
 _cb_image_menu(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
 {
     Evas_Object *ctxpopup;
@@ -324,6 +343,8 @@ _cb_image_menu(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EIN
                              _cb_image_ctxpopup_settings_cb, win);
     elm_ctxpopup_item_append(ctxpopup, "exif", NULL,
                              _cb_image_ctxpopup_exif_cb, win);
+    elm_ctxpopup_item_append(ctxpopup, "copy file name", NULL,
+                             _cb_image_ctxpopup_copy_cb, win);
     evas_pointer_canvas_xy_get(evas_object_evas_get(win), &x, &y);
     evas_object_move(ctxpopup, x, y);
     evas_object_show(ctxpopup);

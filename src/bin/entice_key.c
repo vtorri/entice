@@ -158,10 +158,13 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
             const char *filename;
 
             filename = (char *)eina_list_data_get(entice->image_current);
-            elm_cnp_selection_set(win,
-                                  ELM_SEL_TYPE_CLIPBOARD,
-                                  ELM_SEL_FORMAT_TEXT,
-                                  filename, strlen(filename));
+            if (filename)
+            {
+                elm_cnp_selection_set(win,
+                                      ELM_SEL_TYPE_CLIPBOARD,
+                                      ELM_SEL_FORMAT_TEXT,
+                                      filename, strlen(filename));
+            }
         }
         else if (!strcmp(ev->key, "KP_0") ||
                  !strcmp(ev->key, "0"))
