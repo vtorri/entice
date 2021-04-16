@@ -51,8 +51,8 @@ static Entice_Exif_Entry entice_exif_entries[] =
     { NULL, "Height:",        "PixelYDimension"  },
     { NULL, "Exposure time:", "ExposureTime"     },
     { NULL, "Date time:",     "DateTimeOriginal" },
-    { NULL, "Focal length::",  "FocalLength"      },
-    { NULL, "Exposure time", "ColorSpace"       },
+    { NULL, "Focal length::", "FocalLength"      },
+    { NULL, "Exposure time",  "ColorSpace"       },
 };
 
 static Entice_Exif_Entry entice_exif_gps_entries[] =
