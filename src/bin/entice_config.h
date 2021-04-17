@@ -48,6 +48,7 @@ struct Entice_Config_
     int         cg_width;
     int         cg_height;
     int         duration_controls;
+    int         order;
     Eina_Bool   custom_geometry;
     Eina_Bool   fullscreen_startup;
     Eina_Bool   automatic_orientation;

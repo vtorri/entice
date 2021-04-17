@@ -200,6 +200,14 @@ _entice_translate_options(void)
 }
 #endif
 
+static int
+_entice_compare_name(const void *data1, const void *data2)
+{
+    return strcmp((const char *)data1, (const char *)data2);
+}
+
+static Eina_Compare_Cb _entice_compare_default = _entice_compare_name;
+
 static Eina_List *
 _file_list_append(Eina_List *list, const char *path)
 {
@@ -221,7 +229,8 @@ _file_list_append(Eina_List *list, const char *path)
         return list;
     }
     INF("File %s added.", path);
-    list = eina_list_append(list, eina_stringshare_add(path));
+    list = eina_list_sorted_insert(list, _entice_compare_default,
+                                   eina_stringshare_add(path));
 
     return list;
 }
@@ -309,6 +318,11 @@ elm_main(int argc, char **argv)
     if (quit_option)
         goto end;
 
+    entice_config_init();
+    cfg = entice_config_load();
+    printf(" config order : %d\n", cfg->order);
+    fflush(stdout);
+
     list = NULL;
     if (args == argc)
     {
@@ -355,7 +369,6 @@ elm_main(int argc, char **argv)
        if (!first) first = list;
     }
 
-    entice_config_init();
     /* FIXME key binding */
 
     elm_policy_set(ELM_POLICY_QUIT, ELM_POLICY_QUIT_LAST_WINDOW_CLOSED);
@@ -385,7 +398,6 @@ elm_main(int argc, char **argv)
 
     win_w = 960;
     win_h = 540;
-    cfg = entice_config_load();
     if (cfg)
     {
         win_w = cfg->cg_width;
