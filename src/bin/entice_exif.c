@@ -205,6 +205,7 @@ entice_exif_init(Evas_Object *win)
         elm_entry_single_line_set(o, EINA_TRUE);
         elm_entry_scrollable_set(o, EINA_TRUE);
         elm_object_part_text_set(o, "text", "Unknown");
+        elm_object_focus_allow_set(o, EINA_FALSE);
         evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
         evas_object_size_hint_align_set(o, EVAS_HINT_FILL, 0.5);
         elm_table_pack(table, o, 1, i, 1, 1);
@@ -240,6 +241,7 @@ entice_exif_init(Evas_Object *win)
         elm_entry_single_line_set(o, EINA_TRUE);
         elm_entry_scrollable_set(o, EINA_TRUE);
         elm_object_part_text_set(o, "text", "Unknown");
+        elm_object_focus_allow_set(o, EINA_FALSE);
         evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
         evas_object_size_hint_align_set(o, EVAS_HINT_FILL, 0.5);
         elm_table_pack(table, o, 1, i, 1, 1);
