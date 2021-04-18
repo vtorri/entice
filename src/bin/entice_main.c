@@ -261,19 +261,19 @@ _dir_parse(Eina_List *list, const char *path)
 static char *
 _path_uri_decode(const char *arg)
 {
-   char *path = NULL;
+    char *path = NULL;
 
-   if (!strncasecmp(arg, "file://", strlen("file://")))
-     {
+    if (!strncasecmp(arg, "file://", strlen("file://")))
+    {
         Efreet_Uri *uri = efreet_uri_decode(arg);
         if (uri)
-          {
-             path = strdup(uri->path);
-             efreet_uri_free(uri);
-          }
-     }
-   else path = strdup(arg);
-   return path;
+        {
+            path = strdup(uri->path);
+            efreet_uri_free(uri);
+        }
+    }
+    else path = strdup(arg);
+    return path;
 }
 
 EAPI_MAIN int
@@ -331,9 +331,9 @@ elm_main(int argc, char **argv)
     }
     else
     {
-       // only 1 file passed, so scan dir as list and jump to file in that dir
-       if (args == (argc - 1))
-         {
+        // only 1 file passed, so scan dir as list and jump to file in that dir
+        if (args == (argc - 1))
+        {
             char *dir = NULL, *path;
             Eina_List *l;
             const char *s;
@@ -343,30 +343,30 @@ elm_main(int argc, char **argv)
             else dir = ecore_file_dir_get(path);
             list = _dir_parse(list, dir);
             EINA_LIST_FOREACH(list, l, s)
-              {
-                 if (!strcmp(ecore_file_file_get(s),
-                             ecore_file_file_get(path)))
-                   {
-                      first = l;
-                      break;
-                   }
-              }
+            {
+                if (!strcmp(ecore_file_file_get(s),
+                            ecore_file_file_get(path)))
+                {
+                    first = l;
+                    break;
+                }
+            }
             free(path);
             free(dir);
-         }
-       // multiple files passed - just append them in order as given
-       else
-         {
+        }
+        // multiple files passed - just append them in order as given
+        else
+        {
             int i;
 
             for (i = args; i < argc; i++)
-              {
-                 char *path = _path_uri_decode(argv[i]);
-                 list = _file_list_append(list, path);
-                 free(path);
-              }
-         }
-       if (!first) first = list;
+            {
+                char *path = _path_uri_decode(argv[i]);
+                list = _file_list_append(list, path);
+                free(path);
+            }
+        }
+        if (!first) first = list;
     }
 
     /* FIXME key binding */
@@ -426,7 +426,7 @@ elm_main(int argc, char **argv)
 
     return 0;
 
- shutdown_config:
+  shutdown_config:
     entice_config_shutdown();
     eina_log_domain_unregister(entice_app_log_dom_global);
     entice_app_log_dom_global = -1;

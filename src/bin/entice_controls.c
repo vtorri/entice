@@ -39,29 +39,29 @@
  *                                  Local                                     *
  *============================================================================*/
 
-#define CONTROLS(_icon, _action)                                         \
-    o = elm_icon_add(win);                                               \
-    elm_icon_standard_set(o, _icon);                                     \
-    evas_object_show(o);                                                 \
-    entice->_action = o;                                                 \
-                                                                         \
-    o = elm_button_add(win);                                             \
-    elm_object_content_set(o, entice->_action);                          \
-    elm_object_focus_allow_set(o, EINA_FALSE);                           \
-    elm_object_style_set(o, "overlay");                                  \
-    evas_object_show(o);                                                 \
-    elm_object_part_content_set(entice->layout, "entice." #_action, o);  \
-                                                                         \
-    elm_layout_signal_callback_add(entice->layout,                       \
-                                   "image,action," #_action, "entice",   \
-                                   _cb_image_##_action, win);            \
-                                                                         \
-    elm_layout_signal_callback_add(entice->layout,                       \
-                                   "image,startfade," #_action, "entice",   \
-                                   _cb_image_startfade, win);            \
-                                                                         \
-    elm_layout_signal_callback_add(entice->layout,                       \
-                                   "image,stopfade," #_action, "entice", \
+#define CONTROLS(_icon, _action)                                          \
+    o = elm_icon_add(win);                                                \
+    elm_icon_standard_set(o, _icon);                                      \
+    evas_object_show(o);                                                  \
+    entice->_action = o;                                                  \
+                                                                          \
+    o = elm_button_add(win);                                              \
+    elm_object_content_set(o, entice->_action);                           \
+    elm_object_focus_allow_set(o, EINA_FALSE);                            \
+    elm_object_style_set(o, "overlay");                                   \
+    evas_object_show(o);                                                  \
+    elm_object_part_content_set(entice->layout, "entice." #_action, o);   \
+                                                                          \
+    elm_layout_signal_callback_add(entice->layout,                        \
+                                   "image,action," #_action, "entice",    \
+                                   _cb_image_##_action, win);             \
+                                                                          \
+    elm_layout_signal_callback_add(entice->layout,                        \
+                                   "image,startfade," #_action, "entice", \
+                                   _cb_image_startfade, win);             \
+                                                                          \
+    elm_layout_signal_callback_add(entice->layout,                        \
+                                   "image,stopfade," #_action, "entice",  \
                                    _cb_image_stopfade, win)
 
 static void
@@ -207,7 +207,7 @@ _cb_image_zoomval(void *win, Evas_Object *obj, void *event_info EINA_UNUSED)
     {
         size_t j = l - 1 - i;
         if ((t2[j] < '0') || (t2[j] > '9'))
-        goto free_t2;
+            goto free_t2;
 
         z += (t2[j] - '0') * p;
     }
@@ -252,7 +252,7 @@ _cb_image_fullscreen(void *win, Evas_Object *obj EINA_UNUSED, const char *emissi
 static void
 _cb_image_ctxpopup_dismissed(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
-   evas_object_del(obj);
+    evas_object_del(obj);
 }
 
 static void
@@ -490,7 +490,7 @@ entice_controls_timer_start(Evas_Object *win)
 
     if ((!entice->controls_timer) && (!entice->controls_over))
         entice->controls_timer = ecore_timer_add(entice->config->duration_controls,
-                                             _cb_controls_hide, win);
+                                                 _cb_controls_hide, win);
 
     /* display controls */
     if (eina_list_prev(entice->image_current))

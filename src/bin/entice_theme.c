@@ -48,11 +48,11 @@ _entice_theme_reload_cb(void *data EINA_UNUSED, Evas_Object *obj, const char *em
     const char *file;
     const char *group;
 
-   edje_object_file_get(obj, &file, &group);
-   edje_object_file_set(obj, file, group);
-   func = evas_object_data_get(obj, "theme_reload_func");
-   func_data = evas_object_data_get(obj, "theme_reload_func_data");
-   if (func) func(func_data);
+    edje_object_file_get(obj, &file, &group);
+    edje_object_file_set(obj, file, group);
+    func = evas_object_data_get(obj, "theme_reload_func");
+    func_data = evas_object_data_get(obj, "theme_reload_func_data");
+    if (func) func(func_data);
 }
 
 static char *

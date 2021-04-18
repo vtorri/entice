@@ -37,18 +37,18 @@
 
 #define CONFIG_KEY "config"
 
-#define ENTICE_CONFIG_EDD_KEY_ADD(_s, _m, _t) \
+#define ENTICE_CONFIG_EDD_KEY_ADD(_s, _m, _t)                           \
     EET_DATA_DESCRIPTOR_ADD_BASIC(edd_keys, Entice_Config_Keys, _s, _m, _t)
 
-#define ADD_KEYS(Name, Ctrl, Alt, Shift, Win, Cb) \
-    kb = calloc(1, sizeof(Entice_Config_Keys)); \
-    if (!kb) return; \
-    kb->keyname = eina_stringshare_add_length(Name, strlen(Name)); \
-    kb->ctrl = Ctrl; \
-    kb->alt = Alt; \
-    kb->shift = Shift; \
-    kb->win = Win; \
-    kb->cb = eina_stringshare_add_length(Cb, strlen(Cb)); \
+#define ADD_KEYS(Name, Ctrl, Alt, Shift, Win, Cb)                   \
+    kb = calloc(1, sizeof(Entice_Config_Keys));                     \
+    if (!kb) return;                                                \
+    kb->keyname = eina_stringshare_add_length(Name, strlen(Name));  \
+    kb->ctrl = Ctrl;                                                \
+    kb->alt = Alt;                                                  \
+    kb->shift = Shift;                                              \
+    kb->win = Win;                                                  \
+    kb->cb = eina_stringshare_add_length(Cb, strlen(Cb));           \
     config->keys = eina_list_append(config->keys, kb)
 
 static Eet_Data_Descriptor *edd_base = NULL;
@@ -196,7 +196,7 @@ entice_config_del(Entice_Config *config)
         eina_stringshare_del(key->keyname);
         eina_stringshare_del(key->cb);
         free(key);
-     }
+    }
 
     free(config);
 }
@@ -237,7 +237,7 @@ entice_config_theme_path_get(const Entice_Config *config)
     if (strchr(config->theme, '/'))
         return config->theme;
 
-   return _entice_config_theme_path_get(config->theme);
+    return _entice_config_theme_path_get(config->theme);
 }
 
 const char *
@@ -245,16 +245,16 @@ entice_config_theme_path_default_get(const Entice_Config *config)
 {
     static char path[PATH_MAX];
 
-   EINA_SAFETY_ON_NULL_RETURN_VAL(config, NULL);
-   EINA_SAFETY_ON_NULL_RETURN_VAL(config->theme, NULL);
+    EINA_SAFETY_ON_NULL_RETURN_VAL(config, NULL);
+    EINA_SAFETY_ON_NULL_RETURN_VAL(config->theme, NULL);
 
-   *path = '\0';
-   if (path[0]) return path;
+    *path = '\0';
+    if (path[0]) return path;
 
-   snprintf(path, sizeof(path), "%s/config/entice/themes/default.edj",
-            elm_app_data_dir_get());
+    snprintf(path, sizeof(path), "%s/config/entice/themes/default.edj",
+             elm_app_data_dir_get());
 
-   return path;
+    return path;
 }
 
 /*============================================================================*

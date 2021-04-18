@@ -87,9 +87,9 @@ _cb_win_del(void *data EINA_UNUSED,
 
 static void
 _cb_win_resize(void *data EINA_UNUSED,
-            Evas *_e EINA_UNUSED,
-            Evas_Object *win,
-            void *_event EINA_UNUSED)
+               Evas *_e EINA_UNUSED,
+               Evas_Object *win,
+               void *_event EINA_UNUSED)
 {
     Entice *entice;
 
@@ -120,7 +120,7 @@ _cb_unfullscreen(void *data EINA_UNUSED, Evas_Object *win, void *event EINA_UNUS
     {
         elm_layout_signal_emit(entice->layout, "state,win,normal", "entice");
         elm_win_noblank_set(win, EINA_FALSE);
-     }
+    }
 }
 
 static void

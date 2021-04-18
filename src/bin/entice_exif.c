@@ -72,8 +72,8 @@ static Entice_Exif_Entry entice_exif_gps_entries[] =
 
 static void
 _cb_op_exif_close(void *win,
-                      Evas_Object *obj,
-                      void *_event EINA_UNUSED)
+                  Evas_Object *obj,
+                  void *_event EINA_UNUSED)
 {
     Entice *entice;
 
@@ -245,8 +245,8 @@ entice_exif_fill(Evas_Object *win)
     ed = exif_data_new_from_file(eina_list_data_get(entice->image_current));
     if (!ed)
     {
-      printf("can not get exif data from %s\n",
-             (char *)eina_list_data_get(entice->image_current));
+        printf("can not get exif data from %s\n",
+               (char *)eina_list_data_get(entice->image_current));
         return;
     }
 
