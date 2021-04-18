@@ -78,6 +78,11 @@ collections
         }
       }
 
+      // EVENTS
+      part { name: "entice.events"; type: SWALLOW;
+        description { state: "default" 0.0;
+        }
+      }
       // SETTINGS
 
       // settings bg
