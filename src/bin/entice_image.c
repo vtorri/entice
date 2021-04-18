@@ -153,7 +153,10 @@ _entice_image_anim_handle(Evas_Object *obj)
 static void
 _smart_add(Evas_Object *obj)
 {
+    char buf[4096];
    Img *sd;
+   int w;
+   int h;
 
    sd = calloc(1, sizeof(Img));
    EINA_SAFETY_ON_NULL_RETURN(sd);
@@ -161,6 +164,13 @@ _smart_add(Evas_Object *obj)
    evas_object_smart_data_set(obj, sd);
 
    _parent_sc.add(obj);
+
+   snprintf(buf, sizeof(buf), "%s/entice/images/tiles.png", elm_app_data_dir_get());
+   sd->bg = evas_object_image_add(evas_object_evas_get(obj));
+   evas_object_image_file_set(sd->bg, buf, NULL);
+   evas_object_image_size_get(sd->bg, &w, &h);
+   evas_object_image_size_set(sd->bg, w, h);
+   evas_object_smart_member_add(sd->bg, obj);
 
    sd->img = evas_object_image_filled_add(evas_object_evas_get(obj));
    evas_object_smart_member_add(sd->img, obj);
@@ -178,8 +188,8 @@ _smart_del(Evas_Object *obj)
 
     evas_object_data_del(obj, "entice");
     evas_object_data_del(obj, "win");
-    if (sd->img)
-        evas_object_del(sd->img);
+    evas_object_del(sd->img);
+    evas_object_del(sd->bg);
 
     _parent_sc.del(obj);
 
@@ -194,6 +204,7 @@ _smart_resize(Evas_Object *obj, Evas_Coord w, Evas_Coord h)
     sd = evas_object_smart_data_get(obj);
     EINA_SAFETY_ON_NULL_RETURN(sd);
 
+    evas_object_image_fill_set(sd->bg, 0, 0, w, h);
     evas_object_resize(sd->img, w, h);
 }
 
@@ -205,6 +216,7 @@ _smart_show(Evas_Object *obj)
     sd = evas_object_smart_data_get(obj);
     EINA_SAFETY_ON_NULL_RETURN(sd);
 
+    evas_object_show(sd->bg);
     evas_object_show(sd->img);
 }
 
@@ -216,6 +228,7 @@ _smart_hide(Evas_Object *obj)
     sd = evas_object_smart_data_get(obj);
     EINA_SAFETY_ON_NULL_RETURN(sd);
 
+    evas_object_hide(sd->bg);
     evas_object_hide(sd->img);
 }
 
@@ -233,6 +246,8 @@ _smart_calculate(Evas_Object *obj)
 
     evas_object_geometry_get(obj, &ox, &oy, &ow, &oh);
 
+    evas_object_move(sd->bg, ox, oy);
+    evas_object_image_fill_set(sd->bg, ox, oy, ow, oh);
     evas_object_move(sd->img, ox, oy);
     evas_object_resize(sd->img, ow, oh);
 }
@@ -552,6 +567,8 @@ entice_image_update(Evas_Object *obj)
     evas_object_size_hint_max_set(obj, out_w, out_h);
     evas_object_size_hint_min_set(obj, out_w, out_h);
 
+    evas_object_image_fill_set(sd->bg, out_x, out_y, out_w, out_h);
+    evas_object_move(sd->bg, out_x, out_y);
     evas_object_move(sd->img, out_x, out_y);
 
     entice_win_title_update(win);

@@ -209,7 +209,7 @@ _entice_compare_name(const void *data1, const void *data2)
 static Eina_Compare_Cb _entice_compare_default = _entice_compare_name;
 
 static Eina_List *
-_file_list_append(Eina_List *list, const char *path)
+_file_list_append(Eina_List *list, const char *path, Eina_Bool sort)
 {
     Eina_Bool found = EINA_FALSE;
 
@@ -229,8 +229,11 @@ _file_list_append(Eina_List *list, const char *path)
         return list;
     }
     INF("File %s added.", path);
-    list = eina_list_sorted_insert(list, _entice_compare_default,
-                                   eina_stringshare_add(path));
+    if (sort)
+      list = eina_list_sorted_insert(list, _entice_compare_default,
+                                     eina_stringshare_add(path));
+    else
+      list = eina_list_append(list, eina_stringshare_add(path));
 
     return list;
 }
@@ -250,7 +253,7 @@ _dir_parse(Eina_List *list, const char *path)
     {
         if (info->type == EINA_FILE_REG)
         {
-            list = _file_list_append(list, info->path);
+            list = _file_list_append(list, info->path, EINA_TRUE);
         }
     }
     eina_iterator_free(it);
@@ -362,7 +365,7 @@ elm_main(int argc, char **argv)
             for (i = args; i < argc; i++)
             {
                 char *path = _path_uri_decode(argv[i]);
-                list = _file_list_append(list, path);
+                list = _file_list_append(list, path, EINA_FALSE);
                 free(path);
             }
         }

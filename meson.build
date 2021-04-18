@@ -62,6 +62,7 @@ subdir('src/bin')
 subdir('data/themes')
 subdir('data/desktop')
 subdir('data/icons')
+subdir('data/images')
 
 # use config_h after all subdirs have set values
 configure_file(output : 'config.h', configuration : config_h)
