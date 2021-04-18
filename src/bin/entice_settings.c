@@ -45,7 +45,8 @@ typedef struct
     Evas_Object *op_h;
     Evas_Object *op_wh_current;
     Evas_Object *op_duration_controls;
-    Evas_Object *op_order;
+    Evas_Object *op_order_1;
+    Evas_Object *op_order_2;
 } Settings_Ctx;
 
 static Eina_Bool
@@ -239,9 +240,10 @@ _cb_op_settings_order(void *data,
 {
     Settings_Ctx *ctx = data;
     Entice_Config *config = ctx->config;
-    printf("radio(%p) group value : %d\n", obj, elm_radio_value_get(ctx->op_order));
+    printf("radio group value : %d\n", elm_radio_value_get(ctx->op_order_1));
     fflush(stdout);
-    config->order = elm_radio_value_get(ctx->op_order);
+    config->order = elm_radio_value_get(ctx->op_order_1);
+    entice_config_save(config);
 }
 
 OPTIONS_CB(fullscreen_startup, 0);
@@ -447,26 +449,39 @@ entice_settings_init(Evas_Object *win)
 
     o = elm_radio_add(box);
     elm_object_style_set(o, "default");
-    elm_radio_state_value_set(o, 0);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, 0.0);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, 0.5);
     elm_object_text_set(o, "alphabetic");
     elm_box_pack_end(hbox2, o);
     evas_object_show(o);
-    ctx->op_order = o;
-
-    evas_object_smart_callback_add(ctx->op_order, "changed", _cb_op_settings_order, ctx);
+    ctx->op_order_1 = o;
 
     o = elm_radio_add(box);
     elm_object_style_set(o, "default");
-    elm_radio_state_value_set(o, 1);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, 0.0);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, 0.5);
     elm_object_text_set(o, "date");
-    elm_radio_group_add(o, ctx->op_order);
+    elm_radio_group_add(o, ctx->op_order_1);
     elm_box_pack_end(hbox2, o);
     evas_object_show(o);
-    evas_object_smart_callback_add(o, "changed", _cb_op_settings_order, ctx);
+    ctx->op_order_2 = o;
+
+    switch ( ctx->config->order)
+    {
+        case 0:
+            elm_radio_state_value_set(ctx->op_order_1, 0);
+            break;
+        case 1:
+            /* elm_radio_state_value_set(ctx->op_order_2, 1); */
+            break;
+        default:
+            elm_radio_state_value_set(ctx->op_order_1, 0);
+            break;
+    }
+
+
+    evas_object_smart_callback_add(ctx->op_order_1, "changed", _cb_op_settings_order, ctx);
+    evas_object_smart_callback_add(ctx->op_order_2, "changed", _cb_op_settings_order, ctx);
 
     elm_object_part_content_set(entice->layout, "entice.settings.panel", vbox);
 
