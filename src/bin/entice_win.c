@@ -129,7 +129,7 @@ _cb_focused(void *data EINA_UNUSED, Evas_Object *win, void *event EINA_UNUSED)
     Entice *entice;
 
     entice = evas_object_data_get(win, "entice");
-    elm_layout_signal_emit(entice->layout, "state,win,focused", "entice");
+    elm_object_style_set(entice->bg, "grad_vert_focus_title_match");
 }
 
 static void
@@ -138,7 +138,7 @@ _cb_unfocused(void *data EINA_UNUSED, Evas_Object *win, void *event EINA_UNUSED)
     Entice *entice;
 
     entice = evas_object_data_get(win, "entice");
-    elm_layout_signal_emit(entice->layout, "state,win,unfocused", "entice");
+    elm_object_style_set(entice->bg, "default");
 }
 
 static void
@@ -270,6 +270,14 @@ entice_win_add(void)
     evas_object_smart_callback_add(win, "unfullscreen", _cb_unfullscreen, NULL);
     evas_object_smart_callback_add(win, "focused", _cb_focused, entice);
     evas_object_smart_callback_add(win, "unfocused", _cb_unfocused, entice);
+
+    /* background */
+    o = elm_bg_add(win);
+    evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    elm_object_style_set(o, "grad_vert_focus_title_match");
+    elm_win_resize_object_add(win, o);
+    evas_object_show(o);
+    entice->bg = o;
 
     /* scroller */
     o = elm_scroller_add(win);

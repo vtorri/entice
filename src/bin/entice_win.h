@@ -32,6 +32,7 @@ typedef struct Entice Entice;
 struct Entice
 {
     /* window content */
+    Evas_Object *bg;
     Evas_Object *scroller;
     Evas_Object *layout;
     Evas_Object *image;

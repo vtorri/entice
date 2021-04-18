@@ -36,41 +36,7 @@
 collections
 {
   group { name: "entice/core";
-    images.image: "vg1.png" COMP;
     parts {
-      // BACKGROUND
-      part { name: "bg"; type: RECT;
-        mouse_events: 0;
-        description { state: "default" 0.0;
-          color: 64 64 64 255;
-        }
-      }
-      part { name: "vg1";
-        mouse_events: 0;
-        description { state: "default" 0.0;
-          fixed: 1 1;
-          rel2.relative: 1.0 0.5;
-          image.normal: "vg1.png";
-          color: 64 64 64 255;
-          fill {
-            size.relative: 0.0 1.0;
-            size.offset: 256 0;
-            smooth: 0;
-          }
-        }
-        description { state: "focused" 0.0;
-          inherit: "default" 0.0;
-          color: 32 32 32 255;
-        }
-      }
-      program { signal: "state,win,focused"; source: "entice";
-        action: STATE_SET "focused" 0.0;
-        target: "vg1";
-      }
-      program { signal: "state,win,unfocused"; source: "entice";
-        action: STATE_SET "default" 0.0;
-        target: "vg1";
-      }
 
       // IMAGE
       part { name: "entice.image"; type: SWALLOW;
