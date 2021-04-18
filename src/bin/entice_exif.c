@@ -70,16 +70,64 @@ static Entice_Exif_Entry entice_exif_gps_entries[] =
     { NULL, "DateStamp:",       "GPSDateStamp"       },
 };
 
+static Eina_Bool
+_entice_exif_focus_set_cb(void *win)
+{
+    Entice *entice = evas_object_data_get(win, "entice");
+
+    entice->exif_timer = NULL;
+    elm_object_focus_set(entice->event_kbd, EINA_TRUE);
+    return EINA_FALSE;
+}
+
 static void
-_cb_op_exif_close(void *win,
-                  Evas_Object *obj,
-                  void *_event EINA_UNUSED)
+_entice_exif_key_down_cb(void *win,
+                         Evas *evas EINA_UNUSED,
+                         Evas_Object *obj EINA_UNUSED,
+                         void *event_info)
+{
+    Entice *entice;
+    Evas_Event_Key_Down *ev;
+    Eina_Bool ctrl, alt, shift, winm, meta, hyper; /* modifiers */
+
+    EINA_SAFETY_ON_NULL_RETURN(event_info);
+
+    ev = (Evas_Event_Key_Down *)event_info;
+
+    ctrl = evas_key_modifier_is_set(ev->modifiers, "Control");
+    alt = evas_key_modifier_is_set(ev->modifiers, "Alt");
+    shift = evas_key_modifier_is_set(ev->modifiers, "Shift");
+    winm = evas_key_modifier_is_set(ev->modifiers, "Super");
+    meta =
+        evas_key_modifier_is_set(ev->modifiers, "Meta") ||
+        evas_key_modifier_is_set(ev->modifiers, "AltGr") ||
+        evas_key_modifier_is_set(ev->modifiers, "ISO_Level3_Shift");
+    hyper = evas_key_modifier_is_set(ev->modifiers, "Hyper");
+
+    entice = evas_object_data_get(win, "entice");
+
+    /* No modifier */
+    if (!ctrl && !alt && !shift && !winm && !meta && !hyper)
+    {
+        if (!strcmp(ev->key, "Escape"))
+        {
+            elm_object_signal_emit(entice->layout, "state,exif,hide", "entice");
+            entice->exif_shown = EINA_FALSE;
+        }
+    }
+
+    entice->exif_timer = ecore_timer_add(0.1, _entice_exif_focus_set_cb, win);
+}
+
+static void
+_entice_exif_close_cb(void *win,
+                      Evas_Object *obj,
+                      void *_event EINA_UNUSED)
 {
     Entice *entice;
 
     entice = evas_object_data_get(win, "entice");
     elm_object_signal_emit(entice->layout, "state,exif,hide", "entice");
-    elm_object_signal_emit(entice->layout, "state,exifbg,hide", "entice");
     entice->exif_shown = EINA_FALSE;
 }
 
@@ -92,12 +140,9 @@ entice_exif_init(Evas_Object *win)
 {
     Entice *entice;
     Evas_Object *o;
-    Evas_Object *scroller;
-    Evas_Object *vbox;
-    Evas_Object *hbox;
-    Evas_Object *box;
-    Evas_Object *icon;
     Evas_Object *frame;
+    Evas_Object *scroller;
+    Evas_Object *box;
     Evas_Object *table;
     size_t i;
 
@@ -105,41 +150,29 @@ entice_exif_init(Evas_Object *win)
     if (entice->exif_created)
         return;
 
-    o = elm_box_add(win);
-    evas_object_size_hint_weight_set(o, 0.0, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(o, 0.0, EVAS_HINT_FILL);
+    o = elm_frame_add(win);
+    elm_object_style_set(o, "border_overlay");
+    elm_object_focus_allow_set(o, EINA_FALSE);
+    evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
+    elm_object_text_set(o, "EXIF");
+    if (!evas_object_key_grab(o, "Escape", 0, 0, EINA_TRUE))
+    {
+        ERR("Can not grab the 'Esc' key");
+    }
     evas_object_show(o);
-    vbox = o;
-
-    o = elm_box_add(vbox);
-    evas_object_size_hint_weight_set(o, 0.0, 0.0);
-    evas_object_size_hint_align_set(o, 1.0, 0.0);
-    elm_box_horizontal_set(o, EINA_TRUE);
-    elm_box_pack_end(vbox, o);
-    evas_object_show(o);
-    hbox = o;
-
-    o = elm_icon_add(win);
-    evas_object_size_hint_align_set(o, 1.0, 0.0);
-    elm_icon_standard_set(o, "window-close");
-    evas_object_show(o);
-    icon = o;
-
-    o = elm_button_add(vbox);
-    elm_object_content_set(o, icon);
-    evas_object_size_hint_align_set(o, 1.0, 0.0);
-    elm_box_pack_end(hbox, o);
-    evas_object_show(o);
-    evas_object_smart_callback_add(o, "clicked",
-                                   _cb_op_exif_close,
+    frame = o;
+    evas_object_smart_callback_add(frame, "close",
+                                   _entice_exif_close_cb,
                                    win);
+    evas_object_event_callback_add(frame, EVAS_CALLBACK_KEY_DOWN,
+                                   _entice_exif_key_down_cb, win);
 
     o = elm_scroller_add(win);
     elm_scroller_content_min_limit(o, EINA_TRUE, EINA_FALSE);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
-
-    elm_box_pack_end(vbox, o);
+    elm_object_content_set(frame, o);
     evas_object_show(o);
     scroller = o;
 
@@ -152,19 +185,10 @@ entice_exif_init(Evas_Object *win)
 
     /* EXIF informations */
 
-    o = elm_frame_add(box);
+    o = elm_table_add(box);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
-    elm_object_focus_allow_set(o, EINA_FALSE);
-    elm_object_text_set(o, "EXIF");
     elm_box_pack_end(box, o);
-    evas_object_show(o);
-    frame = o;
-
-    o = elm_table_add(frame);
-    evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
-    elm_object_content_set(frame, o);
     evas_object_show(o);
     table = o;
 
@@ -190,18 +214,16 @@ entice_exif_init(Evas_Object *win)
 
     /* GPS informations */
 
-    o = elm_frame_add(box);
-    evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
-    elm_object_focus_allow_set(o, EINA_FALSE);
-    elm_object_text_set(o, "GPS");
+    o = elm_separator_add(box);
+    evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, 0.0);
+    evas_object_size_hint_align_set(o, EVAS_HINT_FILL, 0.5);
+    elm_separator_horizontal_set(o, EINA_TRUE);
     elm_box_pack_end(box, o);
     evas_object_show(o);
-    frame = o;
 
-    o = elm_table_add(frame);
+    o = elm_table_add(box);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    elm_object_content_set(frame, o);
+    elm_box_pack_end(box, o);
     evas_object_show(o);
     table = o;
 
@@ -225,7 +247,7 @@ entice_exif_init(Evas_Object *win)
         entice_exif_gps_entries[i].button = o;
     }
 
-    elm_object_part_content_set(entice->layout, "entice.exif.panel", vbox);
+    elm_object_part_content_set(entice->layout, "entice.exif.panel", frame);
 
     entice->exif_created = EINA_TRUE;
 }

@@ -113,7 +113,6 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
             if (!entice->settings_shown)
             {
                 elm_object_signal_emit(entice->layout, "state,settings,show", "entice");
-                elm_object_signal_emit(entice->layout, "state,settingsbg,show", "entice");
                 entice->settings_shown = EINA_TRUE;
             }
         }
@@ -123,7 +122,6 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
             if (!entice->exif_shown)
             {
                 elm_object_signal_emit(entice->layout, "state,exif,show", "entice");
-                elm_object_signal_emit(entice->layout, "state,exifbg,show", "entice");
                 entice->exif_shown = EINA_TRUE;
             }
         }
@@ -133,11 +131,9 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
             fflush(stderr);
 
             elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
-            elm_object_signal_emit(entice->layout, "state,settingsbg,hide", "entice");
             entice->settings_shown = EINA_FALSE;
 
             elm_object_signal_emit(entice->layout, "state,exif,hide", "entice");
-            elm_object_signal_emit(entice->layout, "state,exifbg,hide", "entice");
             entice->exif_shown = EINA_FALSE;
         }
     }

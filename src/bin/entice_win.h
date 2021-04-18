@@ -60,6 +60,7 @@ struct Entice
     Evas_Object *close;     /* close icon */
     Ecore_Timer *controls_timer;
     Ecore_Timer *settings_timer;
+    Ecore_Timer *exif_timer;
     Eina_Bool settings_created;
     Eina_Bool settings_shown;
     Eina_Bool controls_shown;
