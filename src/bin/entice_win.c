@@ -174,7 +174,7 @@ _cb_mouse_down(void *win, Evas *evas EINA_UNUSED, Evas_Object *obj EINA_UNUSED, 
     if (ev->button != 1) return;
     if (ev->flags & EVAS_BUTTON_DOUBLE_CLICK)
     {
-        elm_win_fullscreen_set(win, !elm_win_fullscreen_get(win));
+        entice_win_fullscreen_toggle(win);
     }
 }
 
@@ -352,18 +352,19 @@ entice_win_title_update(Evas_Object *win)
 {
     char buf[1024];
     Entice *entice;
-    const char *filename;
-    int w;
-    int h;
+    char *title;
 
     entice = evas_object_data_get(win, "entice");
-    entice_image_size_get(entice->image, &w, &h);
-    filename = eina_list_data_get(entice->image_current);
-
-    snprintf(buf, sizeof(buf), "Entice - %s (%d x %d) %d%%",
-             ecore_file_file_get(filename), w, h,
-             entice_image_zoom_get(entice->image));
-    elm_win_title_set(win, buf);
+    title = entice_image_title_get(entice->image);
+    if (title)
+    {
+        snprintf(buf, sizeof(buf), "Entice - %s", title);
+        elm_win_title_set(win, buf);
+        elm_layout_text_set(entice->layout, "entice.title", title);
+        free(title);
+    }
+    else
+        elm_win_title_set(win, "Entice");
 }
 
 void
@@ -385,4 +386,25 @@ entice_win_image_first_set(Evas_Object *win, Eina_List *first)
 
     entice = evas_object_data_get(win, "entice");
     entice_image_set(entice->image, first);
+}
+
+void
+entice_win_fullscreen_toggle(Evas_Object *win)
+{
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+    elm_win_fullscreen_set(win, !elm_win_fullscreen_get(win));
+    if (elm_win_fullscreen_get(win))
+    {
+        elm_icon_standard_set(entice->fullscreen, "view-fullscreen");
+        elm_object_signal_emit(entice->layout,
+                               "state,title,hide", "entice");
+    }
+    else
+    {
+        elm_icon_standard_set(entice->fullscreen, "view-restore");
+        elm_object_signal_emit(entice->layout,
+                               "state,title,show", "entice");
+    }
 }

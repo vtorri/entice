@@ -38,6 +38,8 @@ Evas_Object *entice_image_add(Evas_Object *win);
 
 void entice_image_set(Evas_Object *obj, Eina_List *image);
 
+const char *entice_image_file_get(Evas_Object *obj);
+
 void entice_image_size_get(Evas_Object *obj, int *w, int *h);
 
 void entice_image_rotate(Evas_Object *obj, unsigned int rot);
@@ -55,5 +57,7 @@ void entice_image_zoom_increase(Evas_Object *obj);
 void entice_image_zoom_decrease(Evas_Object *obj);
 
 void entice_image_update(Evas_Object *obj);
+
+char *entice_image_title_get(Evas_Object *obj);
 
 #endif /* ENTICE_IMAGE_H */

@@ -65,10 +65,7 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
     {
         if (!strcmp(ev->key, "F11"))
         {
-            elm_win_fullscreen_set(win, !elm_win_fullscreen_get(win));
-            (elm_win_fullscreen_get(win))
-                ? elm_icon_standard_set(entice->fullscreen, "view-fullscreen")
-                : elm_icon_standard_set(entice->fullscreen, "view-restore");
+            entice_win_fullscreen_toggle(win);
         }
         else if (!strcmp(ev->key, "space") ||
                  !strcmp(ev->key, "Right"))

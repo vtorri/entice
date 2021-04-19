@@ -389,6 +389,21 @@ entice_image_set(Evas_Object *obj, Eina_List *image)
     entice_image_update(obj);
 }
 
+const char *
+entice_image_file_get(Evas_Object *obj)
+{
+    Img *sd;
+    const char *filename;
+
+    sd = evas_object_smart_data_get(obj);
+    EINA_SAFETY_ON_NULL_RETURN_VAL(sd, NULL);
+
+    evas_object_image_file_get(sd->img, &filename, NULL);
+
+
+    return filename;
+}
+
 void
 entice_image_size_get(Evas_Object *obj, int *w, int *h)
 {
@@ -555,4 +570,24 @@ entice_image_update(Evas_Object *obj)
 
     entice_win_title_update(win);
     entice_controls_update(win);
+}
+
+char *
+entice_image_title_get(Evas_Object *obj)
+{
+    char buf[1024];
+    Img *sd;
+    int w;
+    int h;
+
+    sd = evas_object_smart_data_get(obj);
+    EINA_SAFETY_ON_NULL_RETURN_VAL(sd, NULL);
+
+    entice_image_size_get(obj, &w, &h);
+
+    snprintf(buf, sizeof(buf), "%s (%d x %d) %d%%",
+             ecore_file_file_get(entice_image_file_get(obj)), w, h,
+             entice_image_zoom_get(obj));
+
+    return strdup(buf);
 }
