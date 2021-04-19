@@ -74,6 +74,7 @@ collections
             font: "Sans:style=Bold"; size: 12;
             align: 0.0 0.0;
             min: 1 1;
+            ellipsis: -1;
           }
           visible: 0;
         }
