@@ -398,6 +398,7 @@ entice_controls_init(Evas_Object *win)
 {
     Entice *entice;
     Evas_Object *o;
+    Evas_Object *table;
 
     entice = evas_object_data_get(win, "entice");
 
@@ -421,16 +422,30 @@ entice_controls_init(Evas_Object *win)
     elm_object_part_content_set(entice->layout, "entice.zoomcheck", entice->zoomcheck);
 
     /* zoom entry */
+
+    o = elm_table_add(win);
+    evas_object_show(o);
+    table = o;
+
     o = elm_entry_add(win);
     elm_scroller_policy_set(o, ELM_SCROLLER_POLICY_OFF,
                             ELM_SCROLLER_POLICY_OFF);
-    elm_object_text_set(o, "     ");
+    elm_object_text_set(o, "2000% ");
     elm_entry_single_line_set(o, EINA_TRUE);
+    elm_table_pack(table, o, 0, 0, 1, 1);
+
+    o = elm_entry_add(win);
+    evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
+    elm_scroller_policy_set(o, ELM_SCROLLER_POLICY_OFF,
+                            ELM_SCROLLER_POLICY_OFF);
+    elm_entry_single_line_set(o, EINA_TRUE);
+    elm_table_pack(table, o, 0, 0, 1, 1);
     evas_object_smart_callback_add(o, "activated", _cb_image_zoomval, win);
     evas_object_show(o);
     entice->zoomval = o;
 
-    elm_object_part_content_set(entice->layout, "entice.zoomval", entice->zoomval);
+    elm_object_part_content_set(entice->layout, "entice.zoomval", table);
 
     CONTROLS("menu", menu);
     CONTROLS("view-fullscreen", fullscreen);
