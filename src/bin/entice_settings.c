@@ -279,7 +279,7 @@ entice_settings_init(Evas_Object *win)
     evas_object_geometry_get(win, NULL, NULL, &w, &h);
 
     o = elm_frame_add(win);
-    elm_object_style_set(o, "border_overlay");
+    elm_object_style_set(o, "border");
     elm_object_focus_allow_set(o, EINA_FALSE);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
