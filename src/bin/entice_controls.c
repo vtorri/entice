@@ -483,14 +483,6 @@ entice_controls_timer_start(Evas_Object *win)
                                                  _cb_controls_hide, win);
 
     /* display controls */
-    if (eina_list_prev(entice->image_current))
-        elm_object_signal_emit(entice->layout, "state,prev,show", "entice");
-    else
-        elm_object_signal_emit(entice->layout, "state,prev,hide", "entice");
-    if (eina_list_next(entice->image_current))
-        elm_object_signal_emit(entice->layout, "state,next,show", "entice");
-    else
-        elm_object_signal_emit(entice->layout, "state,next,hide", "entice");
     if (!entice->controls_shown)
     {
         elm_object_signal_emit(entice->layout, "state,controls,show", "entice");
