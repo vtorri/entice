@@ -1,5 +1,4 @@
 [![Github Build status](https://github.com/vtorri/entice/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/vtorri/entice/actions?query=workflow%3A%22GitHub+CI%22)
-[![Github Build status](https://github.com/entice/entice/workflows/GitHub%20CI/badge.svg)](https://github.com/entice/entice/actions?query=workflow%3A%22GitHub+CI%22)
 
 ### Entice
 ##### A simple cross-platform image viewer with basic features written with the EFL (Enlightement Fundation Libraries)
