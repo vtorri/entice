@@ -27,7 +27,7 @@ jobs:
         mkdir builddir
         cd builddir
         meson .. --prefix=/opt/efl --default-library shared -Dbuild-examples=false -Dbuild-tests=false -Dbindings=
-        ninja install
+        sudo ninja install
     - name: Build Entice
       run: |
         export PATH=/opt/efl/bin:$PATH
