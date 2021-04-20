@@ -2,6 +2,11 @@ langage: c
 os: linux
 dist: bionic
 
+env:
+  global:
+    - LD_LIBRARY_PATH=/opt/efl/lib/x86_64-linux-gnu
+    - PKG_CONFIG_PATH=/opt/efl/lib/x86_64-linux-gnu/pkgconfig
+
 compiler:
   - clang
   - gcc
@@ -17,11 +22,10 @@ before_install:
   - mkdir builddir && cd builddir
   - meson .. --prefix=/opt/efl --default-library shared -Dbuild-examples=false -Dbuild-tests=false -Dbindings=
   - sudo ninja install
+  - cd..
 
 script:
   - export PATH=/opt/efl/bin:$PATH
-  - export LD_LIBRARY_PATH=/opt/efl/lib
-  - export PKG_CONFIG_PATH=/opt/efl/lib/pkgconfig
   - rm -rf builddir && mkdir builddir && cd builddir && meson ..
   - ninja
 
