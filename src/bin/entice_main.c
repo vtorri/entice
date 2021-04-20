@@ -230,10 +230,10 @@ _file_list_append(Eina_List *list, const char *path, Eina_Bool sort)
     }
     INF("File %s added.", path);
     if (sort)
-      list = eina_list_sorted_insert(list, _entice_compare_default,
-                                     eina_stringshare_add(path));
+        list = eina_list_sorted_insert(list, _entice_compare_default,
+                                       eina_stringshare_add(path));
     else
-      list = eina_list_append(list, eina_stringshare_add(path));
+        list = eina_list_append(list, eina_stringshare_add(path));
 
     return list;
 }
