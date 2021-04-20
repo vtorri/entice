@@ -20,7 +20,7 @@ before_install:
   - git clone https://git.enlightenment.org/core/efl.git
   - cd efl
   - mkdir builddir && cd builddir
-  - meson .. --prefix=/opt/efl --default-library shared -Dbuild-examples=false -Dbuild-tests=false -Dbindings=
+  - meson .. --prefix=/opt/efl --default-library shared -Dbuild-examples=false -Dbuild-tests=false -Dbindings= -Decore-imf-loaders-disabler='xim','ibus','scim'
   - sudo ninja install
   - cd ..
 
