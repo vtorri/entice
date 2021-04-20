@@ -13,11 +13,24 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: configure
-      run: ./configure
-    - name: make
-      run: make
-    - name: make check
-      run: make check
-    - name: make distcheck
-      run: make distcheck
+    - name: Install dependencies
+      run: |
+        sudo add-apt-repository -y ppa:niko2040/e19
+        sudo apt-get -qq update
+        sudo apt-get install -y ninja-build python3-pip python3-setuptools
+        pip3 install --upgrade pip
+        pip3 install meson --user
+    - name: Install EFL git
+      run: |
+        git clone https://git.enlightenment.org/core/efl.git
+        cd efl
+        mkdir builddir
+        cd builddir
+        meson .. --prefix=/opt/efl --default-library shared
+        ninja install
+    - name: Build Entice
+      run: |
+        mkdir builddir
+        cd builddir
+        meson .. --prefix=/opt/efl
+        ninja
