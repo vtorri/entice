@@ -1,3 +1,5 @@
+[![Entice Logo](https://github.com/vtorri/entice/raw/master/data/icons/entice.png)](https://github.com/vtorri/entice)
+
 [![Github Build status](https://github.com/vtorri/entice/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/vtorri/entice/actions?query=workflow%3A%22GitHub+CI%22)
 
 ### Entice
