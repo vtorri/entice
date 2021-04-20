@@ -48,7 +48,6 @@
     o = elm_button_add(win);                                              \
     elm_object_content_set(o, entice->_action);                           \
     elm_object_focus_allow_set(o, EINA_FALSE);                            \
-    elm_object_style_set(o, "overlay");                                   \
     evas_object_show(o);                                                  \
     elm_object_part_content_set(entice->layout, "entice." #_action, o);   \
                                                                           \
