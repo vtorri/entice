@@ -401,7 +401,7 @@ _cb_image_startfade(void *win, Evas_Object *obj EINA_UNUSED, const char *emissio
 }
 
 static Eina_Bool
-_cb_controls_hide(void *win)
+_entice_controls_hide_cb(void *win)
 {
     Entice *entice;
 
@@ -525,7 +525,7 @@ entice_controls_timer_start(Evas_Object *win)
 
     if ((!entice->controls_timer) && (!entice->controls_over))
         entice->controls_timer = ecore_timer_add(entice->config->duration_controls,
-                                                 _cb_controls_hide, win);
+                                                 _entice_controls_hide_cb, win);
 
     /* display controls */
     if (!entice->controls_shown)
