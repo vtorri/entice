@@ -1,6 +1,7 @@
 langage: c
 os: linux
 dist: bionic
+cache: ccache
 
 env:
   global:
