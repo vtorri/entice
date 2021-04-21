@@ -63,6 +63,22 @@
                                    "image,stopfade," #_action, "entice",  \
                                    _cb_image_stopfade, win)
 
+
+#define _entice_ctrl_entry_zoom_cb(_zm)                         \
+static void                                                     \
+_entice_ctrl_entry_ ## _zm ## _cb(void *win,                    \
+                                  Evas_Object *obj,             \
+                                  void *event_info EINA_UNUSED) \
+{                                                               \
+    Entice *entice;                                             \
+                                                                \
+    entice = evas_object_data_get(win, "entice");               \
+    entice_image_zoom_set(entice->image, _zm);                  \
+    entice_image_update(entice->image);                         \
+                                                                \
+    evas_object_del(obj);                                       \
+}
+
 static void
 _cb_image_prev(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
 {
@@ -246,6 +262,74 @@ static void
 _cb_image_ctxpopup_dismissed(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
     evas_object_del(obj);
+}
+
+_entice_ctrl_entry_zoom_cb(2000);
+_entice_ctrl_entry_zoom_cb(1500);
+_entice_ctrl_entry_zoom_cb(1000);
+_entice_ctrl_entry_zoom_cb(500);
+_entice_ctrl_entry_zoom_cb(200);
+_entice_ctrl_entry_zoom_cb(133);
+_entice_ctrl_entry_zoom_cb(100);
+_entice_ctrl_entry_zoom_cb(50);
+_entice_ctrl_entry_zoom_cb(33);
+
+static void
+_entice_ctrl_entry_best_fit_cb(void *win, Evas_Object *obj, void *event_info EINA_UNUSED)
+{
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+    entice_image_zoom_mode_set(entice->image, ENTICE_ZOOM_MODE_FIT);
+    entice_image_update(entice->image);
+
+    evas_object_del(obj);
+}
+
+static void
+_entice_entry_mouse_up_cb(void *win, Evas *evas EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info)
+{
+    Evas_Event_Mouse_Down *ev;
+
+    ev = (Evas_Event_Mouse_Down *)event_info;
+
+    if (ev->button == 3)
+    {
+        Evas_Object *ctxpopup;
+        Evas_Coord x,y;
+
+        ctxpopup = elm_ctxpopup_add(win);
+        elm_ctxpopup_direction_priority_set(ctxpopup,
+                                            ELM_CTXPOPUP_DIRECTION_UP,
+                                            ELM_CTXPOPUP_DIRECTION_LEFT,
+                                            ELM_CTXPOPUP_DIRECTION_RIGHT,
+                                            ELM_CTXPOPUP_DIRECTION_DOWN);
+
+        elm_ctxpopup_item_append(ctxpopup, "2000%", NULL,
+                                 _entice_ctrl_entry_2000_cb, win);
+        elm_ctxpopup_item_append(ctxpopup, "1500%", NULL,
+                                 _entice_ctrl_entry_1500_cb, win);
+        elm_ctxpopup_item_append(ctxpopup, "1000%", NULL,
+                                 _entice_ctrl_entry_1000_cb, win);
+        elm_ctxpopup_item_append(ctxpopup, "500%", NULL,
+                                 _entice_ctrl_entry_500_cb, win);
+        elm_ctxpopup_item_append(ctxpopup, "200%", NULL,
+                                 _entice_ctrl_entry_200_cb, win);
+        elm_ctxpopup_item_append(ctxpopup, "133%", NULL,
+                                 _entice_ctrl_entry_133_cb, win);
+        elm_ctxpopup_item_append(ctxpopup, "100%", NULL,
+                                 _entice_ctrl_entry_100_cb, win);
+        elm_ctxpopup_item_append(ctxpopup, "50%", NULL,
+                                 _entice_ctrl_entry_50_cb, win);
+        elm_ctxpopup_item_append(ctxpopup, "33%", NULL,
+                                 _entice_ctrl_entry_33_cb, win);
+        elm_ctxpopup_item_append(ctxpopup, "Best fit", NULL,
+                                 _entice_ctrl_entry_best_fit_cb, win);
+        evas_pointer_canvas_xy_get(evas_object_evas_get(win), &x, &y);
+        evas_object_move(ctxpopup, x, y);
+        evas_object_show(ctxpopup);
+        evas_object_smart_callback_add(ctxpopup, "dismissed", _cb_image_ctxpopup_dismissed, NULL);
+    }
 }
 
 static void
@@ -469,10 +553,13 @@ entice_controls_init(Evas_Object *win)
     elm_scroller_policy_set(o, ELM_SCROLLER_POLICY_OFF,
                             ELM_SCROLLER_POLICY_OFF);
     elm_entry_single_line_set(o, EINA_TRUE);
+    elm_entry_context_menu_disabled_set(o, EINA_TRUE);
     elm_table_pack(table, o, 0, 0, 1, 1);
     evas_object_smart_callback_add(o, "activated", _cb_image_zoomval, win);
     evas_object_show(o);
     entice->zoomval = o;
+    evas_object_event_callback_add(o, EVAS_CALLBACK_MOUSE_UP,
+                                   _entice_entry_mouse_up_cb, win);
 
     elm_object_part_content_set(entice->layout, "entice.zoomval", table);
 
