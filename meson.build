@@ -2,7 +2,7 @@ project('entice', 'c',
   version         : '0.0.1',
   license         : 'BSD 2 clause',
   default_options : [ 'buildtype=plain' ],
-  meson_version   : '>= 0.53',
+  meson_version   : '>= 0.49',
 )
 
 v_array = meson.project_version().split('.')
