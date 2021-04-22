@@ -330,8 +330,10 @@ entice_controls_init(Evas_Object *win)
     evas_object_size_hint_align_set(list, EVAS_HINT_FILL, EVAS_HINT_FILL);
     elm_list_mode_set(list, ELM_LIST_EXPAND);
 
-#define LIST_APPEND(_zm)                            \
-    elm_list_item_append(list, #_zm "%", NULL, NULL, \
+#define LIST_APPEND(_zm)                             \
+    o = elm_label_add(win);                          \
+    elm_object_text_set(o, #_zm "%");                   \
+    elm_list_item_append(list, NULL, o, NULL,                       \
                          _entice_ctrl_zoom_ ## _zm ## _cb, entice)
 
     LIST_APPEND(2000);
