@@ -51,11 +51,11 @@ struct Entice
     Evas_Object *rotleft;   /* rotate left (counter clock) */
     Evas_Object *rotright;  /* rotate right (clock) */
     Evas_Object *zoomin;    /* zoom in */
-    Evas_Object *zoomval;   /* entry fo zoom value */
+    Evas_Object *zoomval;   /* button for zoom value */
     Evas_Object *zoomout;   /* zoom out */
-    Evas_Object *zoomorig;  /* zoom 1:1 */
-    Evas_Object *zoomfit;   /* zoom best fit */
-    Evas_Object *zoomcheck; /* checkbox for zoom best fit */
+    Evas_Object *bestfit;   /* checkox for best fit */
+    Evas_Object *hover;
+
     Evas_Object *menu;      /* menu icon */
     Evas_Object *fullscreen;/* fullscreen icon */
     Evas_Object *close;     /* close icon */
