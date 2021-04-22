@@ -7,12 +7,18 @@ env:
   global:
     - LD_LIBRARY_PATH=/opt/efl/lib/x86_64-linux-gnu
     - PKG_CONFIG_PATH=/opt/efl/lib/x86_64-linux-gnu/pkgconfig
+    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+    #   via the "travis encrypt" command using the project repo's public key
+    - secure: "l2Pk_Y1hJoKOopXqvSSiBw"
+
 
 compiler:
   - clang
   - gcc
 
 before_install:
+  - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+
   - sudo apt-get -qq update
   - sudo apt install build-essential meson ninja-build python3-pip python3-setuptools clang
   - pip3 install --upgrade pip
@@ -34,3 +40,11 @@ script:
 addons:
   apt:
     update: true
+  coverity_scan:
+    project:
+      name: "vtorri/entice"
+      description: "Entice image viewer"
+    notification_email: vincent.torri@gmail.com
+    build_command_prepend: "rm -rf builddir && mkdir builddir && cd builddir && meson .."
+    build_command: "ninja"
+    branch_pattern: coverity_scan
