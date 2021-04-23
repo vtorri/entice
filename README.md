@@ -66,7 +66,8 @@ Zoom in | +
 Zoom out | -
 Manage Settings | s
 Show EXIF data | e
-Copy file name in clipboard | Ctrl-c
+Copy file in clipboard | Ctrl-c
+Copy file name in clipboard | Ctrl-Shift-c
 Exit Settings | Esc
 
 ### Mouse
