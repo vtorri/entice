@@ -55,6 +55,7 @@ struct Entice
     Evas_Object *zoomout;   /* zoom out */
     Evas_Object *bestfit;   /* checkox for best fit */
     Evas_Object *hover_zoom;
+    Evas_Object *hover_middle;
 
     Evas_Object *menu;      /* menu icon */
     Evas_Object *fullscreen;/* fullscreen icon */
