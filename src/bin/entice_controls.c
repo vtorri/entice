@@ -28,6 +28,7 @@
 
 #include <Elementary.h>
 
+#include "entice_private.h"
 #include "entice_config.h"
 #include "entice_image.h"
 #include "entice_settings.h"
