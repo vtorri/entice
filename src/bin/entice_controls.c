@@ -332,13 +332,22 @@ _entice_ctrl_menu_copy_filename_cb(void *win,
 {
     Entice *entice;
     Elm_Object_Item *list_it;
-
-    entice_win_filename_copy(win);
+    const char *filename;
 
     list_it = elm_list_selected_item_get(obj);
     elm_list_item_selected_set(list_it, EINA_FALSE);
 
     entice = evas_object_data_get(win, "entice");
+
+    filename = (char *)eina_list_data_get(entice->image_current);
+    if (filename)
+    {
+        elm_cnp_selection_set(win,
+                              ELM_SEL_TYPE_CLIPBOARD,
+                              ELM_SEL_FORMAT_TEXT,
+                              filename, strlen(filename));
+    }
+
     elm_hover_dismiss(entice->hover_menu);
 }
 
@@ -349,13 +358,32 @@ _entice_ctrl_menu_copy_file_cb(void *win,
 {
     Entice *entice;
     Elm_Object_Item *list_it;
-
-    entice_win_file_copy(win);
+    const char *filename;
+    Eina_File *f;
+    void *base;
+    size_t length;
 
     list_it = elm_list_selected_item_get(obj);
     elm_list_item_selected_set(list_it, EINA_FALSE);
 
     entice = evas_object_data_get(win, "entice");
+
+    filename = (char *)eina_list_data_get(entice->image_current);
+    if (!filename)
+        return;
+
+    f = eina_file_open(filename, EINA_FALSE);
+    if (!f)
+        return;
+
+    base = eina_file_map_all(f, EINA_FILE_POPULATE);
+    length = eina_file_size_get(f);
+    elm_cnp_selection_set(win,
+                          ELM_SEL_TYPE_CLIPBOARD,
+                          ELM_SEL_FORMAT_IMAGE,
+                          base, length);
+    eina_file_close(f);
+
     elm_hover_dismiss(entice->hover_menu);
 }
 
