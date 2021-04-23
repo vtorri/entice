@@ -1,4 +1,4 @@
-#define ICON_SIZE 30
+#define ICON_SIZE 24
 
 // padding between icon controls and window border
 #define GB_PAD 10
@@ -178,32 +178,6 @@ collections
       }
 
       STOP_FADE("zoomout")
-
-      // entry bg
-      part
-      {
-        name: "entice.zoomvalbg";
-        type: RECT;
-        clip_to: fader;
-        scale: 1;
-        description
-        {
-          state: "default" 0.0;
-          fixed: 1 1;
-          rel.to: "entice.zoomval";
-          rel1.relative: 0.0 0.0;
-          rel1.offset: 0 0;
-          rel2.relative: 1.0 1.0;
-          rel2.offset: -1 -1;
-          align: 1.0 1.0;
-          offscale;
-          color: 64 64 64 255;
-        }
-        description { state: "disable" 0.0;
-          inherit: "default" 0.0;
-          visible: 0;
-        }
-      }
 
       // entry bg
       part

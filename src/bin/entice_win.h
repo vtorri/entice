@@ -27,7 +27,14 @@
 #ifndef ENTICE_WIN_H
 #define ENTICE_WIN_H
 
-typedef struct Entice Entice;
+typedef struct Entice                 Entice;
+typedef struct Entice_Hover_Menu_Item Entice_Hover_Menu_Item;
+
+struct Entice_Hover_Menu_Item
+{
+    Elm_Widget_Item *item;
+    int              zoom;
+};
 
 struct Entice
 {
@@ -53,13 +60,14 @@ struct Entice
     Evas_Object *zoomin;    /* zoom in */
     Evas_Object *zoomval;   /* button for zoom value */
     Evas_Object *zoomout;   /* zoom out */
-    Evas_Object *bestfit;   /* checkox for best fit */
     Evas_Object *hover_zoom;
 
     Evas_Object *menu;      /* menu icon */
     Evas_Object *fullscreen;/* fullscreen icon */
     Evas_Object *close;     /* close icon */
     Evas_Object *hover_menu;
+    Evas_Object *hover_list;
+    Eina_List *hover_menu_items;
     Ecore_Timer *controls_timer;
     Ecore_Timer *settings_timer;
     Ecore_Timer *exif_timer;
@@ -73,6 +81,10 @@ struct Entice
     /* theme */
     Entice_Config *config;
     char *theme_file;
+
+    /* current ui representation of zoom */
+    int zoom;
+    Eina_Bool bestfit;
 };
 
 Evas_Object *entice_win_add(void);
