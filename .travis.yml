@@ -9,7 +9,7 @@ env:
     - PKG_CONFIG_PATH=/opt/efl/lib/x86_64-linux-gnu/pkgconfig
     # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
     #   via the "travis encrypt" command using the project repo's public key
-    - secure: "l2Pk_Y1hJoKOopXqvSSiBw"
+    - secure: "deHIrHEvvcaXDh8TEux2AgYcFST3GMCWat6uhQeILgfs0DdKgwa2i4sBvsZB1uD/GGKitH/L7AVVlINa6Wf8pf+61FRcwt6GKQV2nDZJD0qzSvxYI7MXWxxxjcrYExnVarIhTI4YSIFCwwQbv22IIaOMSIZ1p+eL0UnsJ8hiBTr8EblKq2vXVRDZ67pOfEvtBzWipy8xVyqHgvkyesyczduoGI5abLZD26gfvgZUE3O0d2MRBDeyGNBVMZMX2ez7Nbm7vVViu3Yfzb1aFkkT/LeCrJFj7WlxmnAT2i1+D7ePaEEZB+TmBbessjDkPAg0oySv7AF5XdIXrMKzJvHJc4GNPYR/3i6cWz7VyQcwq9GnanNSzfxc+IsXzwapp2tB8Lu2efqkEpOfoEgBvVHhEQvNJtj0JKwNsflIM6tOGlQZGnGsvlDUex44JeF+Kn/ALKBwhZAbrtTlXjaEURoA4jARTvKqqbtOBvE4KwDMyURkJxT9nV/7szngrhybwSswypglU7nkIaUiAhWw5AJTI0rjwjT/13s2iOGPMy2RyzCFgVkuo5N+OINZUF66zv7ZoPNbF9ijq1WjJPmEoKIiQyv5w29Eh4kSsmP63SjhjTIp2/N3epOu6xXshE63178rPUnJPrwDlHUDPDRpFg+rp7TgDYTaa71UZL2YHZV85h8="
 
 
 compiler:
