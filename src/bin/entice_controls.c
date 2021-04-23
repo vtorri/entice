@@ -77,7 +77,7 @@
         entice = (Entice *)data;                                        \
         entice_image_zoom_set(entice->image, _zm);                      \
         entice_image_update(entice->image);                             \
-        elm_hover_dismiss(entice->hover);                               \
+        elm_hover_dismiss(entice->hover_zoom);                          \
     }
 
 static void
@@ -157,11 +157,11 @@ CONTROL_ZOOM_CB(50)
 CONTROL_ZOOM_CB(33)
 
 static void
-_entice_ctrl_zoomcheck_cb(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
+_entice_ctrl_zoomcheck_cb(void *win, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
     Entice *entice;
 
-    entice = ( Entice *)data;
+    entice = evas_object_data_get(win, "entice");
 
     if (elm_check_state_get(obj) == EINA_TRUE)
     {
@@ -176,27 +176,14 @@ _entice_ctrl_zoomcheck_cb(void *data, Evas_Object *obj, void *event_info EINA_UN
 }
 
 static void
-_entice_ctrl_zoomval_mouse_up_cb(void *hover, Evas *evas EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info)
+_entice_ctrl_zoomval_cb(void *win, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
-    Evas_Event_Mouse_Down *ev;
+    Entice *entice;
 
-    ev = (Evas_Event_Mouse_Down *)event_info;
-
-    /*
-     * left button: zoom levels + best fit
-     * right button: slider
-     */
-
-    if (ev->button == 1)
-    {
-        printf("button left up\n");
-        fflush(stdout);
-        evas_object_show(hover);
-    }
-
-    if (ev->button == 3)
-    {
-    }
+    printf(" *** zoomval cb\n");
+    fflush(stdout);
+    entice = evas_object_data_get(win, "entice");
+    evas_object_show(entice->hover_zoom);
 }
 
 static void
@@ -259,6 +246,137 @@ _entice_ctrl_fullscreen_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *
     entice_win_fullscreen_toggle(win);
 }
 
+static void
+_entice_ctrl_menu_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+{
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+    evas_object_show(entice->hover_menu);
+}
+
+static void
+_entice_ctrl_menu_settings_cb(void *win,
+                              Evas_Object *obj,
+                              void *event_info EINA_UNUSED)
+{
+    Entice *entice;
+    Elm_Object_Item *list_it;
+
+    list_it = elm_list_selected_item_get(obj);
+    elm_list_item_selected_set(list_it, EINA_FALSE);
+
+    entice = evas_object_data_get(win, "entice");
+
+    entice_settings_init(win);
+
+    if (entice->exif_shown)
+    {
+        elm_object_signal_emit(entice->layout, "state,exif,hide", "entice");
+        entice->exif_shown = EINA_FALSE;
+    }
+
+    if (!entice->settings_shown)
+    {
+        elm_object_signal_emit(entice->layout, "state,settings,show", "entice");
+        entice->settings_shown = EINA_TRUE;
+    }
+
+    elm_hover_dismiss(entice->hover_menu);
+}
+
+static void
+_entice_ctrl_menu_exif_cb(void *win,
+                          Evas_Object *obj,
+                          void *event_info EINA_UNUSED)
+{
+    Entice *entice;
+    Elm_Object_Item *list_it;
+
+    list_it = elm_list_selected_item_get(obj);
+    elm_list_item_selected_set(list_it, EINA_FALSE);
+
+    entice = evas_object_data_get(win, "entice");
+
+    entice_exif_fill(win);
+
+    if (entice->settings_shown)
+    {
+        elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
+        entice->settings_shown = EINA_FALSE;
+    }
+
+    if (!entice->exif_shown)
+    {
+        elm_object_signal_emit(entice->layout, "state,exif,show", "entice");
+        entice->exif_shown = EINA_TRUE;
+    }
+
+    elm_hover_dismiss(entice->hover_menu);
+}
+
+static void
+_entice_ctrl_menu_copy_filename_cb(void *win,
+                                   Evas_Object *obj,
+                                   void *event_info EINA_UNUSED)
+{
+    Entice *entice;
+    Elm_Object_Item *list_it;
+    const char *filename;
+
+    list_it = elm_list_selected_item_get(obj);
+    elm_list_item_selected_set(list_it, EINA_FALSE);
+
+    entice = evas_object_data_get(win, "entice");
+
+    filename = (char *)eina_list_data_get(entice->image_current);
+    if (filename)
+    {
+        elm_cnp_selection_set(win,
+                              ELM_SEL_TYPE_CLIPBOARD,
+                              ELM_SEL_FORMAT_TEXT,
+                              filename, strlen(filename));
+    }
+
+    elm_hover_dismiss(entice->hover_menu);
+}
+
+static void
+_entice_ctrl_menu_copy_file_cb(void *win,
+                               Evas_Object *obj,
+                               void *event_info EINA_UNUSED)
+{
+    Entice *entice;
+    Elm_Object_Item *list_it;
+    const char *filename;
+    Eina_File *f;
+    void *base;
+    size_t length;
+
+    list_it = elm_list_selected_item_get(obj);
+    elm_list_item_selected_set(list_it, EINA_FALSE);
+
+    entice = evas_object_data_get(win, "entice");
+
+    filename = (char *)eina_list_data_get(entice->image_current);
+    if (!filename)
+        return;
+
+    f = eina_file_open(filename, EINA_FALSE);
+    if (!f)
+        return;
+
+    base = eina_file_map_all(f, EINA_FILE_POPULATE);
+    length = eina_file_size_get(f);
+    elm_cnp_selection_set(win,
+                          ELM_SEL_TYPE_CLIPBOARD,
+                          ELM_SEL_FORMAT_IMAGE,
+                          base, length);
+    eina_file_close(f);
+
+    elm_hover_dismiss(entice->hover_menu);
+}
+
 /*============================================================================*
  *                                 Global                                     *
  *============================================================================*/
@@ -266,10 +384,12 @@ _entice_ctrl_fullscreen_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *
 void
 entice_controls_init(Evas_Object *win)
 {
+    char buf[16];
     Entice *entice;
     Evas_Object *o;
     Evas_Object *table;
     Evas_Object *list;
+    Evas_Object *icon;
 
     entice = evas_object_data_get(win, "entice");
 
@@ -297,6 +417,8 @@ entice_controls_init(Evas_Object *win)
     elm_table_pack(table, o, 0, 0, 1, 1);
     evas_object_show(o);
     entice->zoomval = o;
+    evas_object_smart_callback_add(entice->zoomval, "clicked",
+                                   _entice_ctrl_zoomval_cb, win);
 
     elm_object_part_content_set(entice->layout, "entice.zoomval", table);
 
@@ -304,7 +426,7 @@ entice_controls_init(Evas_Object *win)
     elm_hover_parent_set(o, win);
     elm_hover_target_set(o, entice->zoomval);
     elm_object_style_set(o, "popout");
-    entice->hover = o;
+    entice->hover_zoom = o;
 
     /* list in a table*/
     table = elm_table_add(win);
@@ -320,7 +442,8 @@ entice_controls_init(Evas_Object *win)
     o = elm_check_add(win);
     elm_object_style_set(o, "default");
     elm_object_text_set(o, "Best fit");
-    evas_object_smart_callback_add(o, "changed", _entice_ctrl_zoomcheck_cb, entice);
+    evas_object_smart_callback_add(o, "changed",
+                                   _entice_ctrl_zoomcheck_cb, win);
     elm_object_focus_allow_set(o, EINA_FALSE);
     evas_object_show(o);
     entice->bestfit = o;
@@ -330,10 +453,11 @@ entice_controls_init(Evas_Object *win)
     evas_object_size_hint_align_set(list, EVAS_HINT_FILL, EVAS_HINT_FILL);
     elm_list_mode_set(list, ELM_LIST_EXPAND);
 
-#define LIST_APPEND(_zm)                             \
-    o = elm_label_add(win);                          \
-    elm_object_text_set(o, #_zm "%");                   \
-    elm_list_item_append(list, NULL, o, NULL,                       \
+#define LIST_APPEND(_zm)                                           \
+    o = elm_label_add(win);                                        \
+    evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, 0.0);    \
+    elm_object_text_set(o, #_zm "%");                              \
+    elm_list_item_append(list, NULL, o, NULL,                      \
                          _entice_ctrl_zoom_ ## _zm ## _cb, entice)
 
     LIST_APPEND(2000);
@@ -345,19 +469,79 @@ entice_controls_init(Evas_Object *win)
     LIST_APPEND(100);
     LIST_APPEND(50);
     LIST_APPEND(33);
+#undef LIST_APPEND
     elm_list_item_append(list, NULL, entice->bestfit, NULL, NULL, NULL);
+
     elm_table_pack(table, list, 0, 0, 1, 1);
     evas_object_show(list);
 
-    elm_object_part_content_set(entice->hover, "top", table);
+    elm_object_part_content_set(entice->hover_zoom, "top", table);
 
-    evas_object_event_callback_add(entice->zoomval, EVAS_CALLBACK_MOUSE_UP,
-                                   _entice_ctrl_zoomval_mouse_up_cb, entice->hover);
+    o = elm_button_add(win);
+    elm_object_style_set(o, "overlay");
+    snprintf(buf, sizeof(buf), "%d%%", entice_image_zoom_get(entice->image));
+    elm_object_text_set(o, buf);
+    evas_object_show(o);
+    elm_object_part_content_set(entice->hover_zoom, "middle", o);
 
-    //CONTROLS("menu", menu);
-    CONTROLS("view-fullscreen", fullscreen);
+    /* evas_object_event_callback_add(entice->zoomval, EVAS_CALLBACK_MOUSE_UP, */
+    /*                                _entice_ctrl_zoomval_mouse_up_cb, entice->hover_zoom); */
+
     CONTROLS("window-close", close);
+    CONTROLS("view-fullscreen", fullscreen);
+    CONTROLS("menu", menu);
 
+    o = elm_hover_add(win);
+    elm_hover_parent_set(o, win);
+    elm_hover_target_set(o, entice->menu);
+    elm_object_style_set(o, "popout");
+    entice->hover_menu = o;
+
+    /* list in a table*/
+    table = elm_table_add(win);
+    evas_object_size_hint_weight_set(table, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_show(table);
+
+    /* rectangle for the size of the list */
+    o = evas_object_rectangle_add(evas_object_evas_get(win));
+    evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_min_set(o, ELM_SCALE_SIZE(100), ELM_SCALE_SIZE(64));
+    elm_table_pack(table, o, 0, 0, 1, 1);
+
+    list = elm_list_add(win);
+    evas_object_size_hint_weight_set(list, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(list, EVAS_HINT_FILL, EVAS_HINT_FILL);
+    elm_list_mode_set(list, ELM_LIST_EXPAND);
+
+#define LIST_APPEND(_text, _item)                                \
+    o = elm_label_add(win);                                      \
+    elm_object_text_set(o, _text);                               \
+    elm_list_item_append(list, NULL, o, NULL,                    \
+                         _entice_ctrl_menu_ ## _item ## _cb, win)
+
+    LIST_APPEND("Settings", settings);
+    LIST_APPEND("Exif", exif);
+    LIST_APPEND("Copy filename", copy_filename);
+    LIST_APPEND("Copy file", copy_file);
+
+    elm_table_pack(table, list, 0, 0, 1, 1);
+    evas_object_show(list);
+
+    elm_object_part_content_set(entice->hover_menu, "bottom", table);
+
+    o = elm_icon_add(win);
+    elm_icon_standard_set(o, "menu");
+    evas_object_show(o);
+    icon = o;
+
+    o = elm_button_add(win);
+    elm_object_content_set(o, icon);
+    elm_object_focus_allow_set(o, EINA_FALSE);
+    elm_object_style_set(o, "overlay");
+    evas_object_show(o);
+    elm_object_part_content_set(entice->hover_menu, "middle", o);
+
+    /* error icon when no file is found */
     o = elm_icon_add(win);
     elm_icon_standard_set(o, "dialog-error");
     evas_object_show(o);
@@ -402,7 +586,7 @@ entice_controls_timer_start(Evas_Object *win)
 
     if ((!entice->controls_timer) && (!entice->controls_over))
         entice->controls_timer = ecore_timer_add(entice->config->duration_controls,
-                                                 _entice_ctrl_hide_cb, entice);
+                                                 _entice_ctrl_hide_cb, win);
 
     /* display controls */
     if (!entice->controls_shown)

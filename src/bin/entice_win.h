@@ -54,11 +54,12 @@ struct Entice
     Evas_Object *zoomval;   /* button for zoom value */
     Evas_Object *zoomout;   /* zoom out */
     Evas_Object *bestfit;   /* checkox for best fit */
-    Evas_Object *hover;
+    Evas_Object *hover_zoom;
 
     Evas_Object *menu;      /* menu icon */
     Evas_Object *fullscreen;/* fullscreen icon */
     Evas_Object *close;     /* close icon */
+    Evas_Object *hover_menu;
     Ecore_Timer *controls_timer;
     Ecore_Timer *settings_timer;
     Ecore_Timer *exif_timer;
