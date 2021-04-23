@@ -180,13 +180,18 @@ _entice_ctrl_zoomval_cb(void *win, Evas_Object *obj EINA_UNUSED, void *event_inf
 {
     char buf[16];
     Entice *entice;
+    Evas_Object *o;
 
     printf(" *** zoomval cb\n");
     fflush(stdout);
     entice = evas_object_data_get(win, "entice");
 
+    o = elm_button_add(win);
+    elm_object_style_set(o, "overlay");
     snprintf(buf, sizeof(buf), "%d%%", entice_image_zoom_get(entice->image));
-    elm_object_text_set(entice->hover_middle, buf);
+    elm_object_text_set(o, buf);
+    evas_object_show(o);
+    elm_object_part_content_set(entice->hover_zoom, "middle", o);
 
     evas_object_show(entice->hover_zoom);
 }
@@ -448,12 +453,6 @@ entice_controls_init(Evas_Object *win)
     evas_object_show(list);
 
     elm_object_part_content_set(entice->hover_zoom, "top", table);
-
-    o = elm_button_add(win);
-    elm_object_style_set(o, "overlay");
-    evas_object_show(o);
-    entice->hover_middle = o;
-    elm_object_part_content_set(entice->hover_zoom, "middle", o);
 
     /* evas_object_event_callback_add(entice->zoomval, EVAS_CALLBACK_MOUSE_UP, */
     /*                                _entice_ctrl_zoomval_mouse_up_cb, entice->hover_zoom); */
