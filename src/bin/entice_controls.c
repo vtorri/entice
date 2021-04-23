@@ -130,17 +130,17 @@ _entice_ctrl_next_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *emissi
     }
 }
 
-#define CONTROL_ZOOM_CB(_zm)                                            \
-    static void                                                         \
-    _entice_ctrl_zoom_ ## _zm ## _cb(void *data,                        \
-                              Evas_Object *obj EINA_UNUSED,             \
-                              void *event_info EINA_UNUSED)             \
-    {                                                                   \
-        Entice *entice;                                                 \
-        entice = (Entice *)data;                                        \
-        entice_image_zoom_set(entice->image, _zm);                      \
-        entice_image_update(entice->image);                             \
-        elm_hover_dismiss(entice->hover_zoom);                          \
+#define CONTROL_ZOOM_CB(_zm)                                        \
+    static void                                                     \
+    _entice_ctrl_zoom_ ## _zm ## _cb(void *data,                    \
+                                     Evas_Object *obj EINA_UNUSED,  \
+                                     void *event_info EINA_UNUSED)  \
+    {                                                               \
+        Entice *entice;                                             \
+        entice = (Entice *)data;                                    \
+        entice_image_zoom_set(entice->image, _zm);                  \
+        entice_image_update(entice->image);                         \
+        elm_hover_dismiss(entice->hover_zoom);                      \
     }
 
 CONTROL_ZOOM_CB(2000)
@@ -156,12 +156,12 @@ CONTROL_ZOOM_CB(33)
 static void
 _entice_ctrl_zoom_best_fit_cb(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
-   Entice *entice;
+    Entice *entice;
 
-   entice = data;
-   entice_image_zoom_mode_set(entice->image, ENTICE_ZOOM_MODE_FIT);
-   entice_image_update(entice->image);
-   elm_hover_dismiss(entice->hover_zoom);
+    entice = data;
+    entice_image_zoom_mode_set(entice->image, ENTICE_ZOOM_MODE_FIT);
+    entice_image_update(entice->image);
+    elm_hover_dismiss(entice->hover_zoom);
 }
 
 static void
@@ -442,14 +442,14 @@ entice_controls_init(Evas_Object *win)
     evas_object_size_hint_align_set(list, EVAS_HINT_FILL, EVAS_HINT_FILL);
     elm_list_mode_set(list, ELM_LIST_EXPAND);
 
-#define LIST_APPEND(_zm)                                            \
-    hmi = calloc(1, sizeof(*hmi));                                  \
-    if (!hmi) { ERR("Out of memory"); return; }                   \
-    entice->hover_menu_items =                                      \
-      eina_list_append(entice->hover_menu_items, hmi);              \
-    hmi->zoom = _zm;                                                \
-    hmi->item = elm_list_item_append(list, #_zm "%", NULL, NULL,    \
-                         _entice_ctrl_zoom_ ## _zm ## _cb, entice)
+#define LIST_APPEND(_zm)                                                \
+    hmi = calloc(1, sizeof(*hmi));                                      \
+    if (!hmi) { ERR("Out of memory"); return; }                         \
+    entice->hover_menu_items =                                          \
+        eina_list_append(entice->hover_menu_items, hmi);                \
+    hmi->zoom = _zm;                                                    \
+    hmi->item = elm_list_item_append(list, #_zm "%", NULL, NULL,        \
+                                     _entice_ctrl_zoom_ ## _zm ## _cb, entice)
 
     LIST_APPEND(2000);
     LIST_APPEND(1500);
@@ -465,7 +465,7 @@ entice_controls_init(Evas_Object *win)
     hmi = calloc(1, sizeof(*hmi));
     if (!hmi) { ERR("Out of memory"); return; }
     entice->hover_menu_items =
-      eina_list_append(entice->hover_menu_items, hmi);
+        eina_list_append(entice->hover_menu_items, hmi);
     hmi->zoom = 0;
     hmi->item = elm_list_item_append(list, "Best fit", NULL, NULL,
                                      _entice_ctrl_zoom_best_fit_cb, entice);
@@ -505,8 +505,8 @@ entice_controls_init(Evas_Object *win)
     evas_object_size_hint_align_set(list, EVAS_HINT_FILL, EVAS_HINT_FILL);
     elm_list_mode_set(list, ELM_LIST_EXPAND);
 
-#define LIST_APPEND(_text, _item)                                \
-    elm_list_item_append(list, _text, NULL, NULL,                \
+#define LIST_APPEND(_text, _item)                                   \
+    elm_list_item_append(list, _text, NULL, NULL,                   \
                          _entice_ctrl_menu_ ## _item ## _cb, win)
 
     LIST_APPEND("Settings", settings);
@@ -567,15 +567,15 @@ entice_controls_update(Evas_Object *win)
 
     // select the appropriate list item - if any match
     EINA_LIST_FOREACH(entice->hover_menu_items, l, hmi)
-      {
-         if (hmi->zoom == zoom)
-           {
-              if (!elm_list_item_selected_get(hmi->item))
-                  elm_list_item_selected_set(hmi->item, EINA_TRUE);
-           }
-         else if (elm_list_item_selected_get(hmi->item))
-             elm_list_item_selected_set(hmi->item, EINA_FALSE);
-      }
+    {
+        if (hmi->zoom == zoom)
+        {
+            if (!elm_list_item_selected_get(hmi->item))
+                elm_list_item_selected_set(hmi->item, EINA_TRUE);
+        }
+        else if (elm_list_item_selected_get(hmi->item))
+            elm_list_item_selected_set(hmi->item, EINA_FALSE);
+    }
 }
 
 void
