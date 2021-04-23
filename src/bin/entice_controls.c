@@ -472,7 +472,7 @@ entice_controls_init(Evas_Object *win)
 
 #define LIST_APPEND(_zm)                                            \
     hmi = calloc(1, sizeof(*hmi));                                  \
-    if (!hmi) { fprintf(stderr, "Out of memory\n"); abort(); }      \
+    if (!hmi) { ERR("Out of memory"); return; }                   \
     entice->hover_menu_items =                                      \
       eina_list_append(entice->hover_menu_items, hmi);              \
     hmi->zoom = _zm;                                                \
@@ -491,7 +491,7 @@ entice_controls_init(Evas_Object *win)
 #undef LIST_APPEND
 
     hmi = calloc(1, sizeof(*hmi));
-    if (!hmi) { fprintf(stderr, "Out of memory\n"); abort(); }
+    if (!hmi) { ERR("Out of memory"); return; }
     entice->hover_menu_items =
       eina_list_append(entice->hover_menu_items, hmi);
     hmi->zoom = 0;
