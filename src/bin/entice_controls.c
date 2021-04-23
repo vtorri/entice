@@ -422,8 +422,6 @@ entice_controls_init(Evas_Object *win)
     elm_table_pack(table, o, 0, 0, 1, 1);
 
     o = elm_check_add(win);
-    elm_object_style_set(o, "default");
-    elm_object_text_set(o, "Best fit");
     evas_object_smart_callback_add(o, "changed",
                                    _entice_ctrl_zoomcheck_cb, win);
     elm_object_focus_allow_set(o, EINA_FALSE);
@@ -435,11 +433,8 @@ entice_controls_init(Evas_Object *win)
     evas_object_size_hint_align_set(list, EVAS_HINT_FILL, EVAS_HINT_FILL);
     elm_list_mode_set(list, ELM_LIST_EXPAND);
 
-#define LIST_APPEND(_zm)                                            \
-    o = elm_label_add(win);                                         \
-    evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, 0.0);     \
-    elm_object_text_set(o, #_zm "%");                               \
-    elm_list_item_append(list, NULL, o, NULL,                       \
+#define LIST_APPEND(_zm)                                           \
+    elm_list_item_append(list, #_zm "%", NULL, NULL,               \
                          _entice_ctrl_zoom_ ## _zm ## _cb, entice)
 
     LIST_APPEND(2000);
@@ -452,7 +447,7 @@ entice_controls_init(Evas_Object *win)
     LIST_APPEND(50);
     LIST_APPEND(33);
 #undef LIST_APPEND
-    elm_list_item_append(list, NULL, entice->bestfit, NULL, NULL, NULL);
+    elm_list_item_append(list, "Best fit", entice->bestfit, NULL, NULL, NULL);
 
     elm_table_pack(table, list, 0, 0, 1, 1);
     evas_object_show(list);
