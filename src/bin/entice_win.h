@@ -85,4 +85,8 @@ void entice_win_image_first_set(Evas_Object *win, Eina_List *first);
 
 void entice_win_fullscreen_toggle(Evas_Object *win);
 
+void entice_win_filename_copy(Evas_Object *win);
+
+void entice_win_file_copy(Evas_Object *win);
+
 #endif /* ENTICE_WIN_H */
