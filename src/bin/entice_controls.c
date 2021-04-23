@@ -64,20 +64,20 @@
                                    "image,stopfade," #_action, "entice",  \
                                    _entice_ctrl_stopfade_cb, win)
 
-#define CONTROL_ZOOM_CB(_zm)                                            \
-    static void                                                         \
-    _entice_ctrl_zoom_ ## _zm ## _cb(void *data,                        \
-                              Evas_Object *obj,                         \
-                              void *event_info EINA_UNUSED)             \
-    {                                                                   \
-        Entice *entice;                                                 \
-        Elm_Object_Item *list_it;                                       \
-        list_it = elm_list_selected_item_get(obj);                      \
-        elm_list_item_selected_set(list_it, EINA_FALSE);                \
-        entice = (Entice *)data;                                        \
-        entice_image_zoom_set(entice->image, _zm);                      \
-        entice_image_update(entice->image);                             \
-        elm_hover_dismiss(entice->hover_zoom);                          \
+#define CONTROL_ZOOM_CB(_zm)                                        \
+    static void                                                     \
+    _entice_ctrl_zoom_ ## _zm ## _cb(void *data,                    \
+                                     Evas_Object *obj,              \
+                                     void *event_info EINA_UNUSED)  \
+    {                                                               \
+        Entice *entice;                                             \
+        Elm_Object_Item *list_it;                                   \
+        list_it = elm_list_selected_item_get(obj);                  \
+        elm_list_item_selected_set(list_it, EINA_FALSE);            \
+        entice = (Entice *)data;                                    \
+        entice_image_zoom_set(entice->image, _zm);                  \
+        entice_image_update(entice->image);                         \
+        elm_hover_dismiss(entice->hover_zoom);                      \
     }
 
 static void
@@ -420,6 +420,7 @@ entice_controls_init(Evas_Object *win)
     elm_table_pack(table, o, 0, 0, 1, 1);
 
     o = elm_button_add(win);
+    elm_object_focus_allow_set(o, EINA_FALSE);
     elm_object_style_set(o, "overlay");
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
@@ -462,11 +463,11 @@ entice_controls_init(Evas_Object *win)
     evas_object_size_hint_align_set(list, EVAS_HINT_FILL, EVAS_HINT_FILL);
     elm_list_mode_set(list, ELM_LIST_EXPAND);
 
-#define LIST_APPEND(_zm)                                           \
-    o = elm_label_add(win);                                        \
-    evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, 0.0);    \
-    elm_object_text_set(o, #_zm "%");                              \
-    elm_list_item_append(list, NULL, o, NULL,                      \
+#define LIST_APPEND(_zm)                                            \
+    o = elm_label_add(win);                                         \
+    evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, 0.0);     \
+    elm_object_text_set(o, #_zm "%");                               \
+    elm_list_item_append(list, NULL, o, NULL,                       \
                          _entice_ctrl_zoom_ ## _zm ## _cb, entice)
 
     LIST_APPEND(2000);
@@ -515,10 +516,10 @@ entice_controls_init(Evas_Object *win)
     evas_object_size_hint_align_set(list, EVAS_HINT_FILL, EVAS_HINT_FILL);
     elm_list_mode_set(list, ELM_LIST_EXPAND);
 
-#define LIST_APPEND(_text, _item)                                \
-    o = elm_label_add(win);                                      \
-    elm_object_text_set(o, _text);                               \
-    elm_list_item_append(list, NULL, o, NULL,                    \
+#define LIST_APPEND(_text, _item)                                   \
+    o = elm_label_add(win);                                         \
+    elm_object_text_set(o, _text);                                  \
+    elm_list_item_append(list, NULL, o, NULL,                       \
                          _entice_ctrl_menu_ ## _item ## _cb, win)
 
     LIST_APPEND("Settings", settings);
