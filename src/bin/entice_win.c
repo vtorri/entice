@@ -312,8 +312,6 @@ entice_win_add(void)
     }
     elm_object_part_content_set(entice->layout, "entice.image",
                                 entice->scroller);
-    entice_controls_init(win);
-    entice_exif_init(win);
 
     /* dummy button to catch mouse events */
     o = elm_button_add(win);
@@ -343,6 +341,9 @@ entice_win_add(void)
     evas_object_event_callback_add(o, EVAS_CALLBACK_KEY_DOWN,
                                    _cb_key_down, win);
     entice->event_kbd = o;
+
+    entice_controls_init(win);
+    entice_exif_init(win);
 
     return win;
 }

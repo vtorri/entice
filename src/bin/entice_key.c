@@ -136,7 +136,7 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
     }
 
     /* Control modifier */
-    if (ctrl && !alt && !shift && !winm && !meta && !hyper)
+    if (ctrl)// && !alt && !shift && !winm && !meta && !hyper)
     {
         if (!strcmp(ev->keyname, "q"))
         {

@@ -48,13 +48,11 @@
                                                                           \
     o = elm_button_add(win);                                              \
     elm_object_content_set(o, entice->_action);                           \
-    elm_object_focus_allow_set(o, EINA_FALSE);                            \
     elm_object_style_set(o, "overlay");                                   \
     evas_object_show(o);                                                  \
     elm_object_part_content_set(entice->layout, "entice." #_action, o);   \
                                                                           \
-    elm_layout_signal_callback_add(entice->layout,                        \
-                                   "image,action," #_action, "entice",    \
+    evas_object_smart_callback_add(o, "clicked",                         \
                                    _entice_ctrl_ ## _action ##_cb, win);  \
                                                                           \
     elm_layout_signal_callback_add(entice->layout,                        \
@@ -66,7 +64,7 @@
                                    _entice_ctrl_stopfade_cb, win)
 
 static void
-_entice_ctrl_zoomout_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+_entice_ctrl_zoomout_cb(void *win, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Entice *entice;
 
@@ -76,7 +74,7 @@ _entice_ctrl_zoomout_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *emi
 }
 
 static void
-_entice_ctrl_zoomin_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+_entice_ctrl_zoomin_cb(void *win, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Entice *entice;
 
@@ -86,7 +84,7 @@ _entice_ctrl_zoomin_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *emis
 }
 
 static void
-_entice_ctrl_rotleft_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+_entice_ctrl_rotleft_cb(void *win, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Entice *entice;
 
@@ -95,7 +93,7 @@ _entice_ctrl_rotleft_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *emi
 }
 
 static void
-_entice_ctrl_rotright_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+_entice_ctrl_rotright_cb(void *win, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Entice *entice;
 
@@ -104,7 +102,7 @@ _entice_ctrl_rotright_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *em
 }
 
 static void
-_entice_ctrl_prev_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+_entice_ctrl_prev_cb(void *win, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Entice *entice;
     Eina_List *next;
@@ -118,7 +116,7 @@ _entice_ctrl_prev_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *emissi
 }
 
 static void
-_entice_ctrl_next_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+_entice_ctrl_next_cb(void *win, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Entice *entice;
     Eina_List *next;
@@ -236,19 +234,19 @@ _entice_ctrl_hide_cb(void *win)
 }
 
 static void
-_entice_ctrl_close_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+_entice_ctrl_close_cb(void *win, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     evas_object_del(win);
 }
 
 static void
-_entice_ctrl_fullscreen_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+_entice_ctrl_fullscreen_cb(void *win, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     entice_win_fullscreen_toggle(win);
 }
 
 static void
-_entice_ctrl_menu_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+_entice_ctrl_menu_cb(void *win, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Entice *entice;
 
@@ -527,7 +525,6 @@ entice_controls_init(Evas_Object *win)
 
     o = elm_button_add(win);
     elm_object_content_set(o, icon);
-    elm_object_focus_allow_set(o, EINA_FALSE);
     elm_object_style_set(o, "overlay");
     evas_object_smart_callback_add(o, "clicked",
                                    _entice_ctrl_menu_button_cb, win);
@@ -539,6 +536,13 @@ entice_controls_init(Evas_Object *win)
     elm_icon_standard_set(o, "dialog-error");
     evas_object_show(o);
     elm_object_part_content_set(entice->layout, "entice.error", o);
+
+    Evas_Modifier_Mask ctrl;
+    ctrl = evas_key_modifier_mask_get(evas_object_evas_get(win), "Control");
+    if (!evas_object_key_grab(entice->event_kbd, "q", ctrl, 0, EINA_TRUE))
+    {
+        ERR("Can not grab Ctrl-q key");
+    }
 }
 
 void

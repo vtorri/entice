@@ -120,7 +120,6 @@ _cb_key_down(void *win,
         elm_check_state_set(o, _inv ? !ctx->config->_cfg_name       \
                             : ctx->config->_cfg_name);              \
         elm_box_pack_end(box, o);                                   \
-        elm_object_focus_allow_set(o, EINA_FALSE);                  \
         evas_object_show(o);                                        \
         evas_object_smart_callback_add(o, "changed",                \
                                        _cb_op_##_cfg_name, ctx);    \
@@ -280,14 +279,9 @@ entice_settings_init(Evas_Object *win)
 
     o = elm_frame_add(win);
     elm_object_style_set(o, "border");
-    elm_object_focus_allow_set(o, EINA_FALSE);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
     elm_object_text_set(o, "Settings");
-    if (!evas_object_key_grab(o, "Escape", 0, 0, EINA_TRUE))
-    {
-        ERR("Can not grab the 'Esc' key");
-    }
     evas_object_show(o);
     frame = o;
     evas_object_smart_callback_add(frame, "close",
@@ -343,7 +337,6 @@ entice_settings_init(Evas_Object *win)
         elm_spinner_value_set(o, w);
     elm_object_disabled_set(o, !ctx->config->custom_geometry);
     elm_box_pack_end(box, o);
-    elm_object_focus_allow_set(o, EINA_FALSE);
     evas_object_show(o);
     ctx->op_w = o;
     evas_object_smart_callback_add(o, "changed",
@@ -367,7 +360,6 @@ entice_settings_init(Evas_Object *win)
         elm_spinner_value_set(o, h);
     elm_object_disabled_set(o, !ctx->config->custom_geometry);
     elm_box_pack_end(box, o);
-    elm_object_focus_allow_set(o, EINA_FALSE);
     evas_object_show(o);
     ctx->op_h = o;
     evas_object_smart_callback_add(o, "changed",
@@ -395,7 +387,6 @@ entice_settings_init(Evas_Object *win)
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, 0.5);
     elm_spinner_value_set(o, (int) ctx->config->duration_controls);
     elm_box_pack_end(box, o);
-    elm_object_focus_allow_set(o, EINA_FALSE);
     evas_object_show(o);
     ctx->op_duration_controls = o;
     evas_object_smart_callback_add(o, "changed",
@@ -440,6 +431,11 @@ entice_settings_init(Evas_Object *win)
     elm_radio_value_set(rdg, ctx->config->order);
 
     elm_object_part_content_set(entice->layout, "entice.settings.panel", frame);
+
+    if (!evas_object_key_grab(frame, "Escape", 0, 0, EINA_TRUE))
+    {
+        ERR("Can not grab the 'Esc' key");
+    }
 
     entice->settings_created = EINA_TRUE;
 }

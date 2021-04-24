@@ -173,9 +173,6 @@ collections
           visible: 0;
         }
       }
-      program { signal: "mouse,clicked,1"; source: "entice.zoomout";
-        action: SIGNAL_EMIT "image,action,zoomout" "entice";
-      }
 
       STOP_FADE("zoomout")
 
@@ -202,9 +199,6 @@ collections
           inherit: "default" 0.0;
           visible: 0;
         }
-      }
-      program { signal: "mouse,clicked,1"; source: "entice.zoomval";
-        action: SIGNAL_EMIT "image,action,zoomval" "entice";
       }
 
       STOP_FADE("zoomval")
@@ -234,9 +228,6 @@ collections
           visible: 0;
         }
       }
-      program { signal: "mouse,clicked,1"; source: "entice.zoomin";
-        action: SIGNAL_EMIT "image,action,zoomin" "entice";
-      }
 
       STOP_FADE("zoomin")
 
@@ -264,9 +255,6 @@ collections
           inherit: "default" 0.0;
           visible: 0;
         }
-      }
-      program { signal: "mouse,clicked,1"; source: "entice.rotleft";
-        action: SIGNAL_EMIT "image,action,rotleft" "entice";
       }
 
       STOP_FADE("rotleft")
@@ -296,9 +284,6 @@ collections
           visible: 0;
         }
       }
-      program { signal: "mouse,clicked,1"; source: "entice.rotright";
-        action: SIGNAL_EMIT "image,action,rotright" "entice";
-      }
 
       STOP_FADE("rotright")
 
@@ -327,9 +312,6 @@ collections
           visible: 0;
         }
       }
-      program { signal: "mouse,clicked,1"; source: "entice.prev";
-        action: SIGNAL_EMIT "image,action,prev" "entice";
-      }
 
       STOP_FADE("prev")
 
@@ -356,9 +338,6 @@ collections
           inherit: "default" 0.0;
           visible: 0;
         }
-      }
-      program { signal: "mouse,clicked,1"; source: "entice.next";
-        action: SIGNAL_EMIT "image,action,next" "entice";
       }
 
       STOP_FADE("next")
@@ -388,9 +367,6 @@ collections
           visible: 0;
         }
       }
-      program { signal: "mouse,clicked,1"; source: "entice.menu";
-        action: SIGNAL_EMIT "image,action,menu" "entice";
-      }
 
       STOP_FADE("menu")
 
@@ -419,9 +395,6 @@ collections
           visible: 0;
         }
       }
-      program { signal: "mouse,clicked,1"; source: "entice.fullscreen";
-        action: SIGNAL_EMIT "image,action,fullscreen" "entice";
-      }
 
       STOP_FADE("fullscreen")
 
@@ -449,9 +422,6 @@ collections
           inherit: "default" 0.0;
           visible: 0;
         }
-      }
-      program { signal: "mouse,clicked,1"; source: "entice.close";
-        action: SIGNAL_EMIT "image,action,close" "entice";
       }
 
       STOP_FADE("close")
