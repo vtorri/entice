@@ -63,7 +63,8 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
     /* No modifier */
     if (!ctrl && !alt && !shift && !winm && !meta && !hyper)
     {
-        if (!strcmp(ev->key, "F11"))
+        if (!strcmp(ev->key, "F11") ||
+            !strcmp(ev->keyname, "f"))
         {
             entice_win_fullscreen_toggle(win);
         }
@@ -99,7 +100,7 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
             entice_image_zoom_decrease(entice->image);
             entice_image_update(entice->image);
         }
-        else if (!strcmp(ev->keyname, "f"))
+        else if (!strcmp(ev->keyname, "b"))
         {
             entice_image_zoom_mode_set(entice->image, ENTICE_ZOOM_MODE_FIT);
             entice_image_update(entice->image);

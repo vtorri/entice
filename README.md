@@ -53,22 +53,22 @@ This feature is enabled by default and can be disabled in settings
 Action | Shortcut
 ------ | --------
 Quit   | Ctrl-q
-Fullscreen | F11
-Next image | Space
-Previous image|  BackSpace
+Toggle fullscreen | F11 or f
+Next image | Space or right arrow
+Previous image|  BackSpace or left arrow
 First image | Alt-home
 Last image | Alt-end
-rotation clockwise|  Ctrl-r
+rotation clockwise |  Ctrl-r
 rotation counter-clockwise | Ctrl-Alt-r
 Original size | Ctrl-0
-Best fit | f
+Best fit | b
 Zoom in | +
 Zoom out | -
 Manage Settings | s
 Show EXIF data | e
 Copy file in clipboard | Ctrl-c
 Copy file name in clipboard | Ctrl-Shift-c
-Exit Settings | Esc
+Exit Settings or Exif panels | Esc
 
 ### Mouse
 
