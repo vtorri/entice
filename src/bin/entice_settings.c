@@ -30,6 +30,7 @@
 
 #include "entice_private.h"
 #include "entice_config.h"
+#include "entice_key.h"
 #include "entice_image.h"
 #include "entice_win.h"
 
@@ -282,13 +283,15 @@ entice_settings_init(Evas_Object *win)
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
     elm_object_text_set(o, "Settings");
+    //elm_object_focus_set(o, EINA_TRUE);
     evas_object_show(o);
     frame = o;
     evas_object_smart_callback_add(frame, "close",
-                                   _cb_op_settings_close,
-                                   win);
+                                   _cb_op_settings_close, win);
+
     evas_object_event_callback_add(frame, EVAS_CALLBACK_KEY_DOWN,
                                    _cb_key_down, win);
+
 
     o = elm_scroller_add(frame);
     elm_scroller_content_min_limit(o, EINA_TRUE, EINA_FALSE);
@@ -431,11 +434,6 @@ entice_settings_init(Evas_Object *win)
     elm_radio_value_set(rdg, ctx->config->order);
 
     elm_object_part_content_set(entice->layout, "entice.settings.panel", frame);
-
-    if (!evas_object_key_grab(frame, "Escape", 0, 0, EINA_TRUE))
-    {
-        ERR("Can not grab the 'Esc' key");
-    }
 
     entice->settings_created = EINA_TRUE;
 }

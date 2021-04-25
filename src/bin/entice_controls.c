@@ -48,11 +48,12 @@
                                                                           \
     o = elm_button_add(win);                                              \
     elm_object_content_set(o, entice->_action);                           \
+    elm_object_focus_allow_set(o, EINA_FALSE);                            \
     elm_object_style_set(o, "overlay");                                   \
     evas_object_show(o);                                                  \
     elm_object_part_content_set(entice->layout, "entice." #_action, o);   \
                                                                           \
-    evas_object_smart_callback_add(o, "clicked",                         \
+    evas_object_smart_callback_add(o, "clicked",                          \
                                    _entice_ctrl_ ## _action ##_cb, win);  \
                                                                           \
     elm_layout_signal_callback_add(entice->layout,                        \
@@ -536,13 +537,6 @@ entice_controls_init(Evas_Object *win)
     elm_icon_standard_set(o, "dialog-error");
     evas_object_show(o);
     elm_object_part_content_set(entice->layout, "entice.error", o);
-
-    Evas_Modifier_Mask ctrl;
-    ctrl = evas_key_modifier_mask_get(evas_object_evas_get(win), "Control");
-    if (!evas_object_key_grab(entice->event_kbd, "q", ctrl, 0, EINA_TRUE))
-    {
-        ERR("Can not grab Ctrl-q key");
-    }
 }
 
 void

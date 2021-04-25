@@ -128,6 +128,7 @@ _entice_exif_close_cb(void *win,
 
     entice = evas_object_data_get(win, "entice");
     elm_object_signal_emit(entice->layout, "state,exif,hide", "entice");
+    elm_object_focus_set(entice->event_kbd, EINA_TRUE);
     entice->exif_shown = EINA_FALSE;
 }
 
@@ -140,7 +141,6 @@ entice_exif_init(Evas_Object *win)
 {
     Entice *entice;
     Evas_Object *o;
-    Evas_Object *frame;
     Evas_Object *scroller;
     Evas_Object *box;
     Evas_Object *table;
@@ -155,23 +155,16 @@ entice_exif_init(Evas_Object *win)
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
     elm_object_text_set(o, "EXIF");
-    if (!evas_object_key_grab(o, "Escape", 0, 0, EINA_TRUE))
-    {
-        ERR("Can not grab the 'Esc' key");
-    }
     evas_object_show(o);
-    frame = o;
-    evas_object_smart_callback_add(frame, "close",
-                                   _entice_exif_close_cb,
-                                   win);
-    evas_object_event_callback_add(frame, EVAS_CALLBACK_KEY_DOWN,
-                                   _entice_exif_key_down_cb, win);
+    entice->frame_exif = o;
+    evas_object_smart_callback_add(entice->frame_exif, "close",
+                                   _entice_exif_close_cb, win);
 
     o = elm_scroller_add(win);
     elm_scroller_content_min_limit(o, EINA_TRUE, EINA_FALSE);
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
-    elm_object_content_set(frame, o);
+    elm_object_content_set(entice->frame_exif, o);
     evas_object_show(o);
     scroller = o;
 
@@ -246,7 +239,8 @@ entice_exif_init(Evas_Object *win)
         entice_exif_gps_entries[i].button = o;
     }
 
-    elm_object_part_content_set(entice->layout, "entice.exif.panel", frame);
+    elm_object_part_content_set(entice->layout,
+                                "entice.exif.panel", entice->frame_exif);
 
     entice->exif_created = EINA_TRUE;
 }
@@ -262,6 +256,9 @@ entice_exif_fill(Evas_Object *win)
     unsigned int i;
 
     entice = evas_object_data_get(win, "entice");
+
+    evas_object_event_callback_add(entice->frame_exif, EVAS_CALLBACK_KEY_DOWN,
+                                   _entice_exif_key_down_cb, win);
 
     ed = exif_data_new_from_file(eina_list_data_get(entice->image_current));
     if (!ed)
@@ -283,12 +280,12 @@ entice_exif_fill(Evas_Object *win)
             ee = ec->entries[i];
             tag_name = exif_tag_get_name_in_ifd(ee->tag,
                                                 exif_entry_get_ifd(ee));
-            printf("  tag name : %s\n", tag_name);
+            //printf("  tag name : %s\n", tag_name);
 
             for (j = 0; j < sizeof(entice_exif_entries) / sizeof(Entice_Exif_Entry); j++)
             {
-                printf("  tag entice : %s\n",entice_exif_entries[j].tag);
-                fflush(stdout);
+                //printf("  tag entice : %s\n",entice_exif_entries[j].tag);
+                //fflush(stdout);
                 if (strcmp(entice_exif_entries[j].tag, tag_name) == 0)
                 {
                     elm_object_text_set(entice_exif_entries[j].button,
@@ -311,12 +308,12 @@ entice_exif_fill(Evas_Object *win)
             ee = ec->entries[i];
             tag_name = exif_tag_get_name_in_ifd(ee->tag,
                                                 exif_entry_get_ifd(ee));
-            printf("  tag name : %s\n", tag_name);
+            //printf("  tag name : %s\n", tag_name);
 
             for (j = 0; j < sizeof(entice_exif_gps_entries) / sizeof(Entice_Exif_Entry); j++)
             {
-                printf("  tag entice : %s\n",entice_exif_gps_entries[j].tag);
-                fflush(stdout);
+                //printf("  tag entice : %s\n",entice_exif_gps_entries[j].tag);
+                //fflush(stdout);
                 if (strcmp(entice_exif_gps_entries[j].tag, tag_name) == 0)
                 {
                     elm_object_text_set(entice_exif_gps_entries[j].button,

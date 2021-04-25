@@ -67,6 +67,7 @@ struct Entice
     Evas_Object *close;     /* close icon */
     Evas_Object *hover_menu;
     Evas_Object *hover_list;
+    Evas_Object *frame_exif;
     Eina_List *hover_menu_items;
     Ecore_Timer *controls_timer;
     Ecore_Timer *settings_timer;
