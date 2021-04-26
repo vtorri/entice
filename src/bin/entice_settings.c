@@ -50,8 +50,8 @@ typedef struct
 
 #define OPTIONS_CB(_cfg_name, _inv)                         \
     static void                                             \
-    _cb_op_##_cfg_name(void *data, Evas_Object *obj,        \
-                       void *_event EINA_UNUSED)            \
+    _ent_st_##_cfg_name##_cb(void *data, Evas_Object *obj,  \
+                             void *_event EINA_UNUSED)      \
     {                                                       \
         Settings_Ctx *ctx = data;                           \
         Entice_Config *config = ctx->config;                \
@@ -62,19 +62,19 @@ typedef struct
         entice_config_save(config);                         \
     }
 
-#define SETTINGS_CX(_lbl, _cfg_name, _inv)                          \
-    do                                                              \
-    {                                                               \
-        o = elm_check_add(box);                                     \
-        evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, 0.0); \
-        evas_object_size_hint_align_set(o, EVAS_HINT_FILL, 0.5);    \
-        elm_object_text_set(o, _lbl);                               \
-        elm_check_state_set(o, _inv ? !ctx->config->_cfg_name       \
-                            : ctx->config->_cfg_name);              \
-        elm_box_pack_end(box, o);                                   \
-        evas_object_show(o);                                        \
-        evas_object_smart_callback_add(o, "changed",                \
-                                       _cb_op_##_cfg_name, ctx);    \
+#define SETTINGS_CX(_lbl, _cfg_name, _inv)                             \
+    do                                                                 \
+    {                                                                  \
+        o = elm_check_add(box);                                        \
+        evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, 0.0);    \
+        evas_object_size_hint_align_set(o, EVAS_HINT_FILL, 0.5);       \
+        elm_object_text_set(o, _lbl);                                  \
+        elm_check_state_set(o, _inv ? !ctx->config->_cfg_name          \
+                            : ctx->config->_cfg_name);                 \
+        elm_box_pack_end(box, o);                                      \
+        evas_object_show(o);                                           \
+        evas_object_smart_callback_add(o, "changed",                   \
+                                       _ent_st_##_cfg_name##_cb, ctx); \
     } while (0)
 
 #define SETTINGS_SEPARATOR                                          \
@@ -90,9 +90,9 @@ typedef struct
 
 
 static void
-_cb_op_custom_geometry(void *data,
-                       Evas_Object *obj,
-                       void *_event EINA_UNUSED)
+_ent_st_custom_geometry_cb(void *data,
+                           Evas_Object *obj,
+                           void *_event EINA_UNUSED)
 {
     Settings_Ctx *ctx = data;
     Entice_Config *config = ctx->config;
@@ -111,9 +111,9 @@ _cb_op_custom_geometry(void *data,
 }
 
 static void
-_cb_op_behavior_custom_geometry_current_set(void *data,
-                                            Evas_Object *obj EINA_UNUSED,
-                                            void *_event EINA_UNUSED)
+_entice_settings_custom_geometry_current_set_cb(void *data,
+                                                Evas_Object *obj EINA_UNUSED,
+                                                void *_event EINA_UNUSED)
 {
     Settings_Ctx *ctx = data;
     Entice_Config *config = ctx->config;
@@ -127,9 +127,9 @@ _cb_op_behavior_custom_geometry_current_set(void *data,
 }
 
 static void
-_cb_op_behavior_cg_width(void *data,
-                         Evas_Object *obj,
-                         void *_event EINA_UNUSED)
+_entice_settings_cg_width_cb(void *data,
+                             Evas_Object *obj,
+                             void *_event EINA_UNUSED)
 {
     Settings_Ctx *ctx = data;
     Entice_Config *config = ctx->config;
@@ -142,9 +142,9 @@ _cb_op_behavior_cg_width(void *data,
 }
 
 static void
-_cb_op_behavior_cg_height(void *data,
-                          Evas_Object *obj,
-                          void *_event EINA_UNUSED)
+_entice_settings_cg_height_cb(void *data,
+                              Evas_Object *obj,
+                              void *_event EINA_UNUSED)
 {
     Settings_Ctx *ctx = data;
     Entice_Config *config = ctx->config;
@@ -157,9 +157,9 @@ _cb_op_behavior_cg_height(void *data,
 }
 
 static void
-_cb_op_behavior_duration_controls(void *data,
-                                  Evas_Object *obj,
-                                  void *_event EINA_UNUSED)
+_entice_settings_duration_controls_cb(void *data,
+                                      Evas_Object *obj,
+                                      void *_event EINA_UNUSED)
 {
     Settings_Ctx *ctx = data;
     Entice_Config *config = ctx->config;
@@ -169,9 +169,9 @@ _cb_op_behavior_duration_controls(void *data,
 }
 
 static void
-_cb_op_settings_order(void *data,
-                      Evas_Object *obj,
-                      void *event_info EINA_UNUSED)
+_entice_settings_order_cb(void *data,
+                          Evas_Object *obj,
+                          void *event_info EINA_UNUSED)
 {
     Settings_Ctx *ctx = data;
     Entice_Config *config = ctx->config;
@@ -319,7 +319,7 @@ entice_settings_init(Evas_Object *win)
     ctx->op_wh_current = o;
     elm_object_disabled_set(o, !ctx->config->custom_geometry);
     evas_object_smart_callback_add(o, "clicked",
-                                   _cb_op_behavior_custom_geometry_current_set,
+                                   _entice_settings_custom_geometry_current_set_cb,
                                    ctx);
 
     o = elm_label_add(box);
@@ -343,7 +343,7 @@ entice_settings_init(Evas_Object *win)
     evas_object_show(o);
     ctx->op_w = o;
     evas_object_smart_callback_add(o, "changed",
-                                   _cb_op_behavior_cg_width, ctx);
+                                   _entice_settings_cg_width_cb, ctx);
 
     o = elm_label_add(box);
     evas_object_size_hint_weight_set(o, 0.0, 0.0);
@@ -366,7 +366,7 @@ entice_settings_init(Evas_Object *win)
     evas_object_show(o);
     ctx->op_h = o;
     evas_object_smart_callback_add(o, "changed",
-                                   _cb_op_behavior_cg_height, ctx);
+                                   _entice_settings_cg_height_cb, ctx);
 
     SETTINGS_CX("Fullscreen at startup", fullscreen_startup, 0);
 
@@ -393,7 +393,7 @@ entice_settings_init(Evas_Object *win)
     evas_object_show(o);
     ctx->op_duration_controls = o;
     evas_object_smart_callback_add(o, "changed",
-                                   _cb_op_behavior_duration_controls, ctx);
+                                   _entice_settings_duration_controls_cb, ctx);
 
     o = elm_box_add(box);
     evas_object_size_hint_weight_set(o, 0.0, 0.0);
@@ -417,7 +417,8 @@ entice_settings_init(Evas_Object *win)
     elm_radio_state_value_set(o, 0);
     elm_box_pack_end(hbox2, o);
     evas_object_show(o);
-    evas_object_smart_callback_add(o, "changed", _cb_op_settings_order, ctx);
+    evas_object_smart_callback_add(o, "changed",
+                                   _entice_settings_order_cb, ctx);
 
     rdg = o;
 
@@ -429,7 +430,8 @@ entice_settings_init(Evas_Object *win)
     elm_radio_group_add(o, rdg);
     elm_box_pack_end(hbox2, o);
     evas_object_show(o);
-    evas_object_smart_callback_add(o, "changed", _cb_op_settings_order, ctx);
+    evas_object_smart_callback_add(o, "changed",
+                                   _entice_settings_order_cb, ctx);
 
     elm_radio_value_set(rdg, ctx->config->order);
 
