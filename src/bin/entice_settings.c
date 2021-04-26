@@ -48,55 +48,6 @@ typedef struct
     Evas_Object *op_duration_controls;
 } Settings_Ctx;
 
-static Eina_Bool
-_cb_set_focus(void *win)
-{
-    Entice *entice = evas_object_data_get(win, "entice");
-
-    entice->settings_timer = NULL;
-    elm_object_focus_set(entice->event_kbd, EINA_TRUE);
-    return EINA_FALSE;
-}
-
-static void
-_cb_key_down(void *win,
-             Evas *evas EINA_UNUSED,
-             Evas_Object *obj EINA_UNUSED,
-             void *event_info)
-{
-    Entice *entice;
-    Evas_Event_Key_Down *ev;
-    Eina_Bool ctrl, alt, shift, winm, meta, hyper; /* modifiers */
-
-    EINA_SAFETY_ON_NULL_RETURN(event_info);
-
-    ev = (Evas_Event_Key_Down *)event_info;
-
-    ctrl = evas_key_modifier_is_set(ev->modifiers, "Control");
-    alt = evas_key_modifier_is_set(ev->modifiers, "Alt");
-    shift = evas_key_modifier_is_set(ev->modifiers, "Shift");
-    winm = evas_key_modifier_is_set(ev->modifiers, "Super");
-    meta =
-        evas_key_modifier_is_set(ev->modifiers, "Meta") ||
-        evas_key_modifier_is_set(ev->modifiers, "AltGr") ||
-        evas_key_modifier_is_set(ev->modifiers, "ISO_Level3_Shift");
-    hyper = evas_key_modifier_is_set(ev->modifiers, "Hyper");
-
-    entice = evas_object_data_get(win, "entice");
-
-    /* No modifier */
-    if (!ctrl && !alt && !shift && !winm && !meta && !hyper)
-    {
-        if (!strcmp(ev->key, "Escape"))
-        {
-            elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
-            entice->settings_shown = EINA_FALSE;
-        }
-    }
-
-    entice->settings_timer = ecore_timer_add(0.1, _cb_set_focus, win);
-}
-
 #define OPTIONS_CB(_cfg_name, _inv)                         \
     static void                                             \
     _cb_op_##_cfg_name(void *data, Evas_Object *obj,        \
@@ -218,18 +169,6 @@ _cb_op_behavior_duration_controls(void *data,
 }
 
 static void
-_cb_op_settings_close(void *win,
-                      Evas_Object *obj,
-                      void *_event EINA_UNUSED)
-{
-    Entice *entice;
-
-    entice = evas_object_data_get(win, "entice");
-    elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
-    entice->settings_shown = EINA_FALSE;
-}
-
-static void
 _cb_op_settings_order(void *data,
                       Evas_Object *obj,
                       void *event_info EINA_UNUSED)
@@ -247,6 +186,68 @@ OPTIONS_CB(fullscreen_startup, 0);
 OPTIONS_CB(automatic_orientation, 0);
 OPTIONS_CB(best_fit_startup, 0);
 OPTIONS_CB(play_animated, 0);
+
+static Eina_Bool
+_entice_settings_focus_set_cb(void *win)
+{
+    Entice *entice = evas_object_data_get(win, "entice");
+
+    entice->settings_timer = NULL;
+    elm_object_focus_set(entice->event_kbd, EINA_TRUE);
+    return EINA_FALSE;
+}
+
+static void
+_entice_settings_key_down_cb(void *win,
+                         Evas *evas EINA_UNUSED,
+                         Evas_Object *obj EINA_UNUSED,
+                         void *event_info)
+{
+    Entice *entice;
+    Evas_Event_Key_Down *ev;
+    Eina_Bool ctrl, alt, shift, winm, meta, hyper; /* modifiers */
+
+    EINA_SAFETY_ON_NULL_RETURN(event_info);
+
+    ev = (Evas_Event_Key_Down *)event_info;
+
+    ctrl = evas_key_modifier_is_set(ev->modifiers, "Control");
+    alt = evas_key_modifier_is_set(ev->modifiers, "Alt");
+    shift = evas_key_modifier_is_set(ev->modifiers, "Shift");
+    winm = evas_key_modifier_is_set(ev->modifiers, "Super");
+    meta =
+        evas_key_modifier_is_set(ev->modifiers, "Meta") ||
+        evas_key_modifier_is_set(ev->modifiers, "AltGr") ||
+        evas_key_modifier_is_set(ev->modifiers, "ISO_Level3_Shift");
+    hyper = evas_key_modifier_is_set(ev->modifiers, "Hyper");
+
+    entice = evas_object_data_get(win, "entice");
+
+    /* No modifier */
+    if (!ctrl && !alt && !shift && !winm && !meta && !hyper)
+    {
+        if (!strcmp(ev->key, "Escape"))
+        {
+            elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
+            entice->settings_shown = EINA_FALSE;
+        }
+    }
+
+    entice->settings_timer = ecore_timer_add(0.1, _entice_settings_focus_set_cb, win);
+}
+
+static void
+_entice_settings_close_cb(void *win,
+                          Evas_Object *obj,
+                          void *_event EINA_UNUSED)
+{
+    Entice *entice;
+
+    entice = evas_object_data_get(win, "entice");
+    elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
+    elm_object_focus_set(entice->event_kbd, EINA_TRUE);
+    entice->settings_shown = EINA_FALSE;
+}
 
 /*============================================================================*
  *                                 Global                                     *
@@ -283,14 +284,13 @@ entice_settings_init(Evas_Object *win)
     evas_object_size_hint_weight_set(o, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(o, EVAS_HINT_FILL, EVAS_HINT_FILL);
     elm_object_text_set(o, "Settings");
-    //elm_object_focus_set(o, EINA_TRUE);
     evas_object_show(o);
     frame = o;
     evas_object_smart_callback_add(frame, "close",
-                                   _cb_op_settings_close, win);
+                                   _entice_settings_close_cb, win);
 
     evas_object_event_callback_add(frame, EVAS_CALLBACK_KEY_DOWN,
-                                   _cb_key_down, win);
+                                   _entice_settings_key_down_cb, win);
 
 
     o = elm_scroller_add(frame);
