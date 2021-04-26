@@ -445,8 +445,8 @@ entice_controls_init(Evas_Object *win)
 #define LIST_APPEND(_zm)                                                \
     hmi = calloc(1, sizeof(*hmi));                                      \
     if (!hmi) { ERR("Out of memory"); return; }                         \
-    entice->hover_menu_items =                                          \
-        eina_list_append(entice->hover_menu_items, hmi);                \
+    entice->hover_zoom_items =                                          \
+        eina_list_append(entice->hover_zoom_items, hmi);                \
     hmi->zoom = _zm;                                                    \
     hmi->item = elm_list_item_append(list, #_zm "%", NULL, NULL,        \
                                      _entice_ctrl_zoom_ ## _zm ## _cb, entice)
@@ -464,8 +464,8 @@ entice_controls_init(Evas_Object *win)
 
     hmi = calloc(1, sizeof(*hmi));
     if (!hmi) { ERR("Out of memory"); return; }
-    entice->hover_menu_items =
-        eina_list_append(entice->hover_menu_items, hmi);
+    entice->hover_zoom_items =
+        eina_list_append(entice->hover_zoom_items, hmi);
     hmi->zoom = 0;
     hmi->item = elm_list_item_append(list, "Best fit", NULL, NULL,
                                      _entice_ctrl_zoom_best_fit_cb, entice);
@@ -565,15 +565,18 @@ entice_controls_update(Evas_Object *win)
     entice->zoom = zoom;
 
     // select the appropriate list item - if any match
-    EINA_LIST_FOREACH(entice->hover_menu_items, l, hmi)
+    EINA_LIST_FOREACH(entice->hover_zoom_items, l, hmi)
     {
         if (hmi->zoom == zoom)
         {
             if (!elm_list_item_selected_get(hmi->item))
                 elm_list_item_selected_set(hmi->item, EINA_TRUE);
         }
-        else if (elm_list_item_selected_get(hmi->item))
-            elm_list_item_selected_set(hmi->item, EINA_FALSE);
+        else
+        {
+            if (elm_list_item_selected_get(hmi->item))
+                elm_list_item_selected_set(hmi->item, EINA_FALSE);
+        }
     }
 }
 
