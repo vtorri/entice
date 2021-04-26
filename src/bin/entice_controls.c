@@ -191,7 +191,7 @@ _entice_ctrl_stopfade_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *em
 
     entice = evas_object_data_get(win, "entice");
     entice->controls_over = EINA_TRUE;
-    printf("mouse in\n");
+    printf("stop fade\n");
     fflush(stdout);
 
     if (entice->controls_timer)
@@ -209,7 +209,7 @@ _entice_ctrl_startfade_cb(void *win, Evas_Object *obj EINA_UNUSED, const char *e
     entice = evas_object_data_get(win, "entice");
     entice->controls_over = EINA_FALSE;
     //entice_controls_timer_start(win);
-    printf("mouse out\n");
+    printf("start fade\n");
     fflush(stdout);
 }
 
@@ -229,6 +229,10 @@ _entice_ctrl_hide_cb(void *win)
         entice->controls_shown = EINA_FALSE;
         elm_hover_dismiss(entice->hover_zoom);
         elm_hover_dismiss(entice->hover_menu);
+        if (elm_win_fullscreen_get(win))
+        {
+            evas_object_show(entice->event_blank);
+        }
     }
 
     return EINA_FALSE;
@@ -607,6 +611,7 @@ entice_controls_timer_start(Evas_Object *win)
     /* display controls */
     if (!entice->controls_shown)
     {
+        evas_object_hide(entice->event_blank);
         elm_object_signal_emit(entice->layout, "state,controls,show", "entice");
         entice->controls_shown = EINA_TRUE;
     }

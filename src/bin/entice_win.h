@@ -44,6 +44,7 @@ struct Entice
     Evas_Object *layout;
     Evas_Object *image;
     Evas_Object *event_mouse;
+    Evas_Object *event_blank;
     Evas_Object *event_kbd;
     Eina_Bool focused;
 
