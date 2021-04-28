@@ -36,7 +36,7 @@ typedef enum
 
 Evas_Object *entice_image_add(Evas_Object *win);
 
-void entice_image_set(Evas_Object *obj, Eina_List *image);
+void entice_image_file_set(Evas_Object *obj, Eina_List *image);
 
 const char *entice_image_file_get(Evas_Object *obj);
 

@@ -106,13 +106,13 @@ static void
 _entice_ctrl_prev_cb(void *win, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Entice *entice;
-    Eina_List *next;
+    Eina_List *prev;
 
     entice = evas_object_data_get(win, "entice");
-    next = eina_list_prev(entice->image_current);
-    if (next)
+    prev = eina_list_prev(entice->image_current);
+    if (prev)
     {
-        entice_image_set(entice->image, next);
+        entice_image_file_set(entice->image, prev);
     }
 }
 
@@ -126,7 +126,7 @@ _entice_ctrl_next_cb(void *win, Evas_Object *obj EINA_UNUSED, void *event_info E
     next = eina_list_next(entice->image_current);
     if (next)
     {
-        entice_image_set(entice->image, next);
+        entice_image_file_set(entice->image, next);
     }
 }
 

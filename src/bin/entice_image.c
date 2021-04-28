@@ -337,13 +337,13 @@ entice_image_add(Evas_Object *win)
 }
 
 void
-entice_image_set(Evas_Object *obj, Eina_List *image)
+entice_image_file_set(Evas_Object *obj, Eina_List *image)
 {
     Entice *entice;
+    const Entice_List_Data *data;
     Img *sd;
     Evas_Object *win;
     Evas_Load_Error err;
-    const char *filename;
 
     sd = evas_object_smart_data_get(obj);
     EINA_SAFETY_ON_NULL_RETURN(sd);
@@ -365,17 +365,17 @@ entice_image_set(Evas_Object *obj, Eina_List *image)
         return;
 
     entice->image_current = image;
-    filename = eina_list_data_get(entice->image_current);
 
     evas_object_image_load_orientation_set(sd->img,
                                            entice->config->automatic_orientation);
 
-    evas_object_image_file_set(sd->img, filename, NULL);
+    data = (const Entice_List_Data *)eina_list_data_get(entice->image_current);
+    evas_object_image_file_set(sd->img, data->path, NULL);
     err = evas_object_image_load_error_get(sd->img);
     if (err != EVAS_LOAD_ERROR_NONE)
     {
         ERR("Could not load image '%s' : \"%s\"\n",
-            filename, evas_load_error_str(err));
+            data->path, evas_load_error_str(err));
         ERR("Verify that the Evas loader is available for this image if you think it is a valid image");
         return;
     }

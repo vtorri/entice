@@ -395,7 +395,7 @@ entice_win_image_first_set(Evas_Object *win, Eina_List *first)
     Entice *entice;
 
     entice = evas_object_data_get(win, "entice");
-    entice_image_set(entice->image, first);
+    entice_image_file_set(entice->image, first);
 }
 
 void
@@ -426,8 +426,7 @@ entice_win_filename_copy(Evas_Object *win)
     const char *filename;
 
     entice = evas_object_data_get(win, "entice");
-
-    filename = (char *)eina_list_data_get(entice->image_current);
+    filename = entice_image_file_get(entice->image);
     if (filename)
     {
         elm_cnp_selection_set(win,
@@ -441,16 +440,12 @@ void
 entice_win_file_copy(Evas_Object *win)
 {
     Entice *entice;
-    const char *filename;
     Eina_File *f;
     void *base;
     size_t length;
 
     entice = evas_object_data_get(win, "entice");
-
-    filename = (char *)eina_list_data_get(entice->image_current);
-    /* if filename is NULL, eina_file_open() returns NULL */
-    f = eina_file_open(filename, EINA_FALSE);
+    f = eina_file_open(entice_image_file_get(entice->image), EINA_FALSE);
     if (f)
     {
         base = eina_file_map_all(f, EINA_FILE_POPULATE);

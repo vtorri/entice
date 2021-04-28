@@ -28,7 +28,14 @@
 #define ENTICE_WIN_H
 
 typedef struct Entice                 Entice;
+typedef struct Entice_List_Data       Entice_List_Data;
 typedef struct Entice_Hover_Menu_Item Entice_Hover_Menu_Item;
+
+struct Entice_List_Data
+{
+    const char *path;
+    unsigned long date;
+};
 
 struct Entice_Hover_Menu_Item
 {

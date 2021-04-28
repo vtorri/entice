@@ -76,7 +76,7 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
             next = eina_list_next(entice->image_current);
             if (next)
             {
-                entice_image_set(entice->image, next);
+                entice_image_file_set(entice->image, next);
             }
         }
         else if (!strcmp(ev->key, "BackSpace") ||
@@ -87,7 +87,7 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
             prev = eina_list_prev(entice->image_current);
             if (prev)
             {
-                entice_image_set(entice->image, prev);
+                entice_image_file_set(entice->image, prev);
             }
         }
         else if (!strcmp(ev->key, "plus"))
@@ -177,11 +177,11 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
     {
         if (!strcmp(ev->key, "Home"))
         {
-            entice_image_set(entice->image, entice->images);
+            entice_image_file_set(entice->image, entice->images);
         }
         else if (!strcmp(ev->key, "End"))
         {
-            entice_image_set(entice->image, eina_list_last(entice->images));
+            entice_image_file_set(entice->image, eina_list_last(entice->images));
         }
     }
 }

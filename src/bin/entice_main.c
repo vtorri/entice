@@ -201,16 +201,40 @@ _entice_translate_options(void)
 #endif
 
 static int
-_entice_compare_name(const void *data1, const void *data2)
+_entice_compare_path(const void *data1, const void *data2)
 {
-    return strcmp((const char *)data1, (const char *)data2);
+    const Entice_List_Data *d1;
+    const Entice_List_Data *d2;
+
+    d1 = (const Entice_List_Data *)data1;
+    d2 = (const Entice_List_Data *)data2;
+    return strcmp(d1->path, d2->path);
 }
 
-static Eina_Compare_Cb _entice_compare_default = _entice_compare_name;
+static int
+_entice_compare_date(const void *data1, const void *data2)
+{
+    const Entice_List_Data *d1;
+    const Entice_List_Data *d2;
+
+    d1 = (const Entice_List_Data *)data1;
+    d2 = (const Entice_List_Data *)data2;
+
+    if (d1->date < d2->date)
+        return 1;
+
+    else if (d1->date > d2->date)
+        return -1;
+    else
+        return 0;
+}
+
+static Eina_Compare_Cb _entice_compare_default = _entice_compare_path;
 
 static Eina_List *
-_file_list_append(Eina_List *list, const char *path, Eina_Bool sort)
+_file_list_append(Eina_List *list, const char *path, unsigned long mtime, Eina_Bool sort)
 {
+    Entice_List_Data *data;
     Eina_Bool found = EINA_FALSE;
 
     /* check if the file has a supported extension */
@@ -229,11 +253,25 @@ _file_list_append(Eina_List *list, const char *path, Eina_Bool sort)
         return list;
     }
     INF("File %s added.", path);
+
+    data = calloc(1, sizeof(Entice_List_Data));
+    if (!data)
+    {
+        WRN("Can not allocate data for %s.", path);
+        return list;
+    }
+
+    data->path = eina_stringshare_add(path);
+    data->date = mtime;
+
     if (sort)
-        list = eina_list_sorted_insert(list, _entice_compare_default,
-                                       eina_stringshare_add(path));
+    {
+        list = eina_list_sorted_insert(list, _entice_compare_default, data);
+    }
     else
-        list = eina_list_append(list, eina_stringshare_add(path));
+    {
+        list = eina_list_append(list, data);
+    }
 
     return list;
 }
@@ -248,12 +286,20 @@ _dir_parse(Eina_List *list, const char *path)
     if (!path || !*path)
         return list;
 
-    it = eina_file_direct_ls(path);
+    it = eina_file_stat_ls(path);
     EINA_ITERATOR_FOREACH(it, info)
     {
         if (info->type == EINA_FILE_REG)
         {
-            list = _file_list_append(list, info->path, EINA_TRUE);
+            Eina_Stat buf;
+            int ret;
+
+            ret = eina_file_statat(eina_iterator_container_get(it),
+                                   info, &buf);
+            if (ret == 0)
+            {
+                list = _file_list_append(list, info->path, buf.mtime, EINA_TRUE);
+            }
         }
     }
     eina_iterator_free(it);
@@ -326,6 +372,18 @@ elm_main(int argc, char **argv)
     printf(" config order : %d\n", cfg->order);
     fflush(stdout);
 
+    switch (cfg->order)
+    {
+        case 0:
+            _entice_compare_default = _entice_compare_path;
+            break;
+        case 1:
+            _entice_compare_default = _entice_compare_date;
+            break;
+        default:
+            _entice_compare_default = _entice_compare_path;
+    }
+
     list = NULL;
     if (args == argc)
     {
@@ -365,7 +423,7 @@ elm_main(int argc, char **argv)
             for (i = args; i < argc; i++)
             {
                 char *path = _path_uri_decode(argv[i]);
-                list = _file_list_append(list, path, EINA_FALSE);
+                list = _file_list_append(list, path, 0UL, EINA_FALSE);
                 free(path);
             }
         }

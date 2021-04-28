@@ -111,6 +111,7 @@ _entice_exif_key_down_cb(void *win,
     {
         if (!strcmp(ev->key, "Escape"))
         {
+            ERR("exif cb");
             elm_object_signal_emit(entice->layout, "state,exif,hide", "entice");
             entice->exif_shown = EINA_FALSE;
         }
@@ -250,6 +251,7 @@ entice_exif_fill(Evas_Object *win)
 {
     char value[1024];
     Entice *entice;
+    const Entice_List_Data *data;
     ExifData *ed;
     ExifContent *ec;
     ExifEntry *ee;
@@ -260,11 +262,11 @@ entice_exif_fill(Evas_Object *win)
     evas_object_event_callback_add(entice->frame_exif, EVAS_CALLBACK_KEY_DOWN,
                                    _entice_exif_key_down_cb, win);
 
-    ed = exif_data_new_from_file(eina_list_data_get(entice->image_current));
+    data = (const Entice_List_Data *)eina_list_data_get(entice->image_current);
+    ed = exif_data_new_from_file(data->path);
     if (!ed)
     {
-        printf("can not get exif data from %s\n",
-               (char *)eina_list_data_get(entice->image_current));
+        WRN("can not get exif data from %s", data->path);
         return;
     }
 
