@@ -65,6 +65,7 @@ Original size | Ctrl-0
 Best fit | b
 Zoom in | +
 Zoom out | -
+Resize window to real image size (implies zoom 100%) | n
 Manage Settings | s
 Show EXIF data | e
 Copy file in clipboard | Ctrl-c

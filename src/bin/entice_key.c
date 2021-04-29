@@ -123,6 +123,19 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
                 entice->exif_shown = EINA_TRUE;
             }
         }
+        else if (!strcmp(ev->keyname, "n"))
+        {
+            int w;
+            int h;
+
+            entice_image_size_get(entice->image, &w, &h);
+            if ((w > 1) && (h > 1))
+            {
+                entice_image_zoom_set(entice->image, 100);
+                entice_image_update(entice->image);
+                evas_object_resize(win, w, h);
+            }
+        }
         else if (!strcmp(ev->key, "Escape"))
         {
             fprintf(stderr, "Esc !!!!\n");
