@@ -400,15 +400,15 @@ elm_main(int argc, char **argv)
         {
             char *dir = NULL, *path;
             Eina_List *l;
-            const char *s;
+            Entice_List_Data *data;
 
             path = _path_uri_decode(argv[args]);
             if (ecore_file_is_dir(path)) dir =  strdup(path);
             else dir = ecore_file_dir_get(path);
             list = _dir_parse(list, dir);
-            EINA_LIST_FOREACH(list, l, s)
+            EINA_LIST_FOREACH(list, l, data)
             {
-                if (!strcmp(ecore_file_file_get(s),
+                if (!strcmp(ecore_file_file_get(data->path),
                             ecore_file_file_get(path)))
                 {
                     first = l;
