@@ -361,14 +361,17 @@ elm_main(int argc, char **argv)
     if (args < 0)
     {
         ERR(_("Could not parse command line options."));
-        goto end;
+        goto unregister_log;
     }
 
     if (quit_option)
-        goto end;
+        goto unregister_log;
 
     entice_config_init();
     cfg = entice_config_load();
+    if (!cfg)
+        goto shutdown_config;
+
     printf(" config order : %d\n", cfg->order);
     fflush(stdout);
 
@@ -454,7 +457,7 @@ elm_main(int argc, char **argv)
     if (!win)
     {
         ERR(_("could not create main window."));
-        goto shutdown_config;
+        goto del_cfg;
     }
 
     win_w = 960;
@@ -487,8 +490,11 @@ elm_main(int argc, char **argv)
 
     return 0;
 
+  del_cfg:
+    entice_config_del(cfg);
   shutdown_config:
     entice_config_shutdown();
+  unregister_log:
     eina_log_domain_unregister(entice_app_log_dom_global);
     entice_app_log_dom_global = -1;
   end:
