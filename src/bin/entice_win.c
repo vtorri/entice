@@ -354,7 +354,6 @@ entice_win_add(void)
 void
 entice_win_title_update(Evas_Object *win)
 {
-    char buf[1024];
     Entice *entice;
     char *title;
 
@@ -362,6 +361,8 @@ entice_win_title_update(Evas_Object *win)
     title = entice_image_title_get(entice->image);
     if (title)
     {
+        char buf[1024];
+
         snprintf(buf, sizeof(buf), "Entice - %s", title);
         elm_win_title_set(win, buf);
         elm_layout_text_set(entice->layout, "entice.title", title);
@@ -435,13 +436,14 @@ entice_win_file_copy(Evas_Object *win)
 {
     Entice *entice;
     Eina_File *f;
-    void *base;
-    size_t length;
 
     entice = evas_object_data_get(win, "entice");
     f = eina_file_open(entice_image_file_get(entice->image), EINA_FALSE);
     if (f)
     {
+        void *base;
+        size_t length;
+
         base = eina_file_map_all(f, EINA_FILE_POPULATE);
         length = eina_file_size_get(f);
         elm_cnp_selection_set(win,

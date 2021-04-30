@@ -5,13 +5,13 @@
 [![Coverity Scan](https://scan.coverity.com/projects/23000/badge.svg)](https://scan.coverity.com/projects/vtorri-entice)
 
 ### Entice
-##### A simple cross-platform image viewer with basic features written with the EFL (Enlightement Fundation Libraries)
+#### A simple cross-platform image viewer with basic features written with the EFL (Enlightement Fundation Libraries)
 
-### License:
+### License
 
 This application is released under the BSD 2-Clause License
 
-### Requirements:
+### Requirements
 
 The EFL.
 
