@@ -131,8 +131,16 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
             entice_image_size_get(entice->image, &w, &h);
             if ((w > 1) && (h > 1))
             {
+                int sw;
+                int sh;
+
                 entice_image_zoom_set(entice->image, 100);
                 entice_image_update(entice->image);
+                elm_win_screen_size_get(win, NULL, NULL, &sw, &sh);
+                if (w > sw)
+                    w = sw;
+                if (h > sh)
+                    h = sh;
                 evas_object_resize(win, w, h);
             }
         }
