@@ -73,7 +73,7 @@ struct Entice
     Evas_Object *menu;      /* menu icon */
     Evas_Object *fullscreen;/* fullscreen icon */
     Evas_Object *close;     /* close icon */
-    Evas_Object *hover_menu;
+    Evas_Object *menu_menu;
     Evas_Object *hover_list;
     Evas_Object *frame_exif;
     Eina_List *hover_zoom_items;

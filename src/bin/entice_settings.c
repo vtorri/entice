@@ -238,7 +238,7 @@ _entice_settings_key_down_cb(void *win,
 
 static void
 _entice_settings_close_cb(void *win,
-                          Evas_Object *obj,
+                          Evas_Object *obj EINA_UNUSED,
                           void *_event EINA_UNUSED)
 {
     Entice *entice;
