@@ -157,17 +157,11 @@ _cb_mouse_down(void *win, Evas *evas EINA_UNUSED, Evas_Object *obj EINA_UNUSED, 
 
     if (ev->button == 3)
     {
-        entice_settings_init(win);
-        if (!entice->settings_shown)
-        {
-            elm_object_signal_emit(entice->layout, "state,settings,show", "entice");
-            entice->settings_shown = EINA_TRUE;
-        }
+        elm_menu_move(entice->menu_menu, ev->canvas.x, ev->canvas.y);
+        if (!evas_object_visible_get(entice->menu_menu))
+            elm_menu_open(entice->menu_menu);
         else
-        {
-            elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
-            entice->settings_shown = EINA_FALSE;
-        }
+            elm_menu_close(entice->menu_menu);
     }
 
     if (ev->button != 1) return;

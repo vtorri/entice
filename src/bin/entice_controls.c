@@ -348,13 +348,6 @@ _entice_ctrl_menu_copy_file_cb(void *win,
 /* create menu that appears below hamburger menu */
 
 static void
-_menu_dismissed_cb(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED,
-                   void *event_info EINA_UNUSED)
-{
-   ERR("menu dismissed callback is called!");
-}
-
-static void
 _entice_ctrl_menu_ctor(Evas_Object *win)
 {
     Entice *entice;
@@ -363,7 +356,6 @@ _entice_ctrl_menu_ctor(Evas_Object *win)
     entice = evas_object_data_get(win, "entice");
 
     o = elm_menu_add(win);
-    evas_object_smart_callback_add(o, "dismissed", _menu_dismissed_cb, NULL);
     entice->menu_menu = o;
 
 
