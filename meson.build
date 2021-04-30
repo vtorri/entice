@@ -1,7 +1,10 @@
 project('entice', 'c',
   version         : '0.0.1',
   license         : 'BSD 2 clause',
-  default_options : [ 'buildtype=plain' ],
+  default_options : [
+                      'buildtype=plain',
+                      'warning_level=2'
+                    ],
   meson_version   : '>= 0.49',
 )
 
