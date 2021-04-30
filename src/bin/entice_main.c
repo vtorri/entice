@@ -372,9 +372,6 @@ elm_main(int argc, char **argv)
     if (!cfg)
         goto shutdown_config;
 
-    printf(" config order : %d\n", cfg->order);
-    fflush(stdout);
-
     switch (cfg->order)
     {
         case 0:
