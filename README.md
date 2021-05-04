@@ -6,7 +6,7 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/c2497520f8e444bca108086993b41e81)](https://www.codacy.com/gh/vtorri/entice/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vtorri/entice&amp;utm_campaign=Badge_Grade)
 
 ### Entice
-#### A simple cross-platform image viewer with basic features written with the EFL (Enlightement Fundation Libraries)
+#### A simple cross-platform image viewer with basic features written with the EFL (Enlightement Foundation Libraries)
 
 ### License
 
