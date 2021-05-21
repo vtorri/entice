@@ -3,7 +3,9 @@
 Type=Application
 Name=Entice
 GenericName=Image Viewer
+GenericName[fr]=Visionneuse d'images
 Comment=Image Viewer
+Comment[fr]=Visionneuse d'images
 Exec=entice %U
 Icon=entice
 Categories=Graphics;Viewer;
