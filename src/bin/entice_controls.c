@@ -69,6 +69,8 @@ _entice_ctrl_zoomout_cb(void *win, Evas_Object *obj EINA_UNUSED, void *event_inf
 {
     Entice *entice;
 
+    INF(" * %s", __FUNCTION__);
+
     entice = evas_object_data_get(win, "entice");
     entice_image_zoom_decrease(entice->image);
     entice_image_update(entice->image);
@@ -78,6 +80,8 @@ static void
 _entice_ctrl_zoomin_cb(void *win, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Entice *entice;
+
+    INF(" * %s", __FUNCTION__);
 
     entice = evas_object_data_get(win, "entice");
     entice_image_zoom_increase(entice->image);
@@ -138,6 +142,7 @@ _entice_ctrl_next_cb(void *win, Evas_Object *obj EINA_UNUSED, void *event_info E
     {                                                               \
         Entice *entice;                                             \
         entice = (Entice *)data;                                    \
+        INF(" * %s", __FUNCTION__);                                 \
         entice_image_zoom_set(entice->image, _zm);                  \
         entice_image_update(entice->image);                         \
         elm_hover_dismiss(entice->hover_zoom);                      \

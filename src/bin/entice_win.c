@@ -92,11 +92,15 @@ _cb_win_resize(void *data EINA_UNUSED,
 {
     Entice *entice;
 
+    INF("win resize");
+
     entice = evas_object_data_get(win, "entice");
     if (!entice || !entice->image)
         return;
 
     entice_image_update(entice->image);
+
+    INF("win fin resize");
 }
 
 static void
@@ -286,7 +290,7 @@ entice_win_add(void)
     /* image */
     o = entice_image_add(win);
     elm_object_content_set(entice->scroller, o);
-    evas_object_show(o);
+    //evas_object_show(o);
     entice->image = o;
 
     /* gui layout */
