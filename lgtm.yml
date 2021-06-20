@@ -7,4 +7,8 @@ xtraction:
       - rm -f CMakeLists.txt
       - ./buildconf
     configure:
-      command: mkdir builddir && cd builddir && meson .. --prefix=/opt/efl && ninja
+      command:
+        - meson . --prefix=/opt/efl
+    index:
+      build_command:
+        - ninja
