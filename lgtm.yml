@@ -2,12 +2,60 @@ extraction:
   cpp:
     prepare:
       packages:
-        - build-essential meson ninja-build python3-pip python3-setuptools libssl-dev libsystemd-dev libjpeg-dev libglib2.0-dev libgstreamer1.0-dev libluajit-5.1-dev libfreetype6-dev libfontconfig1-dev libfribidi-dev libavahi-client-dev libharfbuzz-dev libibus-1.0-dev libx11-dev libxext-dev libxrender-dev libgl1-mesa-dev libopenjp2-7-dev libwebp-dev libgif-dev libtiff5-dev libpoppler-dev libpoppler-cpp-dev libspectre-dev libraw-dev librsvg2-dev libudev-dev libmount-dev libdbus-1-dev libpulse-dev libsndfile1-dev libxcursor-dev libxcomposite-dev libxinerama-dev libxrandr-dev libxtst-dev libxss-dev libgstreamer-plugins-base1.0-dev libscim-dev libxdamage-dev libwebp-dev libunwind-dev libinput-dev
+        - build-essential
+        - meson
+        - ninja-build
+        - python3-pip
+        - python3-setuptools
+        - libssl-dev
+        - libsystemd-dev
+        - libjpeg-dev
+        - libglib2.0-dev
+        - libgstreamer1.0-dev
+        - libluajit-5.1-dev
+        - libfreetype6-dev
+        - libfontconfig1-dev
+        - libfribidi-dev
+        - libavahi-client-dev
+        - libharfbuzz-dev
+        - libibus-1.0-dev
+        - libx11-dev
+        - libxext-dev
+        - libxrender-dev
+        - libgl1-mesa-dev
+        - libopenjp2-7-dev
+        - libwebp-dev
+        - libgif-dev
+        - libtiff5-dev
+        - libpoppler-dev
+        - libpoppler-cpp-dev
+        - libspectre-dev
+        - libraw-dev
+        - librsvg2-dev
+        - libudev-dev
+        - libmount-dev
+        - libdbus-1-dev
+        - libpulse-dev
+        - libsndfile1-dev
+        - libxcursor-dev
+        - libxcomposite-dev
+        - libxinerama-dev
+        - libxrandr-dev
+        - libxtst-dev
+        - libxss-dev
+        - libgstreamer-plugins-base1.0-dev
+        - libscim-dev
+        - libxdamage-dev
+        - libwebp-dev
+        - libunwind-dev
+        - libinput-dev
+        - libexif-dev
     after_prepare:
-      - rm -f CMakeLists.txt
+      - git clone https://git.enlightenment.org/core/efl.git
+      - cd efl && sed -i -e "s/subdir(join_paths('dbus-services'))//g" meson.build && meson builddir --prefix=$HOME/efl -Dbuild-examples=false -Dbuild-tests=false -Dbindings= -Dsystemd=false && ninja -C builddir install && cd ..
     configure:
       command:
-        - meson . --prefix=/opt/efl
+        - export LD_LIBRARY_PATH=/opt/work/efl/lib/x86_64-linux-gnu && export PATH=/opt/work/efl/bin:$PATH && export PKG_CONFIG_PATH=/opt/work/efl/lib/x86_64-linux-gnu/pkgconfig && sed -i -e "s|subdir('data/themes')||g" meson.build && meson builddir
     index:
       build_command:
-        - ninja
+        - ninja -C builddir
