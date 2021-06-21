@@ -4,6 +4,7 @@
 [![Travis Build Status](https://travis-ci.com/vtorri/entice.svg?branch=master)](https://travis-ci.com/github/vtorri/entice)
 [![Coverity Scan](https://scan.coverity.com/projects/23000/badge.svg)](https://scan.coverity.com/projects/vtorri-entice)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/c2497520f8e444bca108086993b41e81)](https://www.codacy.com/gh/vtorri/entice/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vtorri/entice&amp;utm_campaign=Badge_Grade)
+[![Language Grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/vtorri/entice.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/vtorri/entice/context:cpp)
 
 ### Entice
 #### A simple cross-platform image viewer with basic features written with the EFL (Enlightement Foundation Libraries)
