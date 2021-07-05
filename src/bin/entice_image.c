@@ -209,6 +209,8 @@ _smart_del(Evas_Object *obj)
     sd = evas_object_smart_data_get(obj);
     EINA_SAFETY_ON_NULL_RETURN(sd);
 
+    _parent_sc.del(obj);
+
     evas_object_data_del(obj, "entice");
     evas_object_data_del(obj, "win");
     evas_object_del(sd->img);
@@ -216,10 +218,6 @@ _smart_del(Evas_Object *obj)
 
     evas_object_smart_data_set(obj, NULL);
     memset(sd, 0, sizeof(*sd));
-    free(sd);
-
-    _parent_sc.del(obj);
-
     free(sd);
 }
 
