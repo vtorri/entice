@@ -156,7 +156,7 @@ _entice_image_anim_handle(Img *sd)
 }
 
 static void
-_e_icon_preloaded(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+_entice_image_preloaded(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
     Img *sd;
     int img_w;
@@ -193,7 +193,7 @@ _smart_add(Evas_Object *obj)
     sd->img = evas_object_image_filled_add(evas_object_evas_get(obj));
     evas_object_smart_member_add(sd->img, obj);
     evas_object_event_callback_add(sd->img, EVAS_CALLBACK_IMAGE_PRELOADED,
-                                   _e_icon_preloaded, obj);
+                                   _entice_image_preloaded, obj);
 
     sd->zoom_mode = ENTICE_ZOOM_MODE_NORMAL;
     sd->zoom = 100;
