@@ -86,7 +86,7 @@ Zoom in/out | Ctrl-mouse wheel
 
 ### TODO
 
- - [ ] help panel
- - [ ] about panel
- - [ ] image list
- - [ ] browser mode
+  - [ ] help panel
+  - [ ] about panel
+  - [ ] image list
+  - [ ] browser mode
