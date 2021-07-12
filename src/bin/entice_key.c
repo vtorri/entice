@@ -69,7 +69,9 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
             entice_win_fullscreen_toggle(win);
         }
         else if (!strcmp(ev->key, "space") ||
-                 !strcmp(ev->key, "Right"))
+                 !strcmp(ev->key, "Right") ||
+                 !strcmp(ev->key, "Down") ||
+                 !strcmp(ev->key, "Next"))
         {
             Eina_List *next;
 
@@ -80,7 +82,9 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
             }
         }
         else if (!strcmp(ev->key, "BackSpace") ||
-                 !strcmp(ev->key, "Left"))
+                 !strcmp(ev->key, "Left") ||
+                 !strcmp(ev->key, "Up") ||
+                 !strcmp(ev->key, "Prior"))
         {
             Eina_List *prev;
 
@@ -90,7 +94,16 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
                 entice_image_file_set(entice->image, prev);
             }
         }
-        else if (!strcmp(ev->key, "plus"))
+        else if (!strcmp(ev->key, "Home"))
+        {
+            entice_image_file_set(entice->image, entice->images);
+        }
+        else if (!strcmp(ev->key, "End"))
+        {
+            entice_image_file_set(entice->image, eina_list_last(entice->images));
+        }
+        else if (!strcmp(ev->key, "plus") ||
+                 !strcmp(ev->key, "equal"))
         {
             entice_image_zoom_increase(entice->image);
             entice_image_update(entice->image);
@@ -144,16 +157,27 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
                 evas_object_resize(win, w, h);
             }
         }
+        else if (!strcmp(ev->keyname, "q"))
+        {
+            evas_object_del(win);
+        }
         else if (!strcmp(ev->key, "Escape"))
         {
             fprintf(stderr, "Esc !!!!\n");
             fflush(stderr);
 
-            elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
-            entice->settings_shown = EINA_FALSE;
+            if ((!entice->settings_shown) && (!entice->exif_shown))
+            {
+                evas_object_del(win);
+            }
+            else
+            {
+                elm_object_signal_emit(entice->layout, "state,settings,hide", "entice");
+                entice->settings_shown = EINA_FALSE;
 
-            elm_object_signal_emit(entice->layout, "state,exif,hide", "entice");
-            entice->exif_shown = EINA_FALSE;
+                elm_object_signal_emit(entice->layout, "state,exif,hide", "entice");
+                entice->exif_shown = EINA_FALSE;
+            }
         }
     }
 

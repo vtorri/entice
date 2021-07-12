@@ -56,17 +56,17 @@ This feature is enabled by default and can be disabled in settings
 
 Action | Shortcut
 ------ | --------
-Quit   | Ctrl-q
+Quit   | Esc (when no panel is shown), or q, or Ctrl-q
 Toggle fullscreen | F11 or f
-Next image | Space or right arrow
-Previous image|  BackSpace or left arrow
-First image | Alt-home
-Last image | Alt-end
+Next image | space, or right arrow, or down arrow, or Next key
+Previous image|  backspace, or left arrow, or up arrow, or Prior key
+First image | home, or Alt-home
+Last image | end, or Alt-end
 rotation clockwise |  Ctrl-r
 rotation counter-clockwise | Ctrl-Alt-r
 Original size | Ctrl-0
 Best fit | b
-Zoom in | +
+Zoom in | +, or =
 Zoom out | -
 Resize window to real image size (implies zoom 100%) | n
 Manage Settings | s
@@ -83,3 +83,10 @@ fullscreen | double click
 Open Settings | right click
 Exit Settings | right click
 Zoom in/out | Ctrl-mouse wheel
+
+### TODO
+
+ - [ ] help panel
+ - [ ] about panel
+ - [ ] image list
+ - [ ] browser mode
