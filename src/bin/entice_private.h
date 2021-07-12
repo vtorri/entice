@@ -67,4 +67,20 @@ extern int entice_app_log_dom_global;
 #endif
 #define CRIT(...) EINA_LOG_DOM_CRIT(entice_app_log_dom_global, __VA_ARGS__)
 
+/* Modifiers */
+#define ENTICE_MODIFIERS_GET(mod)                              \
+    do                                                         \
+    {                                                          \
+        ctrl = evas_key_modifier_is_set(mod, "Control");       \
+        alt = evas_key_modifier_is_set(mod, "Alt");            \
+        shift = evas_key_modifier_is_set(mod, "Shift");        \
+        winm = evas_key_modifier_is_set(mod, "Super");         \
+        meta =                                                 \
+            evas_key_modifier_is_set(mod, "Meta") ||           \
+            evas_key_modifier_is_set(mod, "AltGr") ||          \
+            evas_key_modifier_is_set(mod, "ISO_Level3_Shift"); \
+        hyper = evas_key_modifier_is_set(mod, "Hyper");        \
+    }                                                          \
+    while (0)
+
 #endif /* ENTICE_PRIVATE_H */

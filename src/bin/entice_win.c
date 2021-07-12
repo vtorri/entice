@@ -187,15 +187,7 @@ _cb_mouse_wheel(void *win,
 
     ev = (Evas_Event_Mouse_Wheel *)event;
 
-    ctrl = evas_key_modifier_is_set(ev->modifiers, "Control");
-    alt = evas_key_modifier_is_set(ev->modifiers, "Alt");
-    shift = evas_key_modifier_is_set(ev->modifiers, "Shift");
-    winm = evas_key_modifier_is_set(ev->modifiers, "Super");
-    meta =
-        evas_key_modifier_is_set(ev->modifiers, "Meta") ||
-        evas_key_modifier_is_set(ev->modifiers, "AltGr") ||
-        evas_key_modifier_is_set(ev->modifiers, "ISO_Level3_Shift");
-    hyper = evas_key_modifier_is_set(ev->modifiers, "Hyper");
+    ENTICE_MODIFIERS_GET(ev->modifiers);
 
     entice = evas_object_data_get(win, "entice");
 

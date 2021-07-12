@@ -28,6 +28,7 @@
 
 #include <Elementary.h>
 
+#include "entice_private.h"
 #include "entice_config.h"
 #include "entice_image.h"
 #include "entice_settings.h"
@@ -48,15 +49,7 @@ void entice_key_handle(Evas_Object *win, Evas_Event_Key_Down *ev)
     Entice *entice;
     Eina_Bool ctrl, alt, shift, winm, meta, hyper; /* modifiers */
 
-    ctrl = evas_key_modifier_is_set(ev->modifiers, "Control");
-    alt = evas_key_modifier_is_set(ev->modifiers, "Alt");
-    shift = evas_key_modifier_is_set(ev->modifiers, "Shift");
-    winm = evas_key_modifier_is_set(ev->modifiers, "Super");
-    meta =
-        evas_key_modifier_is_set(ev->modifiers, "Meta") ||
-        evas_key_modifier_is_set(ev->modifiers, "AltGr") ||
-        evas_key_modifier_is_set(ev->modifiers, "ISO_Level3_Shift");
-    hyper = evas_key_modifier_is_set(ev->modifiers, "Hyper");
+    ENTICE_MODIFIERS_GET(ev->modifiers);
 
     entice = evas_object_data_get(win, "entice");
 
