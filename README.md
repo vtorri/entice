@@ -45,6 +45,8 @@ Image format  |  File extension
  webp         | .webp
  xcf          | .xcf
  xpm          | .xpm
+ 
+ Entice can also display PDF files if evas PDF generic loader is enabled
 
 ### Animated images
 
