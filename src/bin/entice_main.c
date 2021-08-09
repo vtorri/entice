@@ -136,6 +136,8 @@ static const char *_image_ext[] =
 
     ".tgv",
 
+    ".pdf",
+
     NULL
 };
 
