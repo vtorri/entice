@@ -82,6 +82,8 @@ static const char *_image_ext[] =
     ".heif",
     ".heic",
 
+    ".jxl",
+
     ".xcf",
     ".xcf.gz",
 

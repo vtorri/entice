@@ -100,37 +100,37 @@ _entice_image_anim_cb(void *data)
 
     sd->frame++;
     fr = (sd->frame % (sd->frame_count)) + 1;
-    if ((sd->frame >= sd->frame_count) && (fr == 1))
-    {
-        int loops;
+    /* if ((sd->frame >= sd->frame_count) && (fr == 1)) */
+    /* { */
+    /*     int loops; */
 
-        if (evas_object_image_animated_loop_type_get(sd->img) ==
-            EVAS_IMAGE_ANIMATED_HINT_NONE)
-        {
-            sd->timer_anim = NULL;
-            return EINA_FALSE;
-        }
-        sd->loops++;
-        loops = evas_object_image_animated_loop_count_get(sd->img);
-        if (loops != 0) // loop == 0 -> loop forever
-        {
-            if (loops < sd->loops)
-            {
-                sd->timer_anim = NULL;
-                return EINA_FALSE;
-            }
-        }
-    }
+    /*     if (evas_object_image_animated_loop_type_get(sd->img) == */
+    /*         EVAS_IMAGE_ANIMATED_HINT_NONE) */
+    /*     { */
+    /*         sd->timer_anim = NULL; */
+    /*         return EINA_FALSE; */
+    /*     } */
+    /*     sd->loops++; */
+    /*     loops = evas_object_image_animated_loop_count_get(sd->img); */
+    /*     if (loops != 0) // loop == 0 -> loop forever */
+    /*     { */
+    /*         if (loops < sd->loops) */
+    /*         { */
+    /*             sd->timer_anim = NULL; */
+    /*             return EINA_FALSE; */
+    /*         } */
+    /*     } */
+    /* } */
 
     evas_object_image_animated_frame_set(sd->img, fr);
     t = evas_object_image_animated_frame_duration_get(sd->img, fr, 0);
     sd->timer_anim = ecore_timer_loop_add(t, _entice_image_anim_cb, sd);
-    //ecore_timer_interval_set(sd->anim, t);
+    //ecore_timer_interval_set(sd->timer_anim, t);
 
     return EINA_FALSE;
 }
 
-static int
+static void
 _entice_image_anim_handle(Img *sd)
 {
     double t;
@@ -143,21 +143,21 @@ _entice_image_anim_handle(Img *sd)
     sd->frame_count = 0;
 
     if (!evas_object_image_animated_get(sd->img))
-        return 0;
+        return;
 
     sd->frame_count = evas_object_image_animated_frame_count_get(sd->img);
     if (sd->frame_count < 2)
-        return 0;
+        return;
 
     t = evas_object_image_animated_frame_duration_get(sd->img, sd->frame, 0);
     sd->timer_anim = ecore_timer_add(t, _entice_image_anim_cb, sd);
-
-    return 1;
+    ERR("timer duration : %f", t);
 }
 
 static void
 _entice_image_preloaded(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
+    Entice *entice;
     Img *sd;
     int img_w;
     int img_h;
@@ -174,6 +174,11 @@ _entice_image_preloaded(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_U
 
     sd->loading = 0;
     entice_image_update(data);
+
+    entice = evas_object_data_get(data, "entice");
+
+    if (entice->config->play_animated)
+        _entice_image_anim_handle(sd);
 }
 
 static void
@@ -462,8 +467,8 @@ entice_image_file_set(Evas_Object *obj, Eina_List *image)
     if (entice->config->best_fit_startup)
         sd->zoom_mode = ENTICE_ZOOM_MODE_FIT;
 
-    if (entice->config->play_animated)
-        _entice_image_anim_handle(sd);
+    /* if (entice->config->play_animated) */
+    /*     _entice_image_anim_handle(sd); */
 }
 
 const char *
