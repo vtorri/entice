@@ -9,9 +9,6 @@ platform:
 steps:
 - name: dependencies
   image: gcc
-  volumes:
-  - name apt
-    path: /usr/local/apt
   commands:
   - apt-get -qq update
   - apt install build-essential meson ninja-build python3-pip python3-setuptools
@@ -22,5 +19,5 @@ steps:
   commands:
   - mkdir builddir
   - cd builddir
-  - meson .. --prefix=/usr/local/apt
+  - meson .. --prefix=/usr/local/
   - ninja
