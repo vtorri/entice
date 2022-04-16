@@ -1,5 +1,5 @@
----
 kind: pipeline
+type: docker
 name: ci-amd64
 
 platform:
@@ -7,15 +7,10 @@ platform:
   arch: amd64
 
 steps:
-- name: dependencies
+- name: build
   image: gcc
   commands:
   - apt-get -qq update
   - apt -y install build-essential meson ninja-build python3-pip python3-setuptools
-- name: install
-  image: gcc
-  commands:
-  - mkdir builddir
-  - cd builddir
-  - python3 meson .. --prefix=/usr/local/
-  - ninja
+  - meson builddir
+  - ninja -C builddir
