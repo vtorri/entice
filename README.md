@@ -1,6 +1,7 @@
 [![Entice Logo](https://github.com/vtorri/entice/raw/master/data/icons/entice.png)](https://github.com/vtorri/entice)
 
 [![Linux CI](https://github.com/vtorri/entice/actions/workflows/linux.yml/badge.svg)](https://github.com/vtorri/entice/actions/workflows/linux.yml)
+[![Drone IO](https://cloud.drone.io/api/badges/vtorri/entice/status.svg)](https://cloud.drone.io/vtorri/entice)
 [![Travis Build Status](https://travis-ci.com/vtorri/entice.svg?branch=master)](https://travis-ci.com/github/vtorri/entice)
 [![Build Status](https://cloud.drone.io/api/badges/vtorri/entice/status.svg)](https://cloud.drone.io/vtorri/entice)
 [![Coverity Scan](https://scan.coverity.com/projects/23000/badge.svg)](https://scan.coverity.com/projects/vtorri-entice)
