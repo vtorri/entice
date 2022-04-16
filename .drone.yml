@@ -19,6 +19,9 @@ steps:
   - cd builddir
   - meson .. --prefix=/opt/efl --default-library shared -Dbuild-examples=false -Dbuild-tests=false -Dbindings=
   - ninja install
+  - export PATH=/opt/efl/bin:$PATH
+  - export LD_LIBRARY_PATH=/opt/efl/lib/x86_64-linux-gnu
+  - export PKG_CONFIG_PATH=/opt/efl/lib/x86_64-linux-gnu/pkgconfig
   - cd ../..
   - meson builddir
   - ninja -C builddir
