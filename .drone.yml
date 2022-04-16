@@ -11,7 +11,7 @@ steps:
   image: gcc
   commands:
   - apt-get -qq update
-  - apt install build-essential meson ninja-build python3-pip python3-setuptools
+  - apt -y install build-essential meson ninja-build python3-pip python3-setuptools
   - pip3 install --upgrade pip
   - pip3 install meson --user
 - name: install
