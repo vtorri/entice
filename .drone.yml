@@ -19,5 +19,6 @@ steps:
   - cd builddir
   - meson .. --prefix=/opt/efl --default-library shared -Dbuild-examples=false -Dbuild-tests=false -Dbindings=
   - ninja install
+  - cd ../..
   - meson builddir
   - ninja -C builddir
