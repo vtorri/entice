@@ -34,10 +34,11 @@ Image format  |  File extension
  ico          | .ico, .cur
  jp2k         | .jp2k, .jp2,.jpx, .jpf
  jpeg         | .jpg, .jpeg, .jfif
+ jxl          | .jxl
  pmaps        | .pbm, .pgm, .ppm, .pnm
  png          | .png
  psd          | .psd
- raw          | a lot..
+ raw          | a lot...
  svg          | .svg, .svg.gz
  tga          | .tga
  tgv          | .tgv
@@ -46,12 +47,12 @@ Image format  |  File extension
  webp         | .webp
  xcf          | .xcf
  xpm          | .xpm
- 
+
  Entice can also display PDF files if evas PDF generic loader is enabled
 
 ### Animated images
 
-Animated images, like gif or avif, can also be played.
+Animated images, like gif, avif or jxl, can also be played.
 
 This feature is enabled by default and can be disabled in settings
 
