@@ -473,14 +473,14 @@ elm_main(int argc, char **argv)
                        win_w * elm_config_scale_get(),
                        win_h * elm_config_scale_get());
 
-    evas_object_show(win);
-
     entice_win_images_set(win, list);
-
-    if (fullscreen) elm_win_fullscreen_set(win, EINA_TRUE);
 
     /* once the images are in the list, display the first and current one */
     entice_win_image_first_set(win, first);
+
+    if (fullscreen) elm_win_fullscreen_set(win, EINA_TRUE);
+
+    evas_object_show(win);
 
     elm_run();
 
