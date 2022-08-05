@@ -88,9 +88,13 @@ Open Settings | right click
 Exit Settings | right click
 Zoom in/out | Ctrl-mouse wheel
 
+### Interface
+
+
+
 ### TODO
 
-- [ ]  help panel
-- [ ]   about panel
+- [ ] help panel
+- [ ] about panel
 - [ ] image list
 - [ ] browser mode
