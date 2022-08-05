@@ -90,7 +90,7 @@ Zoom in/out | Ctrl-mouse wheel
 
 ### Interface
 
-
+![interface](data/images/interface.png)
 
 ### TODO
 
