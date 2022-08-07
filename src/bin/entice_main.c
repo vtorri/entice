@@ -473,10 +473,11 @@ elm_main(int argc, char **argv)
                        win_w * elm_config_scale_get(),
                        win_h * elm_config_scale_get());
 
-    entice_win_images_set(win, list);
-
-    /* once the images are in the list, display the first and current one */
-    entice_win_image_first_set(win, first);
+    /*
+     * store the image list in the Entice struct
+     * set the first image that will be displayed
+     */
+    entice_win_images_set(win, list, first);
 
     if (fullscreen) elm_win_fullscreen_set(win, EINA_TRUE);
 

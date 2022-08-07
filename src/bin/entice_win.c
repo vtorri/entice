@@ -369,7 +369,7 @@ entice_win_title_update(Evas_Object *win)
 }
 
 void
-entice_win_images_set(Evas_Object *win, Eina_List *images)
+entice_win_images_set(Evas_Object *win, Eina_List *images, Eina_List *first)
 {
     Entice *entice;
 
@@ -378,14 +378,6 @@ entice_win_images_set(Evas_Object *win, Eina_List *images)
 
     entice = evas_object_data_get(win, "entice");
     entice->images = images;
-}
-
-void
-entice_win_image_first_set(Evas_Object *win, Eina_List *first)
-{
-    Entice *entice;
-
-    entice = evas_object_data_get(win, "entice");
     entice_image_file_set(entice->image, first);
 }
 
