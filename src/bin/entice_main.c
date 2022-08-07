@@ -388,6 +388,45 @@ elm_main(int argc, char **argv)
             _entice_compare_default = _entice_compare_path;
     }
 
+    /* FIXME key binding */
+
+    elm_policy_set(ELM_POLICY_QUIT, ELM_POLICY_QUIT_LAST_WINDOW_CLOSED);
+    elm_app_compile_bin_dir_set(PACKAGE_BIN_DIR);
+    elm_app_compile_lib_dir_set(PACKAGE_LIB_DIR);
+    elm_app_compile_data_dir_set(PACKAGE_DATA_DIR);
+#if ENABLE_NLS
+    elm_app_compile_locale_set(LOCALEDIR);
+#endif
+    elm_app_name_set(PACKAGE_NAME);
+    elm_app_info_set(elm_main, PACKAGE_NAME, "themes/default.edj");
+
+#if ENABLE_NLS
+    bindtextdomain(PACKAGE_NAME, elm_app_locale_dir_get());
+    textdomain(PACKAGE_NAME);
+    _entice_translate_options();
+#else
+    options.copyright = ENTICE_COPYRIGHT;
+#endif
+
+    win = entice_win_add();
+    if (!win)
+    {
+        ERR(_("could not create main window."));
+        goto del_cfg;
+    }
+
+    win_w = 960;
+    win_h = 540;
+    if (cfg)
+    {
+        win_w = cfg->cg_width;
+        win_h = cfg->cg_height;
+    }
+
+    evas_object_resize(win,
+                       win_w * elm_config_scale_get(),
+                       win_h * elm_config_scale_get());
+
     list = NULL;
     if (args == argc)
     {
@@ -433,45 +472,6 @@ elm_main(int argc, char **argv)
         }
         if (!first) first = list;
     }
-
-    /* FIXME key binding */
-
-    elm_policy_set(ELM_POLICY_QUIT, ELM_POLICY_QUIT_LAST_WINDOW_CLOSED);
-    elm_app_compile_bin_dir_set(PACKAGE_BIN_DIR);
-    elm_app_compile_lib_dir_set(PACKAGE_LIB_DIR);
-    elm_app_compile_data_dir_set(PACKAGE_DATA_DIR);
-#if ENABLE_NLS
-    elm_app_compile_locale_set(LOCALEDIR);
-#endif
-    elm_app_name_set(PACKAGE_NAME);
-    elm_app_info_set(elm_main, PACKAGE_NAME, "themes/default.edj");
-
-#if ENABLE_NLS
-    bindtextdomain(PACKAGE_NAME, elm_app_locale_dir_get());
-    textdomain(PACKAGE_NAME);
-    _entice_translate_options();
-#else
-    options.copyright = ENTICE_COPYRIGHT;
-#endif
-
-    win = entice_win_add();
-    if (!win)
-    {
-        ERR(_("could not create main window."));
-        goto del_cfg;
-    }
-
-    win_w = 960;
-    win_h = 540;
-    if (cfg)
-    {
-        win_w = cfg->cg_width;
-        win_h = cfg->cg_height;
-    }
-
-    evas_object_resize(win,
-                       win_w * elm_config_scale_get(),
-                       win_h * elm_config_scale_get());
 
     /*
      * store the image list in the Entice struct
