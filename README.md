@@ -10,6 +10,8 @@
 ### Entice
 #### A simple cross-platform image viewer with basic features written with the EFL (Enlightement Foundation Libraries)
 
+Development is done in [Enlightenment repository](https://git.enlightenment.org/vtorri/entice).
+
 ### License
 
 This application is released under the BSD 2-Clause License
